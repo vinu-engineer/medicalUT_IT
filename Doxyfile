@@ -80,6 +80,7 @@ PREDEFINED             = _MSC_VER
 # Generates: call graphs, caller graphs, include graphs, collaboration diagrams
 # -----------------------------------------------------------------------------
 HAVE_DOT               = YES
+DOT_PATH               = C:/Program Files/Graphviz/bin
 DOT_NUM_THREADS        = 0
 UML_LOOK               = YES
 UML_LIMIT_NUM_FIELDS   = 20
