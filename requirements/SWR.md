@@ -451,6 +451,33 @@ Admin; Add/Remove/Set Password operate via `users_add()`, `users_remove()`,
 
 ---
 
+### SWR-GUI-010 — Simulation Mode Toggle
+
+**Requirement:** The dashboard shall provide a **Sim Mode** toggle button in the
+header bar that switches between two operating modes:
+
+1. **Simulation mode (ON):** The software reads synthetic vital signs from the
+   HAL back-end (`sim_vitals.c`), updates the vital-signs tiles every 2 s, and
+   displays a `* SIM LIVE` / `SIM PAUSED` badge in the header. The status
+   banner shall append `[ SIMULATION MODE ]` to normal-status text.
+2. **Device mode (OFF):** The timer is stopped, all vital-signs tiles shall
+   display `N/A`, the patient bar shall read
+   `"DEVICE MODE — Simulation disabled. Connect real hardware for live data."`,
+   and the status banner shall read
+   `"DEVICE MODE — Enable simulation in the header to use synthetic data"`.
+
+The selected mode shall be persisted to `monitor.cfg` (key `sim_enabled=0|1`)
+and restored when the application is next launched.
+
+**Traces to:** SYS-004, SYS-005
+**Implemented in:** `src/gui_main.c` — `IDC_BTN_SIM_MODE` handler,
+`config_load()`, `config_save()`, `paint_tiles()`, `paint_status_banner()`,
+`paint_patient_bar()`
+**Verified by:** GUI demonstration — toggle Sim: OFF shows N/A tiles and
+device-mode banners; Sim: ON resumes live data.
+
+---
+
 ## Revision History
 
 | Rev | Date       | Author          | Description          |
@@ -459,3 +486,4 @@ Admin; Add/Remove/Set Password operate via `users_add()`, `users_remove()`,
 | B   | 2026-04-07 | vinu-engineer   | Added UNIT-GUI module (SWR-GUI-001..004) |
 | C   | 2026-04-07 | vinu-engineer   | Added SWR-GUI-005 (HAL), SWR-GUI-006 (sim) |
 | D   | 2026-04-07 | vinu-engineer   | Added UNIT-SEC module: SWR-SEC-001/002/003, SWR-GUI-007/008/009 |
+| E   | 2026-04-07 | vinu-engineer   | Added SWR-GUI-010 (simulation mode toggle) — v1.8.0 |

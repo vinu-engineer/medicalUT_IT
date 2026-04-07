@@ -1,6 +1,6 @@
 /**
  * @file gui_main.c
- * @brief Win32 GUI — Patient Vital Signs Monitor v1.5.0
+ * @brief Win32 GUI — Patient Vital Signs Monitor v1.8.0
  *
  * Windows:
  *   1. Login (PVM_Login)      — auth with role detection
@@ -13,7 +13,7 @@
  *
  * @req SWR-GUI-001  @req SWR-GUI-002  @req SWR-GUI-003  @req SWR-GUI-004
  * @req SWR-SEC-001  @req SWR-SEC-002  @req SWR-SEC-003
- * @req SWR-GUI-007  @req SWR-GUI-008  @req SWR-GUI-009
+ * @req SWR-GUI-007  @req SWR-GUI-008  @req SWR-GUI-009  @req SWR-GUI-010
  */
 #ifdef _MSC_VER
 #  define _CRT_SECURE_NO_WARNINGS
@@ -37,7 +37,7 @@
  * App metadata
  * =================================================================== */
 #define APP_TITLE   "Patient Vital Signs Monitor"
-#define APP_VERSION "v1.5.0"
+#define APP_VERSION "v1.8.0"
 #define IDI_APPICON 101
 
 /* ===================================================================
@@ -88,6 +88,7 @@
 #define IDC_BTN_PAUSE    1203
 #define IDC_BTN_SETTINGS 1204
 #define IDC_BTN_ACCOUNT  1205
+#define IDC_BTN_SIM_MODE 1206   /**< Toggle simulation / device mode @req SWR-GUI-010 */
 #define IDC_LIST_ALERTS  1300
 #define IDC_LIST_HISTORY 1301
 #define TIMER_SIM        1
@@ -172,6 +173,7 @@ typedef struct {
     PatientRecord patient;
     int           has_patient;
     int           sim_paused;
+    int           sim_enabled;  /**< 1=simulation mode, 0=device/HAL mode @req SWR-GUI-010 */
 
     HFONT font_hdr;
     HFONT font_tile_val;
@@ -202,6 +204,47 @@ static void update_dashboard(HWND w);
 static void open_settings(HWND parent);
 static void open_pwddlg(HWND parent, const char *user, int admin_mode);
 static void open_adduser(HWND parent);
+
+/* ===================================================================
+ * Config persistence — monitor.cfg  @req SWR-GUI-010
+ * =================================================================== */
+static void get_cfg_path(char *out, int out_len)
+{
+    char  exe[MAX_PATH];
+    char *sep;
+    GetModuleFileNameA(NULL, exe, MAX_PATH);
+    sep = strrchr(exe, '\\');
+    if (sep) *(sep + 1) = '\0'; else exe[0] = '\0';
+    snprintf(out, (size_t)out_len, "%smonitor.cfg", exe);
+}
+
+static void config_load(void)
+{
+    char  path[MAX_PATH];
+    char  line[64];
+    FILE *f;
+    g_app.sim_enabled = 1;   /* default: simulation ON */
+    get_cfg_path(path, MAX_PATH);
+    f = fopen(path, "r");
+    if (!f) return;
+    while (fgets(line, (int)sizeof(line), f)) {
+        int val;
+        if (sscanf(line, "sim_enabled=%d", &val) == 1)
+            g_app.sim_enabled = (val != 0) ? 1 : 0;
+    }
+    fclose(f);
+}
+
+static void config_save(void)
+{
+    char  path[MAX_PATH];
+    FILE *f;
+    get_cfg_path(path, MAX_PATH);
+    f = fopen(path, "w");
+    if (!f) return;
+    fprintf(f, "sim_enabled=%d\n", g_app.sim_enabled);
+    fclose(f);
+}
 
 /* ===================================================================
  * GDI helpers
@@ -274,13 +317,23 @@ static void paint_header(HDC hdc, int cw)
         draw_pill(hdc, cw - 468, 15, 86, 26, badge_bg, badge_txt, g_app.font_tile_lbl);
     }
 
-    /* SIM status badge */
-    if (g_app.has_patient) {
-        const char *sim_txt   = g_app.sim_paused ? "SIM PAUSED" : "* SIM LIVE";
-        COLORREF    sim_color = g_app.sim_paused ? RGB(253,224,71) : RGB(134,239,172);
-        draw_text_ex(hdc, sim_txt,
-                     cw - 370, 0, 130, HDR_H,
-                     g_app.font_tile_lbl, sim_color,
+    /* Sim / Device mode badge */
+    {
+        const char *mode_txt;
+        COLORREF    mode_clr;
+        if (!g_app.sim_enabled) {
+            mode_txt = "DEVICE MODE";
+            mode_clr = RGB(148, 163, 184);
+        } else if (g_app.sim_paused) {
+            mode_txt = "SIM PAUSED";
+            mode_clr = RGB(253, 224,  71);
+        } else {
+            mode_txt = "* SIM LIVE";
+            mode_clr = RGB(134, 239, 172);
+        }
+        draw_text_ex(hdc, mode_txt,
+                     cw - 380, 0, 110, HDR_H,
+                     g_app.font_tile_lbl, mode_clr,
                      DT_SINGLELINE | DT_VCENTER | DT_RIGHT);
     }
 
@@ -301,7 +354,10 @@ static void paint_patient_bar(HDC hdc, int cw)
 {
     char buf[256];
     fill_rect(hdc, 0, HDR_H, cw, PBAR_H, CLR_SLATE);
-    if (g_app.has_patient) {
+    if (!g_app.sim_enabled) {
+        snprintf(buf, sizeof(buf),
+                 "  DEVICE MODE — Simulation disabled. Connect real hardware for live data.");
+    } else if (g_app.has_patient) {
         float bmi = calculate_bmi(g_app.patient.info.weight_kg,
                                    g_app.patient.info.height_m);
         snprintf(buf, sizeof(buf),
@@ -356,21 +412,29 @@ static void paint_tiles(HDC hdc, int cw)
     int pad=10, tw=(cw-3*pad)/2, th=(TILE_H-3*pad)/2;
 
     fill_rect(hdc, 0, TILE_Y, cw, TILE_H+pad, CLR_NEAR_WHITE);
-    if (g_app.has_patient) v = patient_latest_reading(&g_app.patient);
-    if (v) {
-        snprintf(hr_s, sizeof(hr_s), "%d",      v->heart_rate);
-        snprintf(bp_s, sizeof(bp_s), "%d / %d", v->systolic_bp, v->diastolic_bp);
-        snprintf(tp_s, sizeof(tp_s), "%.1f",    v->temperature);
-        snprintf(sp_s, sizeof(sp_s), "%d",      v->spo2);
-        lhr=check_heart_rate(v->heart_rate);
-        lbp=check_blood_pressure(v->systolic_bp, v->diastolic_bp);
-        ltp=check_temperature(v->temperature);
-        lsp=check_spo2(v->spo2);
+    if (!g_app.sim_enabled) {
+        /* Device / HAL mode — no simulation data available */
+        strncpy(hr_s,"N/A",sizeof(hr_s)-1);  hr_s[sizeof(hr_s)-1]='\0';
+        strncpy(bp_s,"N/A",sizeof(bp_s)-1);  bp_s[sizeof(bp_s)-1]='\0';
+        strncpy(tp_s,"N/A",sizeof(tp_s)-1);  tp_s[sizeof(tp_s)-1]='\0';
+        strncpy(sp_s,"N/A",sizeof(sp_s)-1);  sp_s[sizeof(sp_s)-1]='\0';
     } else {
-        strncpy(hr_s,"--",   sizeof(hr_s)-1);  hr_s[sizeof(hr_s)-1]='\0';
-        strncpy(bp_s,"--/--",sizeof(bp_s)-1);  bp_s[sizeof(bp_s)-1]='\0';
-        strncpy(tp_s,"--",   sizeof(tp_s)-1);  tp_s[sizeof(tp_s)-1]='\0';
-        strncpy(sp_s,"--",   sizeof(sp_s)-1);  sp_s[sizeof(sp_s)-1]='\0';
+        if (g_app.has_patient) v = patient_latest_reading(&g_app.patient);
+        if (v) {
+            snprintf(hr_s, sizeof(hr_s), "%d",      v->heart_rate);
+            snprintf(bp_s, sizeof(bp_s), "%d / %d", v->systolic_bp, v->diastolic_bp);
+            snprintf(tp_s, sizeof(tp_s), "%.1f",    v->temperature);
+            snprintf(sp_s, sizeof(sp_s), "%d",      v->spo2);
+            lhr=check_heart_rate(v->heart_rate);
+            lbp=check_blood_pressure(v->systolic_bp, v->diastolic_bp);
+            ltp=check_temperature(v->temperature);
+            lsp=check_spo2(v->spo2);
+        } else {
+            strncpy(hr_s,"--",   sizeof(hr_s)-1);  hr_s[sizeof(hr_s)-1]='\0';
+            strncpy(bp_s,"--/--",sizeof(bp_s)-1);  bp_s[sizeof(bp_s)-1]='\0';
+            strncpy(tp_s,"--",   sizeof(tp_s)-1);  tp_s[sizeof(tp_s)-1]='\0';
+            strncpy(sp_s,"--",   sizeof(sp_s)-1);  sp_s[sizeof(sp_s)-1]='\0';
+        }
     }
     paint_tile(hdc, pad,           TILE_Y+pad,       tw, th, "HEART RATE",     hr_s, "bpm",  lhr);
     paint_tile(hdc, pad+tw+pad,    TILE_Y+pad,       tw, th, "BLOOD PRESSURE", bp_s, "mmHg", lbp);
@@ -380,16 +444,22 @@ static void paint_tiles(HDC hdc, int cw)
 
 static void paint_status_banner(HDC hdc, int cw)
 {
-    AlertLevel lvl = g_app.has_patient ? patient_current_status(&g_app.patient) : ALERT_NORMAL;
     COLORREF bg, fg; const char *txt;
-    switch (lvl) {
-        case ALERT_CRITICAL: bg=CLR_CR_FG; fg=CLR_WHITE; txt="!! CRITICAL — Immediate clinical action required !!"; break;
-        case ALERT_WARNING:  bg=CLR_WN_FG; fg=CLR_WHITE; txt="WARNING — Clinician review required"; break;
-        default:
-            bg=CLR_OK_FG; fg=CLR_WHITE;
-            txt=g_app.has_patient ? "ALL NORMAL — Patient stable"
-                                   : "Admit a patient and add a reading to begin monitoring";
-            break;
+    if (!g_app.sim_enabled) {
+        bg  = CLR_SLATE;
+        fg  = CLR_LIGHT_GRAY;
+        txt = "DEVICE MODE — Enable simulation in the header to use synthetic data";
+    } else {
+        AlertLevel lvl = g_app.has_patient ? patient_current_status(&g_app.patient) : ALERT_NORMAL;
+        switch (lvl) {
+            case ALERT_CRITICAL: bg=CLR_CR_FG; fg=CLR_WHITE; txt="!! CRITICAL — Immediate clinical action required !!"; break;
+            case ALERT_WARNING:  bg=CLR_WN_FG; fg=CLR_WHITE; txt="WARNING — Clinician review required"; break;
+            default:
+                bg=CLR_OK_FG; fg=CLR_WHITE;
+                txt=g_app.has_patient ? "ALL NORMAL — Patient stable [ SIMULATION MODE ]"
+                                       : "Admit a patient and add a reading to begin monitoring";
+                break;
+        }
     }
     fill_rect(hdc, 0, STAT_Y, cw, STAT_H, bg);
     draw_text_ex(hdc, txt, 0, STAT_Y, cw, STAT_H,
@@ -676,7 +746,7 @@ static LRESULT CALLBACK settings_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
         about_ctrls[about_count++] = make_label(w,"IEC 62304 Class B",                    16,112,520,20);
         about_ctrls[about_count++] = make_label(w,"Requirements Revision: SWR-001-REV-C", 16,136,520,20);
         about_ctrls[about_count++] = make_label(w,"Authorized clinical use only.",        16,164,520,20);
-        about_ctrls[about_count++] = make_label(w,"Credentials stored in users.dat (plain text - evaluation only).", 16,184,520,20);
+        about_ctrls[about_count++] = make_label(w,"Credentials stored in users.dat (SHA-256 hashed, IEC 62304 SWR-SEC-004).", 16,184,520,20);
         about_ctrls[about_count++] = make_label(w,"(c) 2026 Patient Monitor Project",     16,228,520,20);
 
         for (i = 0; i < about_count; ++i)
@@ -1078,22 +1148,35 @@ static LRESULT CALLBACK dash_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
         }
         SendMessage(btn, WM_SETFONT, (WPARAM)g_app.font_ui, TRUE);
 
+        /* Simulation mode toggle button — label set after config_load */
+        btn = make_btn(w, IDC_BTN_SIM_MODE, "Sim: ON", WIN_CW-372, 14, 90, 28);
+        SendMessage(btn, WM_SETFONT, (WPARAM)g_app.font_ui, TRUE);
+
+        config_load();   /* restore sim_enabled from previous session */
         hw_init();
         g_app.sim_paused = 0;
-        patient_init(&g_app.patient, 2001, "James Mitchell", 45, 78.0f, 1.75f);
-        g_app.has_patient = 1;
-        set_txt(w,IDC_PAT_ID,"2001"); set_txt(w,IDC_PAT_NAME,"James Mitchell");
-        set_txt(w,IDC_PAT_AGE,"45");  set_txt(w,IDC_PAT_WEIGHT,"78.0");
-        set_txt(w,IDC_PAT_HEIGHT,"1.75");
-        hw_get_next_reading(&first_v);
-        patient_add_reading(&g_app.patient, &first_v);
-        SetTimer(w, TIMER_SIM, 2000, NULL);
+
+        /* Reflect loaded sim state on button label */
+        SetWindowTextA(GetDlgItem(w, IDC_BTN_SIM_MODE),
+                       g_app.sim_enabled ? "Sim: ON" : "Sim: OFF");
+        EnableWindow(GetDlgItem(w, IDC_BTN_PAUSE), g_app.sim_enabled);
+
+        if (g_app.sim_enabled) {
+            patient_init(&g_app.patient, 2001, "James Mitchell", 45, 78.0f, 1.75f);
+            g_app.has_patient = 1;
+            set_txt(w,IDC_PAT_ID,"2001"); set_txt(w,IDC_PAT_NAME,"James Mitchell");
+            set_txt(w,IDC_PAT_AGE,"45");  set_txt(w,IDC_PAT_WEIGHT,"78.0");
+            set_txt(w,IDC_PAT_HEIGHT,"1.75");
+            hw_get_next_reading(&first_v);
+            patient_add_reading(&g_app.patient, &first_v);
+            SetTimer(w, TIMER_SIM, 2000, NULL);
+        }
         update_dashboard(w);
         return 0;
     }
 
     case WM_TIMER:
-        if (wp == TIMER_SIM && !g_app.sim_paused) {
+        if (wp == TIMER_SIM && g_app.sim_enabled && !g_app.sim_paused) {
             VitalSigns v;
             if (g_app.has_patient && patient_is_full(&g_app.patient)) {
                 patient_init(&g_app.patient,
@@ -1117,11 +1200,15 @@ static LRESULT CALLBACK dash_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
 
     case WM_PAINT: {
         PAINTSTRUCT ps;
+        RECT cr;
+        int cw;
         HDC hdc = BeginPaint(w, &ps);
-        paint_header(hdc, WIN_CW);
-        paint_patient_bar(hdc, WIN_CW);
-        paint_tiles(hdc, WIN_CW);
-        paint_status_banner(hdc, WIN_CW);
+        GetClientRect(w, &cr);
+        cw = cr.right;
+        paint_header(hdc, cw);
+        paint_patient_bar(hdc, cw);
+        paint_tiles(hdc, cw);
+        paint_status_banner(hdc, cw);
         EndPaint(w, &ps);
         return 0;
     }
@@ -1134,10 +1221,43 @@ static LRESULT CALLBACK dash_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
         case IDC_BTN_SCEN1:   do_scenario(w,1);  return 0;
         case IDC_BTN_SCEN2:   do_scenario(w,2);  return 0;
         case IDC_BTN_PAUSE:
-            g_app.sim_paused = !g_app.sim_paused;
-            SetWindowTextA(GetDlgItem(w,IDC_BTN_PAUSE),
-                           g_app.sim_paused?"Resume Sim":"Pause Sim");
-            InvalidateRect(w, NULL, FALSE);
+            if (g_app.sim_enabled) {
+                g_app.sim_paused = !g_app.sim_paused;
+                SetWindowTextA(GetDlgItem(w,IDC_BTN_PAUSE),
+                               g_app.sim_paused?"Resume Sim":"Pause Sim");
+                InvalidateRect(w, NULL, FALSE);
+            }
+            return 0;
+
+        case IDC_BTN_SIM_MODE:
+            g_app.sim_enabled = !g_app.sim_enabled;
+            config_save();
+            SetWindowTextA(GetDlgItem(w, IDC_BTN_SIM_MODE),
+                           g_app.sim_enabled ? "Sim: ON" : "Sim: OFF");
+            EnableWindow(GetDlgItem(w, IDC_BTN_PAUSE), g_app.sim_enabled);
+            if (g_app.sim_enabled) {
+                /* Turning ON — start sim with a default patient if none admitted */
+                VitalSigns sv;
+                if (!g_app.has_patient) {
+                    patient_init(&g_app.patient, 2001, "James Mitchell", 45, 78.0f, 1.75f);
+                    g_app.has_patient = 1;
+                    set_txt(w,IDC_PAT_ID,"2001"); set_txt(w,IDC_PAT_NAME,"James Mitchell");
+                    set_txt(w,IDC_PAT_AGE,"45");  set_txt(w,IDC_PAT_WEIGHT,"78.0");
+                    set_txt(w,IDC_PAT_HEIGHT,"1.75");
+                }
+                g_app.sim_paused = 0;
+                SetWindowTextA(GetDlgItem(w,IDC_BTN_PAUSE), "Pause Sim");
+                hw_get_next_reading(&sv);
+                patient_add_reading(&g_app.patient, &sv);
+                SetTimer(w, TIMER_SIM, 2000, NULL);
+            } else {
+                /* Turning OFF — stop timer, clear patient data, show N/A */
+                KillTimer(w, TIMER_SIM);
+                g_app.sim_paused = 0;
+                ZeroMemory(&g_app.patient, sizeof(g_app.patient));
+                g_app.has_patient = 0;
+            }
+            update_dashboard(w);
             return 0;
         case IDC_BTN_SETTINGS:
             if (g_app.logged_role == ROLE_ADMIN) open_settings(w);
@@ -1147,6 +1267,7 @@ static LRESULT CALLBACK dash_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
             return 0;
         case IDC_BTN_LOGOUT:
             KillTimer(w, TIMER_SIM);
+            config_save();
             ZeroMemory(&g_app.patient, sizeof(g_app.patient));
             g_app.has_patient    = 0;
             g_app.sim_paused     = 0;
