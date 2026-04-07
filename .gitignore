@@ -2,6 +2,8 @@
 build/
 
 # Coverage artifacts
+build_cov/
+coverage_report/
 coverage_combined/
 coverage_unit.cov
 coverage_report.xml
