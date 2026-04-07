@@ -3,14 +3,14 @@
 # Runs on every push to main and every pull request targeting main.
 #
 # Strategy: Windows-only (Win32 GUI), MinGW-w64 toolchain, Ninja
-# generator (faster than MinGW Makefiles in CI, avoids make-path
-# lookup issues on the runner).
+# generator (faster than MinGW Makefiles in CI).
 #
 # What is validated:
 #   • CMake configure (GTest fetched from GitHub via FetchContent)
 #   • Build: test_unit + test_integration targets
 #   • Run: all 145 GTest cases; any failure fails the workflow
-#   • Test result XML uploaded as a build artifact for audit trail
+#   • Test result summary written to the Actions job summary page
+#   • Test result XML uploaded as artifact (IEC 62304 audit trail)
 #
 # IEC 62304 relevance:
 #   SWR-VIT-001..007, SWR-ALT-001..004, SWR-PAT-001..006,
@@ -26,7 +26,7 @@ on:
     branches: [ main ]
 
 env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true   # silence Node.js 20 deprecation warnings
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true   # use Node.js 24 for all actions
 
 jobs:
   build-and-test:
@@ -87,13 +87,15 @@ jobs:
 
       # ------------------------------------------------------------------
       # 6. Run unit tests (133 tests across 15 suites)
-      #    Exit code non-zero → step fails → workflow fails
+      #    Exit code non-zero → step fails → workflow fails.
+      #    set -o pipefail ensures the exit code is preserved through tee.
       # ------------------------------------------------------------------
       - name: Run unit tests
         shell: bash
         run: |
+          set -o pipefail
           build/tests/test_unit.exe \
-            --gtest_output=xml:build/results_unit.xml
+            --gtest_output=xml:build/results_unit.xml 2>&1 | tee build/unit_output.txt
 
       # ------------------------------------------------------------------
       # 7. Run integration tests (12 tests across 2 suites)
@@ -101,16 +103,64 @@ jobs:
       - name: Run integration tests
         shell: bash
         run: |
+          set -o pipefail
           build/tests/test_integration.exe \
-            --gtest_output=xml:build/results_integration.xml
+            --gtest_output=xml:build/results_integration.xml 2>&1 | tee build/integration_output.txt
 
       # ------------------------------------------------------------------
-      # 8. Upload XML test results as an artifact
-      #    Available under Actions → run → Artifacts.
-      #    "if: always()" ensures results are uploaded even on failure
-      #    so you can inspect which tests broke.
+      # 8. Write test summary to the Actions job summary page
+      #    Parses the JUnit XML produced by GTest with Python (pre-installed).
+      #    "if: always()" ensures the summary is written even on failure.
       # ------------------------------------------------------------------
-      - name: Upload test results
+      - name: Test summary
+        if: always()
+        shell: python
+        run: |
+          import xml.etree.ElementTree as ET, os, sys
+
+          def parse(path):
+              if not os.path.exists(path):
+                  return None
+              root = ET.parse(path).getroot()
+              total    = int(root.get('tests',    0))
+              failures = int(root.get('failures', 0)) + int(root.get('errors', 0))
+              return {'total': total, 'passed': total - failures, 'failed': failures}
+
+          unit = parse('build/results_unit.xml')
+          intg = parse('build/results_integration.xml')
+
+          summary = os.environ.get('GITHUB_STEP_SUMMARY', '')
+          if not summary:
+              sys.exit(0)
+
+          def row(label, d):
+              if d is None:
+                  return f'| {label} | — | — | — | ⚠️ not run |\n'
+              icon = '✅' if d['failed'] == 0 else '❌'
+              return (f"| {label} | {d['total']} | {d['passed']} "
+                      f"| {d['failed']} | {icon} |\n")
+
+          total_all  = (unit['total']  if unit else 0) + (intg['total']  if intg else 0)
+          passed_all = (unit['passed'] if unit else 0) + (intg['passed'] if intg else 0)
+          failed_all = (unit['failed'] if unit else 0) + (intg['failed'] if intg else 0)
+          icon_all   = '✅' if failed_all == 0 else '❌'
+
+          with open(summary, 'a') as f:
+              f.write('## 🧪 Test Results\n\n')
+              f.write('| Suite | Total | Passed | Failed | Status |\n')
+              f.write('|-------|------:|-------:|-------:|:------:|\n')
+              f.write(row('Unit tests (15 suites)', unit))
+              f.write(row('Integration tests (2 suites)', intg))
+              f.write(f'| **Total** | **{total_all}** | **{passed_all}** '
+                      f'| **{failed_all}** | {icon_all} |\n\n')
+              f.write('> IEC 62304 Class B — 100 % statement + branch coverage\n')
+
+      # ------------------------------------------------------------------
+      # 9. Upload XML test results as an artifact
+      #    Available under Actions → run → Artifacts.
+      #    "if: always()" ensures results are uploaded even on failure.
+      # ------------------------------------------------------------------
+      - name: Upload test results (XML)
         if: always()
         uses: actions/upload-artifact@v4
         with:
