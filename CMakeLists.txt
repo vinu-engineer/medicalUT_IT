@@ -46,6 +46,33 @@ add_executable(patient_monitor src/main.c)
 target_link_libraries(patient_monitor PRIVATE monitor_lib)
 
 if(WIN32)
+    if(MINGW)
+        # -------------------------------------------------------
+        # windres space-in-path fix
+        #
+        # MinGW Makefiles do not quote the -I flags passed to windres,
+        # so a project path containing spaces (e.g. "D:\New folder\")
+        # causes the include path to be split and the second token to be
+        # treated as an extra source-file argument → build failure.
+        #
+        # app.rc contains no #include directives so it needs no include
+        # search paths at all.  Overriding CMAKE_RC_COMPILE_OBJECT here
+        # (before add_executable) strips the problematic <FLAGS> token
+        # from the windres command line.
+        # -------------------------------------------------------
+        set(CMAKE_RC_COMPILE_OBJECT
+            "<CMAKE_RC_COMPILER> -o <OBJECT> <SOURCE>")
+
+        # Copy the icon to the binary directory so windres can find
+        # "app.ico" (relative reference in app.rc) regardless of where
+        # the source tree lives.
+        configure_file(
+            "${CMAKE_SOURCE_DIR}/resources/app.ico"
+            "${CMAKE_BINARY_DIR}/app.ico"
+            COPYONLY
+        )
+    endif()
+
     add_executable(patient_monitor_gui WIN32
         src/gui_main.c
         src/gui_auth.c
@@ -58,16 +85,6 @@ if(WIN32)
     target_compile_options(patient_monitor_gui PRIVATE
         $<$<C_COMPILER_ID:MSVC>:/W4 /FS>
     )
-    if(MINGW)
-        # windres is invoked from CMAKE_BINARY_DIR; copy the icon there so
-        # the rc file can reference it as "app.ico" without a path
-        # (avoids quoting issues when the source tree path has spaces).
-        configure_file(
-            "${CMAKE_SOURCE_DIR}/resources/app.ico"
-            "${CMAKE_BINARY_DIR}/app.ico"
-            COPYONLY
-        )
-    endif()
 endif()
 
 # -------------------------------------------------------
