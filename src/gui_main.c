@@ -823,15 +823,15 @@ static LRESULT CALLBACK dash_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
                     g_app.has_patient      = 0;
                     g_app.sim_paused       = 0;
                     g_app.logged_user[0]   = '\0';
-                    DestroyWindow(w);
-                    g_app.hwnd_dash = NULL;
-                    /* Re-open login */
+                    /* Create login BEFORE destroying dashboard so WM_DESTROY
+                     * sees hwnd_login != NULL and skips PostQuitMessage. */
                     g_app.hwnd_login = CreateWindowExA(
                         WS_EX_APPWINDOW, CLASS_LOGIN, APP_TITLE,
                         WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU,
                         CW_USEDEFAULT, CW_USEDEFAULT, 440, 500,
                         NULL, NULL, g_app.instance, NULL);
                     ShowWindow(g_app.hwnd_login, SW_SHOWNORMAL);
+                    DestroyWindow(w);
                     return 0;
             }
             break;
@@ -869,9 +869,12 @@ static void attempt_login(HWND w)
 
     if (auth_validate(user, pass)) {
         auth_display_name(user, g_app.logged_user, (int)sizeof(g_app.logged_user));
+        /* Create dashboard BEFORE destroying login so that when WM_DESTROY
+         * fires on the login window, hwnd_dash is already non-NULL and
+         * PostQuitMessage is NOT called (avoiding silent app exit). */
+        create_dashboard();
         DestroyWindow(w);
         g_app.hwnd_login = NULL;
-        create_dashboard();
     } else {
         SetWindowTextA(GetDlgItem(w, IDC_LGN_ERR),
                        "Invalid username or password. Please try again.");
