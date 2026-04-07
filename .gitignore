@@ -1,5 +1,6 @@
 # Build output
 build/
+dist/
 
 # Coverage artifacts
 build_cov/
