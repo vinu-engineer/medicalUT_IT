@@ -46,13 +46,7 @@ int generate_alerts(const VitalSigns *vitals, Alert *out, int max_out)
     int count = 0;
     AlertLevel lvl;
 
-/**
- * @internal
- * @brief Write one Alert record if count < max_out.
- * @param _al   AlertLevel value (renamed to avoid shadowing Alert.level).
- * @param param Parameter name string literal.
- * @param fmt   printf-style format string for the message field.
- */
+    /* Write one Alert record if count < max_out. */
 #define PUSH_ALERT(_al, param, fmt, ...)                                    \
     do {                                                                     \
         if (count < max_out) {                                               \

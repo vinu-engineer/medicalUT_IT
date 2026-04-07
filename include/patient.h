@@ -23,7 +23,7 @@
  *
  * ### IEC 62304 Traceability
  * - Software Unit: UNIT-PAT
- * - Requirements covered: REQ-PAT-001 through REQ-PAT-006
+ * - Requirements covered: SWR-PAT-001 through SWR-PAT-006
  *
  * @version 1.0.0
  * @date    2026-04-06
@@ -106,7 +106,8 @@ typedef struct {
  * @pre name != NULL
  * @post rec->reading_count == 0
  *
- * @req REQ-PAT-001
+ * @par Requirement
+ * SWR-PAT-001
  */
 void patient_init(PatientRecord *rec, int id, const char *name,
                   int age, float weight_kg, float height_m);
@@ -133,7 +134,8 @@ void patient_init(PatientRecord *rec, int id, const char *name,
  * @post On success: rec->reading_count is incremented by 1.
  * @post On failure: rec is unchanged.
  *
- * @req REQ-PAT-002
+ * @par Requirement
+ * SWR-PAT-002
  */
 int patient_add_reading(PatientRecord *rec, const VitalSigns *v);
 
@@ -148,7 +150,8 @@ int patient_add_reading(PatientRecord *rec, const VitalSigns *v);
  * @warning The returned pointer points into the PatientRecord's internal
  *          array. It becomes invalid if @p rec is destroyed or moved.
  *
- * @req REQ-PAT-003
+ * @par Requirement
+ * SWR-PAT-003
  */
 const VitalSigns *patient_latest_reading(const PatientRecord *rec);
 
@@ -166,7 +169,8 @@ const VitalSigns *patient_latest_reading(const PatientRecord *rec);
  * @return AlertLevel based on the latest VitalSigns, or ALERT_NORMAL if
  *         reading_count == 0.
  *
- * @req REQ-PAT-004
+ * @par Requirement
+ * SWR-PAT-004
  */
 AlertLevel patient_current_status(const PatientRecord *rec);
 
@@ -176,7 +180,8 @@ AlertLevel patient_current_status(const PatientRecord *rec);
  * @param[in] rec Pointer to an initialised PatientRecord. Must not be NULL.
  * @return Non-zero (true) if reading_count == MAX_READINGS, zero otherwise.
  *
- * @req REQ-PAT-005
+ * @par Requirement
+ * SWR-PAT-005
  */
 int patient_is_full(const PatientRecord *rec);
 
@@ -196,7 +201,8 @@ int patient_is_full(const PatientRecord *rec);
  * @note This function writes to stdout. In unit tests, redirect stdout
  *       before calling to keep test output clean.
  *
- * @req REQ-PAT-006
+ * @par Requirement
+ * SWR-PAT-006
  */
 void patient_print_summary(const PatientRecord *rec);
 

@@ -23,7 +23,7 @@
 
 /**
  * @brief Classify a heart rate reading.
- * @details Implements REQ-VIT-001 threshold logic.
+ * @details Implements SWR-VIT-001 threshold logic.
  *          Critical: bpm < 40 (severe bradycardia) or bpm > 150 (severe tachycardia).
  *          Warning:  bpm < 60 or bpm > 100.
  *          Normal:   60 <= bpm <= 100.
@@ -37,7 +37,7 @@ AlertLevel check_heart_rate(int bpm)
 
 /**
  * @brief Classify a blood pressure reading.
- * @details Implements REQ-VIT-002 threshold logic.
+ * @details Implements SWR-VIT-002 threshold logic.
  *          Critical thresholds are evaluated first (fail-safe ordering).
  *          If either systolic or diastolic is critical, CRITICAL is returned.
  *          If either is outside the normal range, WARNING is returned.
@@ -53,7 +53,7 @@ AlertLevel check_blood_pressure(int systolic, int diastolic)
 
 /**
  * @brief Classify a temperature reading.
- * @details Implements REQ-VIT-003 threshold logic.
+ * @details Implements SWR-VIT-003 threshold logic.
  *          <35.0 °C = hypothermia (CRITICAL).
  *          >39.5 °C = hyperpyrexia (CRITICAL).
  *          Values outside 36.1–37.2 but within critical bounds = WARNING.
@@ -67,7 +67,7 @@ AlertLevel check_temperature(float temp_c)
 
 /**
  * @brief Classify an SpO2 reading.
- * @details Implements REQ-VIT-004 threshold logic.
+ * @details Implements SWR-VIT-004 threshold logic.
  *          <90% = hypoxaemia (CRITICAL).
  *          90–94% = mild hypoxaemia (WARNING).
  *          95–100% = normal saturation.
@@ -81,7 +81,7 @@ AlertLevel check_spo2(int spo2)
 
 /**
  * @brief Return the highest alert level across all four vital parameters.
- * @details Implements REQ-VIT-005. Iterates all four checks and tracks the
+ * @details Implements SWR-VIT-005. Iterates all four checks and tracks the
  *          maximum. Uses a fixed-size array to avoid branch explosion and
  *          keep cyclomatic complexity low for IEC 62304 review.
  */

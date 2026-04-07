@@ -18,7 +18,7 @@
  *
  * ### IEC 62304 Traceability
  * - Software Unit: UNIT-ALT
- * - Requirements covered: REQ-ALT-001 through REQ-ALT-005
+ * - Requirements covered: SWR-ALT-001 through SWR-ALT-004
  *
  * @version 1.0.0
  * @date    2026-04-06
@@ -97,11 +97,8 @@ typedef struct {
  * @pre  out != NULL || max_out == 0
  * @post Return value <= max_out
  *
- * @req REQ-ALT-001
- * @req REQ-ALT-002
- * @req REQ-ALT-003
- * @req REQ-ALT-004
- * @req REQ-ALT-005
+ * @par Requirements
+ * SWR-ALT-001, SWR-ALT-002, SWR-ALT-003, SWR-ALT-004
  */
 int generate_alerts(const VitalSigns *vitals, Alert *out, int max_out);
 

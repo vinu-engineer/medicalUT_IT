@@ -19,7 +19,7 @@
  *
  * ### IEC 62304 Traceability
  * - Software Unit: UNIT-VIT
- * - Requirements covered: REQ-VIT-001 through REQ-VIT-007
+ * - Requirements covered: SWR-VIT-001 through SWR-VIT-007
  *
  * @version 1.0.0
  * @date    2026-04-06
@@ -86,7 +86,8 @@ typedef struct {
  *                treated as CRITICAL.
  * @return AlertLevel classification for the given heart rate.
  *
- * @req REQ-VIT-001
+ * @par Requirement
+ * SWR-VIT-001
  */
 AlertLevel check_heart_rate(int bpm);
 
@@ -104,7 +105,8 @@ AlertLevel check_heart_rate(int bpm);
  * @param[in] diastolic Diastolic pressure in mmHg.
  * @return AlertLevel classification for the combined blood pressure reading.
  *
- * @req REQ-VIT-002
+ * @par Requirement
+ * SWR-VIT-002
  */
 AlertLevel check_blood_pressure(int systolic, int diastolic);
 
@@ -119,7 +121,8 @@ AlertLevel check_blood_pressure(int systolic, int diastolic);
  * @param[in] temp_c Body temperature in degrees Celsius.
  * @return AlertLevel classification for the given temperature.
  *
- * @req REQ-VIT-003
+ * @par Requirement
+ * SWR-VIT-003
  */
 AlertLevel check_temperature(float temp_c);
 
@@ -135,7 +138,8 @@ AlertLevel check_temperature(float temp_c);
  *                 are treated as CRITICAL.
  * @return AlertLevel classification for the given SpO2 reading.
  *
- * @req REQ-VIT-004
+ * @par Requirement
+ * SWR-VIT-004
  */
 AlertLevel check_spo2(int spo2);
 
@@ -155,7 +159,8 @@ AlertLevel check_spo2(int spo2);
  * @return The highest AlertLevel among all four parameters.
  *
  * @pre  vitals != NULL
- * @req  REQ-VIT-005
+ * @par Requirement
+ * SWR-VIT-005
  */
 AlertLevel overall_alert_level(const VitalSigns *vitals);
 
@@ -172,7 +177,8 @@ AlertLevel overall_alert_level(const VitalSigns *vitals);
  * @param[in] height_m  Height in metres. Must be > 0.
  * @return BMI value, or -1.0 if height_m is zero or negative.
  *
- * @req REQ-VIT-006
+ * @par Requirement
+ * SWR-VIT-006
  */
 float calculate_bmi(float weight_kg, float height_m);
 
@@ -191,7 +197,8 @@ float calculate_bmi(float weight_kg, float height_m);
  * @param[in] bmi BMI value as returned by calculate_bmi().
  * @return Null-terminated string literal (never NULL). Caller must not free.
  *
- * @req REQ-VIT-006
+ * @par Requirement
+ * SWR-VIT-006
  */
 const char *bmi_category(float bmi);
 
@@ -206,7 +213,8 @@ const char *bmi_category(float bmi);
  * @return One of: "NORMAL", "WARNING", "CRITICAL", or "UNKNOWN".
  *         Returned pointer is a string literal — caller must not free.
  *
- * @req REQ-VIT-007
+ * @par Requirement
+ * SWR-VIT-007
  */
 const char *alert_level_str(AlertLevel level);
 

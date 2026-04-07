@@ -58,7 +58,6 @@ REFERENCES_LINK_SOURCE = YES
 # -----------------------------------------------------------------------------
 GENERATE_HTML          = YES
 HTML_OUTPUT            = html
-HTML_TIMESTAMP         = YES
 HTML_DYNAMIC_SECTIONS  = YES
 GENERATE_TREEVIEW      = YES
 TREEVIEW_WIDTH         = 250
@@ -100,7 +99,6 @@ DOT_IMAGE_FORMAT       = svg
 INTERACTIVE_SVG        = YES
 DOT_GRAPH_MAX_NODES    = 100
 MAX_DOT_GRAPH_DEPTH    = 0
-DOT_TRANSPARENT        = YES
 DOT_CLEANUP            = YES
 
 # -----------------------------------------------------------------------------
@@ -117,7 +115,6 @@ WARN_LOGFILE           = docs/doxygen_warnings.log
 # Output styling
 # -----------------------------------------------------------------------------
 ALPHABETICAL_INDEX     = YES
-COLS_IN_ALPHA_INDEX    = 3
 SORT_MEMBER_DOCS       = YES
 SORT_BRIEF_DOCS        = YES
 SORT_BY_SCOPE_NAME     = NO

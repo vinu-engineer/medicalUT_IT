@@ -25,6 +25,8 @@ Built to **IEC 62304 Class B** and **FDA SW Validation Guidance** standards.
 The application monitors up to 10 sequential vital sign readings per patient,
 classifies each parameter against clinical thresholds, generates structured
 alert records, and displays a formatted summary with overall patient status.
+It includes a Windows desktop GUI for interactive monitoring alongside the
+original console walkthrough.
 
 **Supported vital signs:**
 - Heart rate (bpm)
@@ -38,26 +40,26 @@ alert records, and displays a formatted summary with overall patient status.
 ## Architecture
 
 ```
-+----------------------------------------------------------+
-|                    patient_monitor                        |
-|                      (main.c)                            |
-|  Orchestrates patient sessions, reads vitals, prints UI  |
-+-----------------------------+----------------------------+
-                              |
-              +---------------v---------------+
-              |          patient.c             |
-              |   PatientRecord management     |
-              |   - Init / add reading         |
-              |   - Status query               |
-              |   - Print summary              |
-              +-------+---------------+--------+
-                      |               |
-         +------------v---+   +-------v---------+
-         |   vitals.c     |   |   alerts.c      |
-         | Parameter      |   | Alert record    |
-         | validation     |   | generation      |
-         | BMI / strings  |   | from VitalSigns |
-         +----------------+   +-----------------+
++-------------------------------------------------------------------+
+|                  Presentation Layer                               |
+|  patient_monitor_gui (gui_main.c)  |  patient_monitor (main.c)    |
+|  Interactive Win32 dashboard       |  Console scenario demo        |
++-------------------------------+-----------------------------------+
+                                |
+                +---------------v---------------+
+                |          patient.c             |
+                |   PatientRecord management     |
+                |   - Init / add reading         |
+                |   - Status query               |
+                |   - Print summary              |
+                +-------+---------------+--------+
+                        |               |
+           +------------v---+   +-------v---------+
+           |   vitals.c     |   |   alerts.c      |
+           | Parameter      |   | Alert record    |
+           | validation     |   | generation      |
+           | BMI / strings  |   | from VitalSigns |
+           +----------------+   +-----------------+
 ```
 
 ### Data Flow
@@ -67,6 +69,7 @@ VitalSigns  -->  check_*()           --> AlertLevel  (per parameter)
 VitalSigns  -->  overall_alert_level --> AlertLevel  (aggregate)
 VitalSigns  -->  generate_alerts()   --> Alert[]     (display records)
 Alert[]     -->  patient_print_summary / print_reading
+GUI actions  -->  patient_*() + vitals_*() + generate_alerts()
 ```
 
 ### Memory Model
@@ -158,7 +161,7 @@ up to `MAX_READINGS` (10) vital sign readings.
 | Script                     | Purpose                                              |
 |----------------------------|------------------------------------------------------|
 | `setup_gtest.bat`          | **Full clean build** — delete old build, configure, compile |
-| `build.bat`                | Incremental rebuild + run the app                    |
+| `build.bat`                | Incremental rebuild + launch the GUI (fallback: console app) |
 | `run_tests.bat`            | Rebuild + run all 106 tests                          |
 | `install_coverage_tools.bat` | Install OpenCppCoverage (one time)               |
 | `run_coverage.bat`         | Run tests with coverage, generate HTML + XML report  |
@@ -169,6 +172,19 @@ up to `MAX_READINGS` (10) vital sign readings.
 ```bat
 cmake -S . -B build -DBUILD_TESTS=ON
 cmake --build build --config Debug
+build\Debug\patient_monitor_gui.exe
+```
+
+### GUI workflow
+
+- Admit or refresh a patient from the demographic fields.
+- Enter live vital signs and append them to the current patient history.
+- Review the latest reading, aggregate status banner, and active alerts.
+- Load built-in deterioration and bradycardia scenarios for demos.
+
+The original console executable remains available:
+
+```bat
 build\Debug\patient_monitor.exe
 ```
 
@@ -182,9 +198,9 @@ build\Debug\patient_monitor.exe
 
 | File                              | Tests | Requirements            |
 |-----------------------------------|-------|-------------------------|
-| `tests/unit/test_vitals.cpp`      | 54    | REQ-VIT-001 – REQ-VIT-007 |
+| `tests/unit/test_vitals.cpp`      | 64    | REQ-VIT-001 – REQ-VIT-007 |
 | `tests/unit/test_alerts.cpp`      | 11    | REQ-ALT-001 – REQ-ALT-005 |
-| `tests/unit/test_patient.cpp`     | 17    | REQ-PAT-001 – REQ-PAT-006 |
+| `tests/unit/test_patient.cpp`     | 19    | REQ-PAT-001 – REQ-PAT-006 |
 | `tests/integration/test_patient_monitoring.cpp` | 6 | REQ-INT-MON-001–006 |
 | `tests/integration/test_alert_escalation.cpp`   | 6 | REQ-INT-ESC-001–005 |
 | **Total**                         | **94 unit + 12 integration = 106** | |
@@ -276,8 +292,8 @@ Opens `docs/html/index.html` in your browser automatically.
 |--------------------------|-----------------------------------------------------|
 | Module list              | File-level descriptions with IEC 62304 unit IDs     |
 | Data structure reference | `VitalSigns`, `Alert`, `PatientRecord`, `AlertLevel` |
-| Function reference       | Parameters, return values, pre/postconditions, `@req` tags |
-| Requirement traceability | `REQ-VIT`, `REQ-ALT`, `REQ-PAT`, `REQ-INT` cross-references |
+| Function reference       | Parameters, return values, pre/postconditions, and requirement annotations |
+| Requirement traceability | `SWR-*` Doxygen tags plus `REQ-*` test-case cross-references |
 | Call graphs              | Per-function call and caller diagrams (SVG)         |
 | Include dependency graph | Module dependency visualisation                     |
 | Source browser           | Annotated source with cross-references              |
@@ -300,9 +316,9 @@ Opens `docs/html/index.html` in your browser automatically.
 
 | Requirement ID | Module     | Test File              |
 |----------------|------------|------------------------|
-| REQ-VIT-001–007| `vitals.c` | `test_vitals.cpp`      |
-| REQ-ALT-001–005| `alerts.c` | `test_alerts.cpp`      |
-| REQ-PAT-001–006| `patient.c`| `test_patient.cpp`     |
+| SWR-VIT-001–007| `vitals.c` | `test_vitals.cpp`      |
+| SWR-ALT-001–004| `alerts.c` | `test_alerts.cpp`      |
+| SWR-PAT-001–006| `patient.c`| `test_patient.cpp`     |
 | REQ-INT-MON    | All        | `test_patient_monitoring.cpp` |
 | REQ-INT-ESC    | All        | `test_alert_escalation.cpp`   |
 
@@ -330,9 +346,9 @@ medicalUT_IT/
 ├── tests/
 │   ├── CMakeLists.txt
 │   ├── unit/
-│   │   ├── test_vitals.cpp         # 54 unit tests — REQ-VIT
+│   │   ├── test_vitals.cpp         # 64 unit tests — REQ-VIT
 │   │   ├── test_alerts.cpp         # 11 unit tests — REQ-ALT
-│   │   └── test_patient.cpp        # 17 unit tests — REQ-PAT
+│   │   └── test_patient.cpp        # 19 unit tests — REQ-PAT
 │   └── integration/
 │       ├── test_patient_monitoring.cpp  # 6 tests — REQ-INT-MON
 │       └── test_alert_escalation.cpp    # 6 tests — REQ-INT-ESC
