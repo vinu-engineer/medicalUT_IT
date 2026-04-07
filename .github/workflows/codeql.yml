@@ -51,7 +51,7 @@ jobs:
       # CodeQL needs to trace the actual compilation to build its database.
       # We use the same MinGW-w64 + Ninja stack as the CI workflow.
       - name: Initialise CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@v4
         with:
           languages: cpp
           # security-extended includes CWE-120 (buffer copy), CWE-134
@@ -78,6 +78,6 @@ jobs:
           cmake --build build
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@v4
         with:
           category: "/language:cpp"
