@@ -1,0 +1,116 @@
+# =====================================================================
+# CI — Patient Vital Signs Monitor
+# Runs on every push to main and every pull request targeting main.
+#
+# Strategy: Windows-only (Win32 GUI), MinGW-w64 toolchain, Ninja
+# generator (faster than MinGW Makefiles in CI, avoids make-path
+# lookup issues on the runner).
+#
+# What is validated:
+#   • CMake configure (GTest fetched from GitHub via FetchContent)
+#   • Build: test_unit + test_integration targets
+#   • Run: all 145 GTest cases; any failure fails the workflow
+#   • Test result XML uploaded as a build artifact for audit trail
+#
+# IEC 62304 relevance:
+#   SWR-VIT-001..007, SWR-ALT-001..004, SWR-PAT-001..006,
+#   SWR-GUI-001/002, SWR-SEC-001..003, SWR-GUI-007
+# =====================================================================
+
+name: CI — Build & Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    name: Windows / MinGW-w64 / 145 tests
+    runs-on: windows-latest
+
+    steps:
+      # ------------------------------------------------------------------
+      # 1. Source
+      # ------------------------------------------------------------------
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ------------------------------------------------------------------
+      # 2. Cache GTest FetchContent download
+      #    Key on CMakeLists.txt so the cache is busted if GTest version
+      #    or fetch parameters change.
+      # ------------------------------------------------------------------
+      - name: Cache GTest (FetchContent)
+        uses: actions/cache@v4
+        with:
+          path: build/_deps
+          key: gtest-${{ hashFiles('CMakeLists.txt') }}
+          restore-keys: gtest-
+
+      # ------------------------------------------------------------------
+      # 3. Ensure FetchContent can clone GTest
+      #    (same fix as build.bat — avoids "dubious ownership" error)
+      # ------------------------------------------------------------------
+      - name: Fix git safe.directory
+        shell: bash
+        run: git config --global --add safe.directory "*"
+
+      # ------------------------------------------------------------------
+      # 4. Configure
+      #    Ninja is used in CI (pre-installed on windows-latest; faster
+      #    than MinGW Makefiles and avoids mingw32-make PATH issues).
+      #    The GUI target is excluded (BUILD_TESTS=ON only) — Win32
+      #    painting code needs a live display for meaningful testing and
+      #    is covered by structured GUI demo per IEC 62304 §5.6.3.
+      # ------------------------------------------------------------------
+      - name: CMake configure
+        shell: bash
+        run: |
+          cmake -S . -B build \
+            -G Ninja \
+            -DCMAKE_C_COMPILER=gcc \
+            -DCMAKE_CXX_COMPILER=g++ \
+            -DBUILD_TESTS=ON \
+            -Wno-dev
+
+      # ------------------------------------------------------------------
+      # 5. Build test executables only
+      # ------------------------------------------------------------------
+      - name: Build test targets
+        shell: bash
+        run: cmake --build build --target test_unit test_integration
+
+      # ------------------------------------------------------------------
+      # 6. Run unit tests (133 tests across 15 suites)
+      #    Exit code non-zero → step fails → workflow fails
+      # ------------------------------------------------------------------
+      - name: Run unit tests
+        shell: bash
+        run: |
+          build/tests/test_unit.exe \
+            --gtest_output=xml:build/results_unit.xml
+
+      # ------------------------------------------------------------------
+      # 7. Run integration tests (12 tests across 2 suites)
+      # ------------------------------------------------------------------
+      - name: Run integration tests
+        shell: bash
+        run: |
+          build/tests/test_integration.exe \
+            --gtest_output=xml:build/results_integration.xml
+
+      # ------------------------------------------------------------------
+      # 8. Upload XML test results as an artifact
+      #    Available under Actions → run → Artifacts.
+      #    "if: always()" ensures results are uploaded even on failure
+      #    so you can inspect which tests broke.
+      # ------------------------------------------------------------------
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ github.run_number }}
+          path: build/results_*.xml
+          retention-days: 90

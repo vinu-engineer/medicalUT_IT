@@ -1,5 +1,7 @@
 # Patient Vital Signs Monitor
 
+[![CI — Build & Test](https://github.com/vinu-engineer/medicalUT_IT/actions/workflows/ci.yml/badge.svg)](https://github.com/vinu-engineer/medicalUT_IT/actions/workflows/ci.yml)
+
 Medical device software for real-time patient vital sign monitoring and alert generation.
 Built to **IEC 62304 Class B** and **FDA SW Validation Guidance** standards.
 **Version 1.6.0** — Multi-user roles, Settings panel, Password management, App icon.
