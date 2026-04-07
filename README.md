@@ -11,13 +11,14 @@ Built to **IEC 62304 Class B** and **FDA SW Validation Guidance** standards.
 2. [Architecture](#architecture)
 3. [Modules](#modules)
 4. [Alert Thresholds](#alert-thresholds)
-5. [Build](#build)
-6. [GUI Workflow](#gui-workflow)
-7. [Testing](#testing)
-8. [Code Coverage](#code-coverage)
-9. [Documentation](#documentation)
-10. [Standards Compliance](#standards-compliance)
-11. [Repository Structure](#repository-structure)
+5. [Installation](#installation)
+6. [Build](#build)
+7. [GUI Workflow](#gui-workflow)
+8. [Testing](#testing)
+9. [Code Coverage](#code-coverage)
+10. [Documentation](#documentation)
+11. [Standards Compliance](#standards-compliance)
+12. [Repository Structure](#repository-structure)
 
 ---
 
@@ -213,6 +214,39 @@ table covering four phases:
 
 ---
 
+## Installation
+
+### End-user install (no development tools needed)
+
+Download **`PatientMonitorSetup-1.5.0.exe`** from the
+[Releases](https://github.com/vinu-engineer/medicalUT_IT/releases) page and
+double-click to run the setup wizard.
+
+| Step | What happens |
+|------|-------------|
+| 1. Run setup wizard | Choose install folder (default: `C:\Program Files\Patient Vital Signs Monitor\`) |
+| 2. Select shortcuts | Start Menu group created automatically; optional desktop shortcut |
+| 3. Finish | App launches immediately after install |
+
+**Uninstall:** Settings → Apps → Patient Vital Signs Monitor → Uninstall
+*(or Control Panel → Programs → Uninstall a program)*
+
+**System requirements:** Windows 10 or later (32-bit or 64-bit). No additional
+runtimes or redistributables required — the executable depends only on standard
+Windows system DLLs (`GDI32`, `KERNEL32`, `USER32`).
+
+### Build your own installer (developers)
+
+```bat
+:: One-time: install Inno Setup 6
+winget install --id JRSoftware.InnoSetup
+
+:: Build app + compile installer  →  dist\PatientMonitorSetup-1.5.0.exe
+create_installer.bat
+```
+
+---
+
 ## Build
 
 ### Prerequisites
@@ -228,15 +262,16 @@ table covering four phases:
 
 ### Scripts
 
-Four scripts cover the full workflow — double-click in File Explorer or run
+Five scripts cover the full workflow — double-click in File Explorer or run
 from a terminal.
 
-| Script               | What it does                                                          |
-|----------------------|-----------------------------------------------------------------------|
-| `build.bat`          | Configure + build everything (first run or incremental). Launches GUI.|
-| `run_tests.bat`      | Rebuild test targets and run all 121 tests. Exits non-zero on failure.|
-| `run_coverage.bat`   | Build with `--coverage`, run tests, generate HTML + XML reports.      |
-| `generate_docs.bat`  | Run Doxygen to produce HTML + XML design documentation.               |
+| Script                 | What it does                                                          |
+|------------------------|-----------------------------------------------------------------------|
+| `build.bat`            | Configure + build everything (first run or incremental). Launches GUI.|
+| `run_tests.bat`        | Rebuild test targets and run all 121 tests. Exits non-zero on failure.|
+| `run_coverage.bat`     | Build with `--coverage`, run tests, generate HTML + XML reports.      |
+| `generate_docs.bat`    | Run Doxygen to produce HTML + XML design documentation.               |
+| `create_installer.bat` | Build release exe + compile Windows installer (`dist\` folder).       |
 
 ### Typical workflow
 
@@ -486,5 +521,7 @@ medicalUT_IT/
 ├── build.bat                        # Configure + build + launch GUI
 ├── run_tests.bat                    # Run all 121 tests
 ├── run_coverage.bat                 # GCC coverage report (gcov + gcovr)
-└── generate_docs.bat                # Doxygen HTML + XML documentation
+├── generate_docs.bat                # Doxygen HTML + XML documentation
+├── create_installer.bat             # Build release + compile Windows installer
+└── installer.iss                    # Inno Setup 6 installer script
 ```
