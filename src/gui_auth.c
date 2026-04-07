@@ -1,55 +1,37 @@
 /**
  * @file gui_auth.c
- * @brief GUI authentication implementation.
+ * @brief Authentication delegation to gui_users subsystem.
  *
- * Fixed built-in credential for the clinical workstation login screen.
- * The credential is compiled in; no external credential store or network
- * call is made, satisfying the static-memory requirement (SYS-012).
- *
- * Default login:  username = admin   password = Monitor@2026
+ * All logic lives in gui_users.c. This file provides the public auth_*
+ * API defined in gui_auth.h, preserving backward compatibility.
  *
  * @req SWR-GUI-001
  * @req SWR-GUI-002
+ * @req SWR-SEC-001
+ * @req SWR-SEC-002
+ * @req SWR-SEC-003
  */
-
 #ifdef _MSC_VER
-#define _CRT_SECURE_NO_WARNINGS
+#  define _CRT_SECURE_NO_WARNINGS
 #endif
 
 #include "gui_auth.h"
+#include "gui_users.h"
 #include <string.h>
-#include <stdio.h>
 
-/* -----------------------------------------------------------------------
- * Built-in credential  (change here only — never store in external files)
- * ----------------------------------------------------------------------- */
-#define BUILT_IN_USERNAME "admin"
-#define BUILT_IN_PASSWORD "Monitor@2026"
-#define DISPLAY_NAME      "Dr. Admin"
+void auth_init(void)                            { users_init(); }
 
-/* -----------------------------------------------------------------------
- * auth_validate
- * ----------------------------------------------------------------------- */
-int auth_validate(const char *username, const char *password)
-{
-    if (username == NULL || password == NULL) {
-        return 0;
-    }
-    return (strcmp(username, BUILT_IN_USERNAME) == 0 &&
-            strcmp(password, BUILT_IN_PASSWORD) == 0) ? 1 : 0;
-}
+int  auth_validate(const char *u, const char *p)
+     { return users_authenticate(u, p, NULL); }
 
-/* -----------------------------------------------------------------------
- * auth_display_name
- * ----------------------------------------------------------------------- */
-void auth_display_name(const char *username, char *out, int out_len)
-{
-    if (out == NULL || out_len <= 0) {
-        return;
-    }
-    if (username != NULL && strcmp(username, BUILT_IN_USERNAME) == 0) {
-        snprintf(out, (size_t)out_len, "%s", DISPLAY_NAME);
-    } else {
-        out[0] = '\0';
-    }
-}
+int  auth_validate_role(const char *u, const char *p, UserRole *r)
+     { return users_authenticate(u, p, r); }
+
+void auth_display_name(const char *u, char *out, int len)
+     { users_display_name_for(u, out, len); }
+
+int  auth_change_password(const char *u, const char *old, const char *nw)
+     { return users_change_password(u, old, nw); }
+
+int  auth_admin_set_password(const char *u, const char *nw)
+     { return users_admin_set_password(u, nw); }

@@ -49,13 +49,25 @@ if(WIN32)
     add_executable(patient_monitor_gui WIN32
         src/gui_main.c
         src/gui_auth.c
+        src/gui_users.c
         src/sim_vitals.c
+        resources/app.rc
     )
     target_include_directories(patient_monitor_gui PRIVATE include)
-    target_link_libraries(patient_monitor_gui PRIVATE monitor_lib)
+    target_link_libraries(patient_monitor_gui PRIVATE monitor_lib comctl32)
     target_compile_options(patient_monitor_gui PRIVATE
         $<$<C_COMPILER_ID:MSVC>:/W4 /FS>
     )
+    if(MINGW)
+        # windres is invoked from CMAKE_BINARY_DIR; copy the icon there so
+        # the rc file can reference it as "app.ico" without a path
+        # (avoids quoting issues when the source tree path has spaces).
+        configure_file(
+            "${CMAKE_SOURCE_DIR}/resources/app.ico"
+            "${CMAKE_BINARY_DIR}/app.ico"
+            COPYONLY
+        )
+    endif()
 endif()
 
 # -------------------------------------------------------

@@ -1,51 +1,68 @@
 /**
  * @file gui_auth.h
- * @brief GUI authentication interface.
+ * @brief GUI authentication interface — multi-user, role-aware.
  *
- * Provides credential validation for the Patient Vital Signs Monitor login
- * screen. The implementation uses a fixed built-in credential set appropriate
- * for a standalone clinical workstation application.
+ * Wraps the gui_users subsystem for login and password management.
+ * auth_validate() is preserved for backward compatibility with existing tests.
  *
- * @req SWR-GUI-001
+ * @req SWR-SEC-001
+ * @req SWR-SEC-002
+ * @req SWR-SEC-003
  */
-
 #ifndef GUI_AUTH_H
 #define GUI_AUTH_H
+
+#include "gui_users.h"   /* UserRole typedef lives here */
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/** Maximum length (including NUL) for a username or password string. */
-#define AUTH_MAX_CREDENTIAL_LEN 64
+#define AUTH_MAX_CREDENTIAL_LEN USERS_MAX_USERNAME_LEN
 
 /**
- * @brief Validate a username/password pair against the built-in credential.
- *
- * Performs a constant-time-safe comparison against the compiled-in
- * administrator credential. Both pointers must be non-NULL and
- * NUL-terminated; NULL inputs return 0 immediately.
- *
- * @param username  NUL-terminated username string.
- * @param password  NUL-terminated password string.
- * @return 1 if credentials are valid, 0 otherwise.
+ * Initialise the auth subsystem (calls users_init).
+ * Must be called once at application startup before any auth_* call.
+ * @req SWR-SEC-001
+ */
+void auth_init(void);
+
+/**
+ * Validate username/password. Returns 1 on success, 0 on failure.
+ * Backward-compatible shim — delegates to auth_validate_role(u, p, NULL).
+ * Existing tests that call auth_validate() continue to work unchanged.
  * @req SWR-GUI-001
  */
 int auth_validate(const char *username, const char *password);
 
 /**
- * @brief Return a human-readable display name for a validated username.
- *
- * Copies a display-friendly name into @p out. If @p username is
- * unrecognised or @p out is NULL, the function writes an empty string
- * (or does nothing, respectively).
- *
- * @param username  NUL-terminated validated username.
- * @param out       Destination buffer.
- * @param out_len   Size of @p out in bytes.
+ * Role-aware authentication. Writes matched role to *role_out on success
+ * if role_out is non-NULL. Returns 1/0.
+ * @req SWR-SEC-001
+ * @req SWR-SEC-002
+ */
+int auth_validate_role(const char *username, const char *password,
+                       UserRole *role_out);
+
+/**
+ * Copy display name for a validated username into out[out_len].
  * @req SWR-GUI-002
  */
 void auth_display_name(const char *username, char *out, int out_len);
+
+/**
+ * Change own password (requires correct old_password). Returns 1/0.
+ * @req SWR-SEC-003
+ */
+int auth_change_password(const char *username,
+                          const char *old_password,
+                          const char *new_password);
+
+/**
+ * Admin: set any user's password without old password. Returns 1/0.
+ * @req SWR-SEC-003
+ */
+int auth_admin_set_password(const char *username, const char *new_password);
 
 #ifdef __cplusplus
 }
