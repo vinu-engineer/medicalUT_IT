@@ -106,9 +106,11 @@ if(BUILD_TESTS)
 
     # MinGW compatibility: GTest release-1.10.0 uses MSVC-specific headers and
     # symbols (_stricmp, _fileno, crtdbg.h, etc.) inside GTEST_OS_WINDOWS blocks.
-    # Generate stub/shim headers and force-include a compat header for each
-    # GTest translation unit so the old MinGW 6.3 toolchain can compile GTest.
-    if(MINGW)
+    # The shim below is ONLY needed for the old MinGW GCC 6.3.0 (32-bit) used
+    # in local development.  MinGW-w64 GCC 7+ already exposes all these symbols
+    # correctly, so applying the shim on newer toolchains causes redefinition
+    # errors and extern/static linkage conflicts.  Guard on compiler version.
+    if(MINGW AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS "7.0")
         set(MINGW_STUB_DIR "${CMAKE_BINARY_DIR}/mingw_compat")
 
         # Stub headers that satisfy #include directives inside gtest sources
