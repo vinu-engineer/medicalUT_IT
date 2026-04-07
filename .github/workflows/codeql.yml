@@ -1,0 +1,83 @@
+# =====================================================================
+# CodeQL SAST — Patient Vital Signs Monitor
+#
+# Tool    : GitHub CodeQL (free for public repos)
+# Language: C / C++
+# Queries : security-extended  (superset of default; covers CWE top-25,
+#           CERT-C, buffer overflows, format-string vulns, integer overflow)
+# Output  : SARIF → Security → Code Scanning tab on GitHub
+#           Inline annotations on Pull Requests
+#
+# Triggers:
+#   • Every push to main
+#   • Every PR targeting main
+#   • Weekly schedule (Monday 03:00 UTC) — catches newly published CVE rules
+#
+# IEC 62304 relevance: §5.5.4 software unit verification / §5.7 software
+# system testing — static security analysis is a required verification
+# activity for Class B devices.
+# =====================================================================
+
+name: CodeQL SAST
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '0 3 * * 1'   # Every Monday 03:00 UTC
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  codeql:
+    name: CodeQL — C/C++ security-extended
+    runs-on: windows-latest
+    permissions:
+      security-events: write   # upload SARIF to Code Scanning
+      actions: read
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fix git safe.directory
+        shell: bash
+        run: git config --global --add safe.directory "*"
+
+      # CodeQL needs to trace the actual compilation to build its database.
+      # We use the same MinGW-w64 + Ninja stack as the CI workflow.
+      - name: Initialise CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: cpp
+          # security-extended includes CWE-120 (buffer copy), CWE-134
+          # (format string), CWE-190 (integer overflow), CWE-476 (null
+          # deref) and ~80 more rules on top of the default query set.
+          queries: security-extended
+
+      - name: Cache GTest (FetchContent)
+        uses: actions/cache@v4
+        with:
+          path: build/_deps
+          key: gtest-codeql-${{ hashFiles('CMakeLists.txt') }}
+          restore-keys: gtest-codeql-
+
+      - name: Build (CodeQL compilation trace)
+        shell: bash
+        run: |
+          cmake -S . -B build \
+            -G Ninja \
+            -DCMAKE_C_COMPILER=gcc \
+            -DCMAKE_CXX_COMPILER=g++ \
+            -DBUILD_TESTS=ON \
+            -Wno-dev
+          cmake --build build
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:cpp"
