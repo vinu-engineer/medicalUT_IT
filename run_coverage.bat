@@ -130,21 +130,24 @@ if %ERRORLEVEL% EQU 0 (
     echo       gcovr not installed -- using gcov text output.
     echo       Install gcovr for HTML:  pip install gcovr
     echo.
+    echo   CMake places coverage data alongside object files.
+    echo   Passing the .gcno files directly so gcov finds them correctly.
+    echo.
 
     echo   --- vitals.c ---
-    gcov -r -b -o "%COV_BUILD%\CMakeFiles\monitor_lib.dir\src" src\vitals.c
+    gcov -b "%COV_BUILD%\CMakeFiles\monitor_lib.dir\src\vitals.c.gcno"
 
     echo.
     echo   --- alerts.c ---
-    gcov -r -b -o "%COV_BUILD%\CMakeFiles\monitor_lib.dir\src" src\alerts.c
+    gcov -b "%COV_BUILD%\CMakeFiles\monitor_lib.dir\src\alerts.c.gcno"
 
     echo.
     echo   --- patient.c ---
-    gcov -r -b -o "%COV_BUILD%\CMakeFiles\monitor_lib.dir\src" src\patient.c
+    gcov -b "%COV_BUILD%\CMakeFiles\monitor_lib.dir\src\patient.c.gcno"
 
     echo.
     echo   --- gui_auth.c ---
-    gcov -r -b -o "%COV_BUILD%\CMakeFiles\test_unit.dir\src" src\gui_auth.c
+    gcov -b "%COV_BUILD%\tests\CMakeFiles\test_unit.dir\__\src\gui_auth.c.gcno"
 
     echo.
     echo   Annotated .gcov files written to the current directory.
