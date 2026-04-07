@@ -2,6 +2,7 @@
 
 Medical device software for real-time patient vital sign monitoring and alert generation.
 Built to **IEC 62304 Class B** and **FDA SW Validation Guidance** standards.
+**Version 1.6.0** — Multi-user roles, Settings panel, Password management, App icon.
 
 ---
 
@@ -14,11 +15,12 @@ Built to **IEC 62304 Class B** and **FDA SW Validation Guidance** standards.
 5. [Installation](#installation)
 6. [Build](#build)
 7. [GUI Workflow](#gui-workflow)
-8. [Testing](#testing)
-9. [Code Coverage](#code-coverage)
-10. [Documentation](#documentation)
-11. [Standards Compliance](#standards-compliance)
-12. [Repository Structure](#repository-structure)
+8. [User Roles & Settings](#user-roles--settings)
+9. [Testing](#testing)
+10. [Code Coverage](#code-coverage)
+11. [Documentation](#documentation)
+12. [Standards Compliance](#standards-compliance)
+13. [Repository Structure](#repository-structure)
 
 ---
 
@@ -336,21 +338,73 @@ build\patient_monitor_gui.exe
 
 ---
 
+## User Roles & Settings
+
+### Default credentials
+
+| Username   | Password        | Role     | Access                                         |
+|------------|-----------------|----------|------------------------------------------------|
+| `admin`    | `Monitor@2026`  | Admin    | Full dashboard + Settings panel                |
+| `clinical` | `Clinical@2026` | Clinical | Full dashboard + My Account (password only)    |
+
+Both accounts are created automatically on first launch.  Credentials are
+persisted in `users.dat` in the same directory as the executable.
+
+### Role-based access
+
+| Feature                    | Admin | Clinical |
+|----------------------------|-------|----------|
+| Live vital signs dashboard | Yes   | Yes      |
+| Admit patient / Add reading| Yes   | Yes      |
+| Demo scenarios             | Yes   | Yes      |
+| Pause / Resume simulation  | Yes   | Yes      |
+| Change own password        | Yes   | Yes      |
+| Settings panel             | Yes   | —        |
+| Add / Remove users         | Yes   | —        |
+| Set any user's password    | Yes   | —        |
+
+The header bar shows a **gold ADMIN** or **teal CLINICAL** pill badge next to
+the logged-in user's name.
+
+### Settings panel (Admin only)
+
+Click **Settings** in the dashboard header to open the Settings window.
+
+**Users tab**
+- Lists all accounts with username, display name, and role.
+- **Add User** — create a new account with username, display name, initial
+  password (min 8 chars), and role selection.
+- **Remove** — delete a selected account.  The last admin account and the
+  currently logged-in user cannot be removed.
+- **Set Password** — override any user's password without requiring the
+  current password.
+
+**About tab** — application version, standard (IEC 62304 Class B), and
+requirements revision.
+
+### Password change (all users)
+
+- **Admin:** Settings → select user → Set Password.
+- **Clinical / self-service:** Click **My Account** in the header.
+  Enter current password, new password (min 8 chars), and confirmation.
+
+---
+
 ## Testing
 
 **Framework:** Google Test release-1.10.0 (downloaded automatically via CMake FetchContent)
 
 ### Test counts
 
-| File                                            | Tests | Requirements          |
-|-------------------------------------------------|-------|-----------------------|
-| `tests/unit/test_vitals.cpp`                    | 64    | SWR-VIT-001 – 007     |
-| `tests/unit/test_alerts.cpp`                    | 11    | SWR-ALT-001 – 004     |
-| `tests/unit/test_patient.cpp`                   | 19    | SWR-PAT-001 – 006     |
-| `tests/unit/test_auth.cpp`                      | 15    | SWR-GUI-001 – 002     |
-| `tests/integration/test_patient_monitoring.cpp` | 6     | SWR-PAT-*, SWR-VIT-*  |
-| `tests/integration/test_alert_escalation.cpp`   | 6     | SWR-VIT-*, SWR-ALT-*  |
-| **Total**                                       | **121** | **23 SWRs covered** |
+| File                                            | Tests  | Requirements                      |
+|-------------------------------------------------|--------|-----------------------------------|
+| `tests/unit/test_vitals.cpp`                    | 64     | SWR-VIT-001 – 007                 |
+| `tests/unit/test_alerts.cpp`                    | 11     | SWR-ALT-001 – 004                 |
+| `tests/unit/test_patient.cpp`                   | 19     | SWR-PAT-001 – 006                 |
+| `tests/unit/test_auth.cpp`                      | 36     | SWR-GUI-001 – 002, SWR-SEC-001 – 003, SWR-GUI-007 |
+| `tests/integration/test_patient_monitoring.cpp` | 6      | SWR-PAT-*, SWR-VIT-*              |
+| `tests/integration/test_alert_escalation.cpp`   | 6      | SWR-VIT-*, SWR-ALT-*              |
+| **Total**                                       | **144** | **28 SWRs covered**              |
 
 ### Test techniques applied
 
@@ -470,6 +524,9 @@ Opens `docs\html\index.html` automatically.
 | SWR-GUI-001–002 | `gui_auth.c`              | `test_auth.cpp`                  |
 | SWR-GUI-003–004 | `gui_main.c`              | GUI demonstration                |
 | SWR-GUI-005–006 | `hw_vitals.h`/`sim_vitals.c` | Architecture review + GUI demo|
+| SWR-SEC-001–003 | `gui_users.c`             | `test_auth.cpp` — UserAuth, PasswordChange  |
+| SWR-GUI-007     | `gui_users.c`/`gui_main.c`| `test_auth.cpp` — UserManagement            |
+| SWR-GUI-008–009 | `resources/`, `gui_main.c`| Visual verification (icon, version label)   |
 | SWR-INT-MON     | All modules               | `test_patient_monitoring.cpp`    |
 | SWR-INT-ESC     | All modules               | `test_alert_escalation.cpp`      |
 
@@ -519,9 +576,32 @@ medicalUT_IT/
 │   └── TRACEABILITY.md              # RTM — 15/15 UNS, 23/23 SWR, 121 tests
 │
 ├── build.bat                        # Configure + build + launch GUI
-├── run_tests.bat                    # Run all 121 tests
+├── run_tests.bat                    # Run all 144 tests
 ├── run_coverage.bat                 # GCC coverage report (gcov + gcovr)
 ├── generate_docs.bat                # Doxygen HTML + XML documentation
 ├── create_installer.bat             # Build release + compile Windows installer
-└── installer.iss                    # Inno Setup 6 installer script
+├── installer.iss                    # Inno Setup 6 installer script
+├── make_icon.py                     # Regenerate resources/app.ico from source
+│
+├── resources/
+│   ├── app.ico                      # Medical cross icon (16/32/48 px)
+│   └── app.rc                       # Windows resource script (icon + version info)
+│
+├── include/
+│   ├── vitals.h                     # Vital signs types and validation API
+│   ├── alerts.h                     # Alert record structure and generation API
+│   ├── patient.h                    # Patient record management API
+│   ├── gui_auth.h                   # Authentication API (role-aware)
+│   ├── gui_users.h                  # Multi-user account management API
+│   └── hw_vitals.h                  # Hardware Abstraction Layer interface
+│
+└── src/
+    ├── vitals.c                     # Vital sign validation + BMI  (UNIT-VIT)
+    ├── alerts.c                     # Alert record generation      (UNIT-ALT)
+    ├── patient.c                    # Patient record management     (UNIT-PAT)
+    ├── gui_auth.c                   # Auth delegation layer         (UNIT-GUI)
+    ├── gui_users.c                  # Multi-user account management (UNIT-USR)
+    ├── sim_vitals.c                 # Simulation HAL back-end       (UNIT-SIM)
+    ├── gui_main.c                   # Win32 GUI (5 windows)         (UNIT-GUI)
+    └── main.c                       # Console entry point
 ```
