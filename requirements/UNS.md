@@ -140,8 +140,31 @@ dependencies create deployment and security risks.
 
 ---
 
+### UNS-013 — User Authentication
+**Need:** The system shall require the clinician to authenticate with a
+username and password before accessing patient data or any monitoring function.
+**Rationale:** Unauthorised access to patient health data is a clinical and
+regulatory risk; access control is required under HIPAA and IEC 62304 risk
+management.
+**Priority:** Critical
+
+---
+
+### UNS-014 — Graphical User Interface
+**Need:** The system shall provide a graphical dashboard that presents vital
+sign readings and alert status in a clear, colour-coded format consistent with
+clinical monitoring equipment conventions, and shall allow data entry without
+use of a command line.
+**Rationale:** Clinical staff in ward environments are not expected to use
+command-line tools; a GUI improves speed and reduces input errors during
+high-pressure scenarios.
+**Priority:** High
+
+---
+
 ## Revision History
 
 | Rev | Date       | Author          | Description          |
 |-----|------------|-----------------|----------------------|
 | A   | 2026-04-06 | vinu-engineer   | Initial release      |
+| B   | 2026-04-07 | vinu-engineer   | Added UNS-013, UNS-014 (GUI) |

@@ -1,9 +1,9 @@
 # Requirements Traceability Matrix (RTM)
 
-**Document ID:** RTM-001-REV-A
+**Document ID:** RTM-001-REV-B
 **Project:** Patient Vital Signs Monitor
-**Version:** 1.0.0
-**Date:** 2026-04-06
+**Version:** 1.3.0
+**Date:** 2026-04-07
 **Status:** Approved
 **Standard:** IEC 62304 §5.7.3 / FDA SW Validation Guidance
 
@@ -51,6 +51,10 @@ implementation and test coverage, and every UNS must reach at least one SWR.
 | UNS-010 | SYS-006, SYS-011 | SWR-PAT-004 | `patient.c` : `patient_current_status()` | `PatientStatus.*` (4 tests) | `REQ_INT_MON_002`, `REQ_INT_MON_003`, `REQ_INT_ESC_001` – `REQ_INT_ESC_005` |
 | UNS-011 | SYS-010 | SWR-PAT-005 | `patient.c` : `patient_is_full()` | `PatientIsFull.*` (2 tests) | `REQ_INT_MON_005` |
 | UNS-010 | SYS-011 | SWR-PAT-006 | `patient.c` : `patient_print_summary()` | `PatientPrintSummary.*` (3 tests) | — |
+| UNS-013 | SYS-013 | SWR-GUI-001 | `gui_auth.c` : `auth_validate()` | `AuthValidation.*` (10 tests) | — |
+| UNS-013 | SYS-013 | SWR-GUI-002 | `gui_main.c` : `attempt_login()`, `login_proc()`, logout handler | `AuthDisplayName.*` (5 tests) | — |
+| UNS-014, UNS-005, UNS-006 | SYS-014 | SWR-GUI-003 | `gui_main.c` : `paint_tile()`, `paint_tiles()`, `paint_status_banner()`, `update_dashboard()` | GUI demo | — |
+| UNS-014, UNS-008, UNS-009 | SYS-014 | SWR-GUI-004 | `gui_main.c` : `create_dash_controls()`, `do_admit()`, `do_add_reading()`, `do_scenario()` | GUI demo | — |
 
 ---
 
@@ -80,6 +84,8 @@ implementation and test coverage, and every UNS must reach at least one SWR.
 | `PatientStatus` | `REQ_PAT_004_*` | SWR-PAT-004 | SYS-006, SYS-011 | UNS-010 |
 | `PatientIsFull` | `REQ_PAT_005_*` | SWR-PAT-005 | SYS-010 | UNS-011 |
 | `PatientPrintSummary` | `REQ_PAT_006_*` | SWR-PAT-006 | SYS-011 | UNS-010 |
+| `AuthValidation` | `REQ_GUI_001_*` | SWR-GUI-001 | SYS-013 | UNS-013 |
+| `AuthDisplayName` | `REQ_GUI_002_*` | SWR-GUI-002 | SYS-013 | UNS-013 |
 
 ### Integration Tests
 
@@ -117,8 +123,10 @@ implementation and test coverage, and every UNS must reach at least one SWR.
 | UNS-010 | Consolidated summary | SYS-011 | SWR-PAT-004, SWR-PAT-006, SWR-VIT-007 | ✓ |
 | UNS-011 | Data integrity | SYS-010, SYS-012 | SWR-PAT-002, SWR-PAT-005, SWR-ALT-003, SWR-PAT-001 | ✓ |
 | UNS-012 | Platform compatibility | SYS-012 | SWR-PAT-001, SWR-ALT-003 | ✓ |
+| UNS-013 | User authentication | SYS-013 | SWR-GUI-001, SWR-GUI-002 | ✓ |
+| UNS-014 | Graphical dashboard | SYS-014 | SWR-GUI-003, SWR-GUI-004 | ✓ |
 
-**Result: 12 / 12 User Needs covered ✓**
+**Result: 14 / 14 User Needs covered ✓**
 
 ---
 
@@ -145,8 +153,12 @@ implementation and test coverage, and every UNS must reach at least one SWR.
 | SWR-PAT-004 | `patient_current_status()` | 4 | 7 | ✓ |
 | SWR-PAT-005 | `patient_is_full()` | 2 | 1 | ✓ |
 | SWR-PAT-006 | `patient_print_summary()` | 3 | — | ✓ |
+| SWR-GUI-001 | `auth_validate()` | 10 | — | ✓ |
+| SWR-GUI-002 | `attempt_login()`, `login_proc()`, logout | 5 | — | ✓ |
+| SWR-GUI-003 | `paint_tile()`, `paint_tiles()`, `paint_status_banner()` | GUI demo | — | ✓ |
+| SWR-GUI-004 | `create_dash_controls()`, `do_admit()`, `do_add_reading()` | GUI demo | — | ✓ |
 
-**Result: 17 / 17 SWRs implemented and tested ✓**
+**Result: 21 / 21 SWRs implemented and tested ✓**
 
 ---
 
@@ -159,7 +171,8 @@ implementation and test coverage, and every UNS must reach at least one SWR.
 | `tests/unit/test_patient.cpp` | 19 | SWR-PAT-001 – SWR-PAT-006 |
 | `tests/integration/test_patient_monitoring.cpp` | 6 | SWR-PAT-*, SWR-VIT-* |
 | `tests/integration/test_alert_escalation.cpp` | 6 | SWR-VIT-*, SWR-ALT-*, SWR-PAT-004 |
-| **Total** | **106** | **17 SWRs** |
+| `tests/unit/test_auth.cpp` | 15 | SWR-GUI-001, SWR-GUI-002 |
+| **Total** | **121** | **21 SWRs** |
 
 ---
 
@@ -168,3 +181,4 @@ implementation and test coverage, and every UNS must reach at least one SWR.
 | Rev | Date       | Author          | Description          |
 |-----|------------|-----------------|----------------------|
 | A   | 2026-04-06 | vinu-engineer   | Initial release      |
+| B   | 2026-04-07 | vinu-engineer   | Added SWR-GUI-001..004; 14/14 UNS, 21/21 SWR, 121 tests |

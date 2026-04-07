@@ -22,7 +22,7 @@ add_library(monitor_lib STATIC
 target_include_directories(monitor_lib PUBLIC include)
 target_compile_options(monitor_lib PRIVATE
     $<$<C_COMPILER_ID:GNU,Clang>:-Wall -Wextra -Wpedantic>
-    $<$<C_COMPILER_ID:MSVC>:/W4>
+    $<$<C_COMPILER_ID:MSVC>:/W4 /FS>
 )
 
 if(ENABLE_COVERAGE AND NOT MSVC)
@@ -35,6 +35,18 @@ endif()
 # -------------------------------------------------------
 add_executable(patient_monitor src/main.c)
 target_link_libraries(patient_monitor PRIVATE monitor_lib)
+
+if(WIN32)
+    add_executable(patient_monitor_gui WIN32
+        src/gui_main.c
+        src/gui_auth.c
+    )
+    target_include_directories(patient_monitor_gui PRIVATE include)
+    target_link_libraries(patient_monitor_gui PRIVATE monitor_lib)
+    target_compile_options(patient_monitor_gui PRIVATE
+        $<$<C_COMPILER_ID:MSVC>:/W4 /FS>
+    )
+endif()
 
 # -------------------------------------------------------
 # Google Test via FetchContent — pinned for traceability

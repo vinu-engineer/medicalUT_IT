@@ -146,8 +146,30 @@ anywhere in the production code stack.
 
 ---
 
+### SYS-013 — User Authentication Enforcement
+**Requirement:** The system shall display a login screen on launch and shall
+not permit access to any patient data or monitoring function until a valid
+username and password credential pair has been verified. On authentication
+failure the system shall display a clear error message without revealing which
+field was incorrect. A Logout function shall terminate the current session and
+return the user to the login screen, clearing all session data.
+**Traces to:** UNS-013
+
+---
+
+### SYS-014 — Graphical Vital Signs Dashboard
+**Requirement:** The system shall present the most recent vital signs of the
+active patient in a graphical dashboard using colour-coded status tiles:
+green for NORMAL, amber for WARNING, and red for CRITICAL. The aggregate
+alert status shall be displayed in a banner using the same colour convention.
+The dashboard shall refresh automatically after each new reading is added.
+**Traces to:** UNS-014, UNS-005, UNS-006, UNS-010
+
+---
+
 ## Revision History
 
 | Rev | Date       | Author          | Description          |
 |-----|------------|-----------------|----------------------|
 | A   | 2026-04-06 | vinu-engineer   | Initial release      |
+| B   | 2026-04-07 | vinu-engineer   | Added SYS-013, SYS-014 (GUI) |

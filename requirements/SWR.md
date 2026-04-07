@@ -222,8 +222,75 @@ vitals and alerts sections shall be omitted.
 
 ---
 
+## Module UNIT-GUI — Graphical User Interface (`gui_main.c`, `gui_auth.c`)
+
+### SWR-GUI-001 — Login Credential Validation
+**Requirement:** `auth_validate(username, password)` shall return `1` if and
+only if both the username and password exactly match the built-in credential.
+It shall return `0` for any other input, including empty strings and NULL
+pointers. NULL inputs shall not cause undefined behaviour.
+**Traces to:** SYS-013
+**Implemented in:** `src/gui_auth.c` — `auth_validate()`
+**Verified by:** `tests/unit/test_auth.cpp` — `AuthValidation.*`
+
+---
+
+### SWR-GUI-002 — Session Management (Login / Logout)
+**Requirement:** The application shall:
+1. Display the login window on launch; no dashboard controls shall be
+   accessible until `auth_validate()` returns `1`.
+2. On successful authentication, record the display name via
+   `auth_display_name()` and display it in the dashboard header.
+3. On Logout, destroy the dashboard window, clear all session data, and
+   recreate the login window.
+4. On authentication failure, display an error message and clear the
+   password field; do not identify which field was incorrect.
+
+**Traces to:** SYS-013
+**Implemented in:** `src/gui_main.c` — `attempt_login()`, `login_proc()`,
+`dash_proc()` (IDC_BTN_LOGOUT handler)
+**Verified by:** `tests/unit/test_auth.cpp` — `AuthDisplayName.*`
+
+---
+
+### SWR-GUI-003 — Colour-Coded Vital Signs Display
+**Requirement:** The dashboard shall paint four status tiles (Heart Rate,
+Blood Pressure, Temperature, SpO2). Each tile shall:
+- Display the parameter label, measured value with unit, and a status badge.
+- Use a green background and text for `ALERT_NORMAL`.
+- Use an amber background and text for `ALERT_WARNING`.
+- Use a red background and text for `ALERT_CRITICAL`.
+The aggregate status banner shall use the same colour mapping.
+All tiles and the banner shall repaint automatically each time
+`update_dashboard()` is called.
+
+**Traces to:** SYS-014, SYS-005, SYS-006
+**Implemented in:** `src/gui_main.c` — `paint_tile()`, `paint_tiles()`,
+`paint_status_banner()`, `update_dashboard()`
+**Verified by:** Verified structurally by `AuthValidation.*`; visual
+verification performed via GUI demonstration.
+
+---
+
+### SWR-GUI-004 — Patient Data Entry via GUI
+**Requirement:** The dashboard shall provide labelled edit controls for:
+patient ID, name, age, weight, height; heart rate, systolic BP, diastolic BP,
+temperature, SpO2. The "Admit / Refresh" button shall call `patient_init()`.
+The "Add Reading" button shall call `patient_add_reading()`. Invalid or empty
+fields shall produce a `MessageBox` error and set focus to the offending
+control. The dashboard shall include two pre-built clinical demonstration
+scenarios (deterioration, bradycardia).
+
+**Traces to:** SYS-014, SYS-008, SYS-009
+**Implemented in:** `src/gui_main.c` — `create_dash_controls()`, `do_admit()`,
+`do_add_reading()`, `do_scenario()`
+**Verified by:** Verified via GUI demonstration.
+
+---
+
 ## Revision History
 
 | Rev | Date       | Author          | Description          |
 |-----|------------|-----------------|----------------------|
 | A   | 2026-04-06 | vinu-engineer   | Initial release      |
+| B   | 2026-04-07 | vinu-engineer   | Added UNIT-GUI module (SWR-GUI-001..004) |

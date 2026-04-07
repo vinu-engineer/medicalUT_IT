@@ -118,8 +118,9 @@ Before submitting for regulatory review, verify:
 - [ ] All requirement annotations in code comments refer to valid SWR IDs in `SWR.md`
 - [ ] All Google Test names follow the `REQ_XXX_NNN_Description` pattern
 - [ ] `docs/doxygen_warnings.log` is empty (no undocumented or malformed comments)
-- [ ] All 106 tests pass (`run_tests.bat`)
-- [ ] Line coverage ≥ 99% (`run_coverage.bat`)
+- [ ] All 121+ tests pass (`run_tests.bat`)
+- [ ] `AuthValidation.*` and `AuthDisplayName.*` (15 tests) all pass
+- [ ] Line coverage ≥ 99% for `vitals.c`, `alerts.c`, `patient.c` (`run_coverage.bat`)
 - [ ] No dynamic memory allocation in production code
 - [ ] Git history is clean — one commit per change, meaningful messages
 
@@ -130,3 +131,4 @@ Before submitting for regulatory review, verify:
 | Rev | Date       | Author          | Description          |
 |-----|------------|-----------------|----------------------|
 | A   | 2026-04-06 | vinu-engineer   | Initial release      |
+| B   | 2026-04-07 | vinu-engineer   | Updated for v1.3 GUI additions |
