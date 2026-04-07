@@ -39,6 +39,9 @@ echo.
 :: -------------------------------------------------------
 set COV_BUILD=build_cov
 
+:: Fix Git dubious ownership (network drives / non-ownership filesystems)
+git config --global --add safe.directory * >nul 2>&1
+
 echo [1/5] Configuring coverage build (ENABLE_COVERAGE=ON) in %COV_BUILD%...
 if exist "%COV_BUILD%" rmdir /s /q "%COV_BUILD%"
 cmake -S . -B "%COV_BUILD%" -G "MinGW Makefiles" ^

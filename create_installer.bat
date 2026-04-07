@@ -32,6 +32,9 @@ for /f "tokens=*" %%v in ('gcc --version 2^>^&1 ^| findstr /i "gcc"') do echo [O
 echo [OK] CMake found.
 echo.
 
+:: Fix Git dubious ownership (network drives / non-ownership filesystems)
+git config --global --add safe.directory * >nul 2>&1
+
 :: -------------------------------------------------------
 :: 1. Build the GUI application (tests OFF for release build)
 :: -------------------------------------------------------

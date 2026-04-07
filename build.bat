@@ -59,6 +59,13 @@ if !NEEDS_CLEAN! EQU 1 (
 )
 
 :: -------------------------------------------------------
+:: 2b. Fix Git "dubious ownership" so FetchContent can clone GTest
+::     Needed when the repo lives on a filesystem that doesn't record
+::     ownership (NTFS on certain drives, network shares, SD cards).
+:: -------------------------------------------------------
+git config --global --add safe.directory * >nul 2>&1
+
+:: -------------------------------------------------------
 :: 3. Configure
 :: -------------------------------------------------------
 echo Configuring...
