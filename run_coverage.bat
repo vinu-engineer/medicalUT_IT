@@ -95,18 +95,35 @@ echo       Done.
 
 :: -------------------------------------------------------
 :: 5. Generate coverage report
-::    Primary  : gcovr  (pip install gcovr)  -> HTML + Cobertura XML
+::    Primary  : gcovr  -> HTML + Cobertura XML
 ::    Fallback : gcov text output per source file
 :: -------------------------------------------------------
 echo [5/5] Generating coverage report...
 
+:: Locate gcovr -- check PATH first, then common Python Scripts locations
+set GCOVR_CMD=
 where gcovr >nul 2>&1
-if %ERRORLEVEL% EQU 0 (
+if %ERRORLEVEL% EQU 0 set GCOVR_CMD=gcovr
+
+if "!GCOVR_CMD!"=="" (
+    for %%P in (
+        "%LOCALAPPDATA%\Programs\Python\Python312\Scripts\gcovr.exe"
+        "%LOCALAPPDATA%\Programs\Python\Python311\Scripts\gcovr.exe"
+        "%LOCALAPPDATA%\Programs\Python\Python310\Scripts\gcovr.exe"
+        "%APPDATA%\Python\Python312\Scripts\gcovr.exe"
+        "C:\Python312\Scripts\gcovr.exe"
+        "C:\Python311\Scripts\gcovr.exe"
+    ) do (
+        if exist %%P set GCOVR_CMD=%%P
+    )
+)
+
+if not "!GCOVR_CMD!"=="" (
     echo       gcovr found -- generating HTML + Cobertura XML.
     if exist "coverage_report" rmdir /s /q "coverage_report"
     mkdir coverage_report
 
-    gcovr ^
+    "!GCOVR_CMD!" ^
         --root . ^
         --object-directory "%COV_BUILD%" ^
         --filter "src/vitals\.c" ^
@@ -127,8 +144,9 @@ if %ERRORLEVEL% EQU 0 (
         start "" "coverage_report\index.html"
     )
 ) else (
-    echo       gcovr not installed -- using gcov text output.
-    echo       Install gcovr for HTML:  pip install gcovr
+    echo       gcovr not found -- using gcov text output.
+    echo       Install: winget install Python.Python.3.12
+    echo                pip install gcovr
     echo.
     echo   CMake places coverage data alongside object files.
     echo   Passing the .gcno files directly so gcov finds them correctly.
