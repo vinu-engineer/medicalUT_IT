@@ -67,9 +67,19 @@ jobs:
       # ----------------------------------------------------------------
       # 4. Install Inno Setup and build installer
       # ----------------------------------------------------------------
-      - name: Install Inno Setup 6
+      - name: Verify Inno Setup 6
         shell: pwsh
-        run: choco install innosetup --version 6.2.2 -y --no-progress
+        run: |
+          # Inno Setup is typically pre-installed on Windows runners
+          # Use whatever version is available (v6.7.1 or newer works fine)
+          $iscc = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
+          if (-not (Test-Path $iscc)) {
+            Write-Host "Installing Inno Setup..."
+            choco install innosetup -y --no-progress
+          } else {
+            Write-Host "Inno Setup already installed"
+            & $iscc /? | head -1
+          }
 
       - name: Build installer
         shell: pwsh
