@@ -234,6 +234,7 @@ static LRESULT CALLBACK pwddlg_proc  (HWND, UINT, WPARAM, LPARAM);
 static LRESULT CALLBACK adduser_proc (HWND, UINT, WPARAM, LPARAM);
 static void create_dashboard(void);
 static void update_dashboard(HWND w);
+static void refresh_dash_language(HWND w);
 static void apply_sim_mode(HWND dash);
 static void open_settings(HWND parent);
 static void open_pwddlg(HWND parent, const char *user, int admin_mode);
