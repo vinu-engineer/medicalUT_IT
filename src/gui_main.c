@@ -42,7 +42,7 @@
  * App metadata
  * =================================================================== */
 #define APP_TITLE   "Patient Vital Signs Monitor"
-#define APP_VERSION "v2.5.0"
+#define APP_VERSION "v2.6.0"
 #define IDI_APPICON 101
 
 /* ===================================================================
@@ -107,6 +107,7 @@
 #define IDC_BTN_USER_EDIT  1222
 #define IDC_BTN_USER_REM   1223
 #define IDC_BTN_USER_PWD   1224
+#define IDC_BTN_MY_PWD     1227  /**< My Account: change own password */
 /* Simulation tab in Settings @req SWR-GUI-010 */
 #define IDC_BTN_SIM_TOGGLE 1225
 #define IDC_STC_SIM_STATUS 1226
@@ -192,7 +193,8 @@ typedef struct {
     HWND      hwnd_pwddlg;
     HWND      hwnd_adduser;
 
-    char     logged_user[USERS_MAX_USERNAME_LEN];
+    char     logged_user[USERS_MAX_USERNAME_LEN];     /* display name for UI */
+    char     logged_username[USERS_MAX_USERNAME_LEN]; /* actual username for auth */
     UserRole logged_role;
 
     PatientRecord patient;
@@ -296,19 +298,16 @@ static void paint_header(HDC hdc, int cw)
                  g_app.font_hdr, CLR_WHITE,
                  DT_SINGLELINE | DT_VCENTER | DT_LEFT);
 
-    /* Right-hand info block — stays left of the button cluster (rightmost 400 px) */
-    /* Logged-in display name + role pill — left half of info block */
+    /* Info block — placed left of the header buttons (rightmost ~280px reserved for buttons) */
     if (g_app.logged_user[0]) {
-        snprintf(buf, sizeof(buf), "  %s", g_app.logged_user);
-        draw_text_ex(hdc, buf,
-                     cw - 480, 0, 180, HDR_H,
-                     g_app.font_ui, RGB(186, 230, 253),
-                     DT_SINGLELINE | DT_VCENTER | DT_LEFT);
-    }
-    {
         COLORREF badge_bg = (g_app.logged_role == ROLE_ADMIN) ? CLR_GOLD : CLR_TEAL;
         const char *badge_txt = (g_app.logged_role == ROLE_ADMIN) ? "ADMIN" : "CLINICAL";
-        draw_pill(hdc, cw - 300, 15, 86, 26, badge_bg, badge_txt, g_app.font_tile_lbl);
+        snprintf(buf, sizeof(buf), "  %s", g_app.logged_user);
+        draw_text_ex(hdc, buf,
+                     cw - 560, 0, 160, HDR_H,
+                     g_app.font_ui, RGB(186, 230, 253),
+                     DT_SINGLELINE | DT_VCENTER | DT_LEFT);
+        draw_pill(hdc, cw - 400, 15, 86, 26, badge_bg, badge_txt, g_app.font_tile_lbl);
     }
 
     /* Sim status indicator — only shown when simulation is active */
@@ -316,9 +315,9 @@ static void paint_header(HDC hdc, int cw)
         const char *mode_txt = g_app.sim_paused ? "SIM PAUSED" : "* SIM LIVE";
         COLORREF    mode_clr = g_app.sim_paused ? RGB(253,224,71) : RGB(134,239,172);
         draw_text_ex(hdc, mode_txt,
-                     cw - 208, 0, 108, HDR_H,
+                     cw - 560, 32, 108, 22,
                      g_app.font_tile_lbl, mode_clr,
-                     DT_SINGLELINE | DT_VCENTER | DT_CENTER);
+                     DT_SINGLELINE | DT_LEFT);
     }
 }
 
@@ -532,7 +531,7 @@ static void paint_status_banner(HDC hdc, int cw)
     if (!g_app.sim_enabled) {
         bg  = CLR_SLATE;
         fg  = CLR_LIGHT_GRAY;
-        txt = "DEVICE MODE — Enable simulation in the header to use synthetic data";
+        txt = "DEVICE MODE — Enable simulation in Settings to use synthetic data";
     } else {
         AlertLevel lvl = g_app.has_patient ? patient_current_status(&g_app.patient) : ALERT_NORMAL;
         switch (lvl) {
@@ -641,7 +640,6 @@ static void reposition_dash_controls(HWND w, int cw)
     SetWindowPos(GetDlgItem(w, IDC_BTN_PAUSE),  NULL, cw - 176, 14, 86, 28, SWP_NOZORDER|SWP_NOACTIVATE);
 
     btn = GetDlgItem(w, IDC_BTN_SETTINGS);
-    if (!btn) btn = GetDlgItem(w, IDC_BTN_ACCOUNT);
     if (btn)  SetWindowPos(btn, NULL, cw - 272, 14, 86, 28, SWP_NOZORDER|SWP_NOACTIVATE);
 
     /* Wide list boxes — stretch horizontally */
@@ -829,8 +827,11 @@ static LRESULT CALLBACK settings_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
     static HWND about_ctrls[8];
     static int  about_count = 0;
     /* Alarm limits tab control handles */
-    static HWND alm_ctrls[32];
+    static HWND alm_ctrls[48];
     static int  alm_count = 0;
+    /* My Account tab control handles */
+    static HWND acct_ctrls[4];
+    static int  acct_count = 0;
 
     switch (msg) {
     case WM_CREATE: {
@@ -845,10 +846,19 @@ static LRESULT CALLBACK settings_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
         SendMessage(hw_tab, WM_SETFONT, (WPARAM)g_app.font_ui, TRUE);
 
         ZeroMemory(&ti, sizeof(ti)); ti.mask = TCIF_TEXT;
-        ti.pszText = "Users";         TabCtrl_InsertItem(hw_tab, 0, &ti);
-        ti.pszText = "Simulation";    TabCtrl_InsertItem(hw_tab, 1, &ti);
-        ti.pszText = "About";         TabCtrl_InsertItem(hw_tab, 2, &ti);
-        ti.pszText = "Alarm Limits";  TabCtrl_InsertItem(hw_tab, 3, &ti);
+        if (g_app.logged_role == ROLE_ADMIN) {
+            ti.pszText = "Users";         TabCtrl_InsertItem(hw_tab, 0, &ti);
+            ti.pszText = "Simulation";    TabCtrl_InsertItem(hw_tab, 1, &ti);
+            ti.pszText = "About";         TabCtrl_InsertItem(hw_tab, 2, &ti);
+            ti.pszText = "Alarm Limits";  TabCtrl_InsertItem(hw_tab, 3, &ti);
+            ti.pszText = "My Account";    TabCtrl_InsertItem(hw_tab, 4, &ti);
+        } else {
+            /* Clinical users: no Users tab */
+            ti.pszText = "Simulation";    TabCtrl_InsertItem(hw_tab, 0, &ti);
+            ti.pszText = "Alarm Limits";  TabCtrl_InsertItem(hw_tab, 1, &ti);
+            ti.pszText = "My Account";    TabCtrl_InsertItem(hw_tab, 2, &ti);
+            ti.pszText = "About";         TabCtrl_InsertItem(hw_tab, 3, &ti);
+        }
 
         /* --- Users tab controls --- */
         hw_list = CreateWindowExA(WS_EX_CLIENTEDGE,"LISTBOX","",
@@ -932,47 +942,47 @@ static LRESULT CALLBACK settings_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
                 "Alarm Limits  (IEC 60601-1-8)", 16, 52, 520, 20);
 
             snprintf(buf, sizeof(buf), "%d",   g_app.alarm_limits.hr_low);
-            make_label(w, "HR (bpm)",   16, 82, 90, 18);
-            make_label(w, "Low:",      110, 82, 34, 18);
+            alm_ctrls[alm_count++] = make_label(w, "HR (bpm)",   16, 82, 90, 18);
+            alm_ctrls[alm_count++] = make_label(w, "Low:",      110, 82, 34, 18);
             alm_ctrls[alm_count++] = make_edit(w, IDC_ALM_HR_LOW,  buf, 148, 82, 72, 22);
-            make_label(w, "High:",     226, 82, 40, 18);
+            alm_ctrls[alm_count++] = make_label(w, "High:",     226, 82, 40, 18);
             snprintf(buf, sizeof(buf), "%d",   g_app.alarm_limits.hr_high);
             alm_ctrls[alm_count++] = make_edit(w, IDC_ALM_HR_HIGH, buf, 270, 82, 72, 22);
 
-            make_label(w, "SBP (mmHg)",16,110, 90, 18);
-            make_label(w, "Low:",     110,110, 34, 18);
+            alm_ctrls[alm_count++] = make_label(w, "SBP (mmHg)",16,110, 90, 18);
+            alm_ctrls[alm_count++] = make_label(w, "Low:",     110,110, 34, 18);
             snprintf(buf, sizeof(buf), "%d", g_app.alarm_limits.sbp_low);
             alm_ctrls[alm_count++] = make_edit(w, IDC_ALM_SBP_LOW,  buf, 148,110, 72, 22);
-            make_label(w, "High:",    226,110, 40, 18);
+            alm_ctrls[alm_count++] = make_label(w, "High:",    226,110, 40, 18);
             snprintf(buf, sizeof(buf), "%d", g_app.alarm_limits.sbp_high);
             alm_ctrls[alm_count++] = make_edit(w, IDC_ALM_SBP_HIGH, buf, 270,110, 72, 22);
 
-            make_label(w, "DBP (mmHg)",16,138, 90, 18);
-            make_label(w, "Low:",     110,138, 34, 18);
+            alm_ctrls[alm_count++] = make_label(w, "DBP (mmHg)",16,138, 90, 18);
+            alm_ctrls[alm_count++] = make_label(w, "Low:",     110,138, 34, 18);
             snprintf(buf, sizeof(buf), "%d", g_app.alarm_limits.dbp_low);
             alm_ctrls[alm_count++] = make_edit(w, IDC_ALM_DBP_LOW,  buf, 148,138, 72, 22);
-            make_label(w, "High:",    226,138, 40, 18);
+            alm_ctrls[alm_count++] = make_label(w, "High:",    226,138, 40, 18);
             snprintf(buf, sizeof(buf), "%d", g_app.alarm_limits.dbp_high);
             alm_ctrls[alm_count++] = make_edit(w, IDC_ALM_DBP_HIGH, buf, 270,138, 72, 22);
 
-            make_label(w, "Temp (C)",  16,166, 90, 18);
-            make_label(w, "Low:",     110,166, 34, 18);
+            alm_ctrls[alm_count++] = make_label(w, "Temp (C)",  16,166, 90, 18);
+            alm_ctrls[alm_count++] = make_label(w, "Low:",     110,166, 34, 18);
             snprintf(buf, sizeof(buf), "%.1f", (double)g_app.alarm_limits.temp_low);
             alm_ctrls[alm_count++] = make_edit(w, IDC_ALM_TMP_LOW,  buf, 148,166, 72, 22);
-            make_label(w, "High:",    226,166, 40, 18);
+            alm_ctrls[alm_count++] = make_label(w, "High:",    226,166, 40, 18);
             snprintf(buf, sizeof(buf), "%.1f", (double)g_app.alarm_limits.temp_high);
             alm_ctrls[alm_count++] = make_edit(w, IDC_ALM_TMP_HIGH, buf, 270,166, 72, 22);
 
-            make_label(w, "SpO2 (%)", 16,194, 90, 18);
-            make_label(w, "Low:",    110,194, 34, 18);
+            alm_ctrls[alm_count++] = make_label(w, "SpO2 (%)", 16,194, 90, 18);
+            alm_ctrls[alm_count++] = make_label(w, "Low:",    110,194, 34, 18);
             snprintf(buf, sizeof(buf), "%d", g_app.alarm_limits.spo2_low);
             alm_ctrls[alm_count++] = make_edit(w, IDC_ALM_SPO2_LOW, buf, 148,194, 72, 22);
 
-            make_label(w, "RR (br/m)",16,222, 90, 18);
-            make_label(w, "Low:",    110,222, 34, 18);
+            alm_ctrls[alm_count++] = make_label(w, "RR (br/m)",16,222, 90, 18);
+            alm_ctrls[alm_count++] = make_label(w, "Low:",    110,222, 34, 18);
             snprintf(buf, sizeof(buf), "%d", g_app.alarm_limits.rr_low);
             alm_ctrls[alm_count++] = make_edit(w, IDC_ALM_RR_LOW,  buf, 148,222, 72, 22);
-            make_label(w, "High:",   226,222, 40, 18);
+            alm_ctrls[alm_count++] = make_label(w, "High:",   226,222, 40, 18);
             snprintf(buf, sizeof(buf), "%d", g_app.alarm_limits.rr_high);
             alm_ctrls[alm_count++] = make_edit(w, IDC_ALM_RR_HIGH, buf, 270,222, 72, 22);
 
@@ -983,6 +993,23 @@ static LRESULT CALLBACK settings_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
         }
         for (i = 0; i < alm_count; ++i)
             ShowWindow(alm_ctrls[i], SW_HIDE);
+
+        /* --- My Account tab controls --- */
+        acct_count = 0;
+        {
+            char acct_label[128];
+            snprintf(acct_label, sizeof(acct_label),
+                     "Logged in as: %s  (%s)",
+                     g_app.logged_user,
+                     g_app.logged_role == ROLE_ADMIN ? "Admin" : "Clinical");
+            acct_ctrls[acct_count++] = make_label(w, acct_label, 16, 58, 520, 22);
+            acct_ctrls[acct_count++] = make_label(w,
+                "Click below to change your password.", 16, 88, 520, 20);
+            acct_ctrls[acct_count++] = make_btn(w, IDC_BTN_MY_PWD,
+                "Change My Password", 16, 120, 180, 30);
+        }
+        for (i = 0; i < acct_count; ++i)
+            ShowWindow(acct_ctrls[i], SW_HIDE);
 
         font_children(w, g_app.font_ui);
         if (about_count > 0)
@@ -1010,18 +1037,36 @@ static LRESULT CALLBACK settings_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
         if (nm->idFrom == IDC_TAB_SETTINGS && nm->code == TCN_SELCHANGE) {
             int sel = TabCtrl_GetCurSel(hw_tab);
             int i;
-            int show_users = (sel == 0) ? SW_SHOW : SW_HIDE;
+            /* Map tab index to content: depends on role */
+            int show_users=SW_HIDE, show_sim=SW_HIDE, show_about=SW_HIDE,
+                show_alm=SW_HIDE, show_acct=SW_HIDE;
+            if (g_app.logged_role == ROLE_ADMIN) {
+                /* Admin tabs: 0=Users, 1=Sim, 2=About, 3=Alarm, 4=MyAccount */
+                if (sel==0) show_users=SW_SHOW;
+                if (sel==1) show_sim=SW_SHOW;
+                if (sel==2) show_about=SW_SHOW;
+                if (sel==3) show_alm=SW_SHOW;
+                if (sel==4) show_acct=SW_SHOW;
+            } else {
+                /* Clinical tabs: 0=Sim, 1=Alarm, 2=MyAccount, 3=About */
+                if (sel==0) show_sim=SW_SHOW;
+                if (sel==1) show_alm=SW_SHOW;
+                if (sel==2) show_acct=SW_SHOW;
+                if (sel==3) show_about=SW_SHOW;
+            }
             ShowWindow(hw_list,    show_users);
             ShowWindow(hw_btn_add, show_users);
             ShowWindow(hw_btn_edit,show_users);
             ShowWindow(hw_btn_rem, show_users);
             ShowWindow(hw_btn_pwd, show_users);
             for (i = 0; i < sim_count;   ++i)
-                ShowWindow(sim_ctrls[i],   (sel==1)?SW_SHOW:SW_HIDE);
+                ShowWindow(sim_ctrls[i],   show_sim);
             for (i = 0; i < about_count; ++i)
-                ShowWindow(about_ctrls[i], (sel==2)?SW_SHOW:SW_HIDE);
+                ShowWindow(about_ctrls[i], show_about);
             for (i = 0; i < alm_count;   ++i)
-                ShowWindow(alm_ctrls[i],   (sel==3)?SW_SHOW:SW_HIDE);
+                ShowWindow(alm_ctrls[i],   show_alm);
+            for (i = 0; i < acct_count;  ++i)
+                ShowWindow(acct_ctrls[i],  show_acct);
             InvalidateRect(w, NULL, TRUE);
         }
         if (nm->idFrom == IDC_LST_USERS && nm->code == (UINT)LBN_SELCHANGE) {
@@ -1032,7 +1077,7 @@ static LRESULT CALLBACK settings_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
             if (has_sel) {
                 UserAccount acct;
                 int ok = users_get_by_index(sel_idx, &acct);
-                BOOL can_rem = ok && (strcmp(acct.username, g_app.logged_user) != 0);
+                BOOL can_rem = ok && (strcmp(acct.username, g_app.logged_username) != 0);
                 EnableWindow(hw_btn_rem, can_rem);
             } else {
                 EnableWindow(hw_btn_rem, FALSE);
@@ -1117,7 +1162,7 @@ static LRESULT CALLBACK settings_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
                 if (hs) {
                     UserAccount a;
                     int ok = users_get_by_index(si, &a);
-                    EnableWindow(hw_btn_rem, ok && strcmp(a.username, g_app.logged_user)!=0);
+                    EnableWindow(hw_btn_rem, ok && strcmp(a.username, g_app.logged_username)!=0);
                 } else EnableWindow(hw_btn_rem, FALSE);
             }
             break;
@@ -1176,6 +1221,9 @@ static LRESULT CALLBACK settings_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
             }
             break;
         }
+        case IDC_BTN_MY_PWD:
+            open_pwddlg(w, g_app.logged_username, 0);
+            break;
         }
         return 0;
 
@@ -1431,8 +1479,9 @@ static LRESULT CALLBACK adduser_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
  * =================================================================== */
 static void apply_sim_mode(HWND dash)
 {
-    HWND pause_btn = GetDlgItem(dash, IDC_BTN_PAUSE);
-    ShowWindow(pause_btn, g_app.sim_enabled ? SW_SHOW : SW_HIDE);
+    ShowWindow(GetDlgItem(dash, IDC_BTN_PAUSE), g_app.sim_enabled ? SW_SHOW : SW_HIDE);
+    ShowWindow(GetDlgItem(dash, IDC_BTN_SCEN1), g_app.sim_enabled ? SW_SHOW : SW_HIDE);
+    ShowWindow(GetDlgItem(dash, IDC_BTN_SCEN2), g_app.sim_enabled ? SW_SHOW : SW_HIDE);
 
     if (g_app.sim_enabled) {
         VitalSigns sv;
@@ -1474,12 +1523,7 @@ static LRESULT CALLBACK dash_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
         SendMessage(btn, WM_SETFONT, (WPARAM)g_app.font_ui, TRUE);
         btn = make_btn(w, IDC_BTN_PAUSE,  "Pause Sim",WIN_CW-176, 14, 86, 28);
         SendMessage(btn, WM_SETFONT, (WPARAM)g_app.font_ui, TRUE);
-
-        if (g_app.logged_role == ROLE_ADMIN) {
-            btn = make_btn(w, IDC_BTN_SETTINGS, "Settings",  WIN_CW-272, 14, 86, 28);
-        } else {
-            btn = make_btn(w, IDC_BTN_ACCOUNT,  "My Account",WIN_CW-272, 14, 86, 28);
-        }
+        btn = make_btn(w, IDC_BTN_SETTINGS, "Settings",  WIN_CW-272, 14, 86, 28);
         SendMessage(btn, WM_SETFONT, (WPARAM)g_app.font_ui, TRUE);
 
         app_config_load(&g_app.sim_enabled);          /* restore sim mode */
@@ -1487,8 +1531,10 @@ static LRESULT CALLBACK dash_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
         hw_init();
         g_app.sim_paused = 0;
 
-        /* Pause Sim button only visible when simulation is active */
+        /* Pause Sim and demo buttons only visible when simulation is active */
         ShowWindow(GetDlgItem(w, IDC_BTN_PAUSE), g_app.sim_enabled ? SW_SHOW : SW_HIDE);
+        ShowWindow(GetDlgItem(w, IDC_BTN_SCEN1), g_app.sim_enabled ? SW_SHOW : SW_HIDE);
+        ShowWindow(GetDlgItem(w, IDC_BTN_SCEN2), g_app.sim_enabled ? SW_SHOW : SW_HIDE);
 
         if (g_app.sim_enabled) {
             patient_init(&g_app.patient, 2001, "James Mitchell", 45, 78.0f, 1.75f);
@@ -1572,10 +1618,7 @@ static LRESULT CALLBACK dash_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
             InvalidateRect(w, NULL, FALSE);
             return 0;
         case IDC_BTN_SETTINGS:
-            if (g_app.logged_role == ROLE_ADMIN) open_settings(w);
-            return 0;
-        case IDC_BTN_ACCOUNT:
-            open_pwddlg(w, g_app.logged_user, 0);
+            open_settings(w);
             return 0;
         case IDC_BTN_LOGOUT:
             KillTimer(w, TIMER_SIM);
@@ -1584,6 +1627,7 @@ static LRESULT CALLBACK dash_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
             g_app.has_patient    = 0;
             g_app.sim_paused     = 0;
             g_app.logged_user[0] = '\0';
+            g_app.logged_username[0] = '\0';
             g_app.hwnd_login = CreateWindowExA(
                 WS_EX_APPWINDOW, CLASS_LOGIN, APP_TITLE,
                 WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU,
@@ -1618,6 +1662,8 @@ static void attempt_login(HWND w)
 
     if (auth_validate_role(user, pass, &role)) {
         g_app.logged_role = role;
+        strncpy(g_app.logged_username, user, sizeof(g_app.logged_username)-1);
+        g_app.logged_username[sizeof(g_app.logged_username)-1] = '\0';
         auth_display_name(user, g_app.logged_user, (int)sizeof(g_app.logged_user));
         create_dashboard();
         DestroyWindow(w);
