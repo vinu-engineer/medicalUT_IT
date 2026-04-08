@@ -6,9 +6,10 @@
 #   2. Static Analysis (cppcheck) + SAST (CodeQL)   [parallel]
 #   3. Unit & Integration Tests
 #   4. Code Coverage
-#   5. DVT — Design Verification Tests
-#   6. Release Artifacts                             [tags only]
+#   5. DVT — Design Verification Report (from stage 3 results)
+#   6. Publish Reports (artifact always; GitHub Pages on main only)
 #
+# Release artifacts are built by release.yml on tag push (v*).
 # IEC 62304 Class B — full verification pipeline.
 # =====================================================================
 
@@ -301,6 +302,10 @@ jobs:
 
   # ═══════════════════════════════════════════════════════════════════
   # Stage 4 — Code Coverage
+  #
+  # Builds with --coverage, runs tests, then uses gcov directly to
+  # parse .gcda/.gcno files and a Python script to produce Cobertura
+  # XML + HTML. This avoids gcovr path-matching issues on Windows.
   # ═══════════════════════════════════════════════════════════════════
   coverage:
     name: "4 — Code Coverage"
@@ -331,43 +336,138 @@ jobs:
 
       - name: Run tests for coverage data
         run: |
-          ./build_cov/tests/test_unit.exe || true
-          ./build_cov/tests/test_integration.exe || true
+          echo "=== Running unit tests ==="
+          ./build_cov/tests/test_unit.exe --gtest_brief=1 2>&1; echo "Exit: $?"
+          echo "=== Running integration tests ==="
+          ./build_cov/tests/test_integration.exe --gtest_brief=1 2>&1; echo "Exit: $?"
 
       - name: Generate coverage report
         run: |
-          pip install gcovr
           mkdir -p coverage-report
 
-          echo "--- Searching for .gcda files ---"
-          find build_cov -name '*.gcda' 2>/dev/null | head -20 || echo "(none found via find)"
-          ls build_cov/CMakeFiles/monitor_lib.dir/src/*.gcda 2>/dev/null || echo "(no gcda in expected dir)"
+          echo "=== .gcno files ==="
+          find build_cov -name '*.gcno' | head -15
+          echo "=== .gcda files ==="
+          find build_cov -name '*.gcda' | head -15
 
-          echo "--- Running gcovr ---"
-          gcovr --root . \
-            --search-path build_cov \
-            --gcov-executable gcov \
-            --filter 'src/' \
-            --xml coverage-report/coverage.xml \
-            --html-details coverage-report/index.html \
-            --print-summary 2>&1 || echo "gcovr exited with error"
+          # Run gcov on each source file's .gcda
+          GCDA_DIR="build_cov/CMakeFiles/monitor_lib.dir/src"
+          echo "=== Running gcov on monitor_lib sources ==="
+          for gcda in "$GCDA_DIR"/*.gcda; do
+            [ -f "$gcda" ] && gcov -o "$GCDA_DIR" "$gcda" 2>/dev/null
+          done
+          ls *.gcov 2>/dev/null | head -10 || echo "(no .gcov files produced)"
 
-          # Ensure coverage artifact always exists (placeholder if gcovr failed)
-          if [ ! -f coverage-report/coverage.xml ]; then
-            echo "--- gcovr produced no output, writing placeholder ---"
-            cat > coverage-report/coverage.xml << 'XMLEOF'
-          <?xml version="1.0" ?>
-          <coverage version="6.0" line-rate="0" branch-rate="0" lines-covered="0" lines-valid="0" branches-covered="0" branches-valid="0">
-            <packages/>
-          </coverage>
-          XMLEOF
-            cat > coverage-report/index.html << 'HTMLEOF'
-          <html><body><h1>Coverage report unavailable</h1>
-          <p>gcovr did not produce output. Check the pipeline coverage step logs.</p>
-          </body></html>
-          HTMLEOF
-          fi
-          echo "--- coverage-report contents ---"
+          # Use Python to parse gcov output → Cobertura XML + HTML
+          python3 - << 'PYEOF'
+          import os, glob, re, json
+
+          src_dir = "src"
+          gcov_files = glob.glob("*.gcov")
+          print(f"Found {len(gcov_files)} .gcov files")
+
+          files_data = {}
+          total_lines = 0
+          covered_lines = 0
+          total_branches = 0
+          covered_branches = 0
+
+          for gcov_file in gcov_files:
+              # Extract original source filename from gcov file
+              # gcov files are named like "vitals.c.gcov"
+              src_name = gcov_file.replace(".gcov", "")
+              src_path = os.path.join(src_dir, src_name)
+
+              if not os.path.exists(src_path):
+                  continue
+
+              lines = []
+              with open(gcov_file, "r", errors="replace") as f:
+                  for raw_line in f:
+                      parts = raw_line.split(":", 2)
+                      if len(parts) < 3:
+                          continue
+                      count_str = parts[0].strip()
+                      line_no = parts[1].strip()
+                      if not line_no.isdigit():
+                          continue
+                      ln = int(line_no)
+                      if ln == 0:
+                          continue
+                      if count_str == "-":
+                          continue  # non-executable
+                      elif count_str.startswith("#") or count_str == "0":
+                          lines.append((ln, 0))
+                          total_lines += 1
+                      else:
+                          try:
+                              hits = int(count_str)
+                              lines.append((ln, hits))
+                              total_lines += 1
+                              if hits > 0:
+                                  covered_lines += 1
+                          except ValueError:
+                              continue
+
+              if lines:
+                  files_data[src_path] = lines
+
+          line_rate = covered_lines / total_lines if total_lines > 0 else 0
+          branch_rate = 0  # gcov basic mode doesn't give branch info
+
+          print(f"Coverage: {covered_lines}/{total_lines} lines = {line_rate*100:.1f}%")
+          print(f"Files with coverage: {len(files_data)}")
+
+          # Write Cobertura XML
+          xml_lines = [
+              '<?xml version="1.0" ?>',
+              f'<coverage version="6.0" line-rate="{line_rate:.4f}" branch-rate="{branch_rate:.4f}"',
+              f'  lines-covered="{covered_lines}" lines-valid="{total_lines}"',
+              f'  branches-covered="{covered_branches}" branches-valid="{total_branches}">',
+              '<packages><package name="src" line-rate="{:.4f}"><classes>'.format(line_rate),
+          ]
+          for src_path, lines in files_data.items():
+              fname = os.path.basename(src_path)
+              file_covered = sum(1 for _, h in lines if h > 0)
+              file_total = len(lines)
+              file_rate = file_covered / file_total if file_total > 0 else 0
+              xml_lines.append(f'<class name="{fname}" filename="{src_path}" line-rate="{file_rate:.4f}">')
+              xml_lines.append('<lines>')
+              for ln, hits in lines:
+                  xml_lines.append(f'<line number="{ln}" hits="{hits}"/>')
+              xml_lines.append('</lines></class>')
+          xml_lines.append('</classes></package></packages></coverage>')
+
+          with open("coverage-report/coverage.xml", "w") as f:
+              f.write("\n".join(xml_lines))
+
+          # Write HTML summary
+          html = ['<!DOCTYPE html><html><head><meta charset="utf-8">',
+                  '<title>Code Coverage Report</title>',
+                  '<style>body{font-family:sans-serif;max-width:900px;margin:0 auto;padding:2rem}',
+                  'table{border-collapse:collapse;width:100%}th,td{border:1px solid #ccc;padding:.5rem}',
+                  'th{background:#1e3a8a;color:#fff}.good{color:#16a34a}.bad{color:#dc2626}</style>',
+                  '</head><body>',
+                  f'<h1>Code Coverage: {line_rate*100:.1f}%</h1>',
+                  f'<p>{covered_lines} of {total_lines} lines covered</p>',
+                  '<table><tr><th>File</th><th>Lines</th><th>Covered</th><th>Rate</th></tr>']
+          for src_path, lines in sorted(files_data.items()):
+              fname = os.path.basename(src_path)
+              fc = sum(1 for _, h in lines if h > 0)
+              ft = len(lines)
+              fr = fc / ft * 100 if ft > 0 else 0
+              cls = "good" if fr >= 80 else "bad"
+              html.append(f'<tr><td>{fname}</td><td>{ft}</td><td>{fc}</td>'
+                          f'<td class="{cls}">{fr:.1f}%</td></tr>')
+          html.append('</table></body></html>')
+
+          with open("coverage-report/index.html", "w") as f:
+              f.write("\n".join(html))
+
+          print("Reports written to coverage-report/")
+          PYEOF
+
+          echo "=== coverage-report contents ==="
           ls -la coverage-report/
 
       - name: Coverage summary
@@ -401,50 +501,24 @@ jobs:
           retention-days: 90
 
   # ═══════════════════════════════════════════════════════════════════
-  # Stage 5 — DVT (Design Verification Tests)
+  # Stage 5 — DVT (Design Verification Report)
+  #
+  # Downloads test results from stage 3, generates the IEC 62304
+  # DVT report with per-suite SWR traceability. Does NOT re-build
+  # or re-run tests — DVT is a report-generation activity.
   # ═══════════════════════════════════════════════════════════════════
   dvt:
-    name: "5 — DVT"
+    name: "5 — DVT Report"
     needs: coverage
-    runs-on: windows-latest
-    defaults:
-      run:
-        shell: bash
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: git config --global --add safe.directory "*"
 
-      - uses: actions/cache@v4
+      - name: Download test results from stage 3
+        uses: actions/download-artifact@v4
         with:
-          path: build_dvt/_deps
-          key: gtest-dvt-${{ hashFiles('CMakeLists.txt') }}
-          restore-keys: gtest-dvt-
-
-      - name: Build
-        run: |
-          cmake -S . -B build_dvt -G Ninja \
-            -DCMAKE_C_COMPILER=gcc \
-            -DCMAKE_CXX_COMPILER=g++ \
-            -DBUILD_TESTS=ON \
-            -Wno-dev
-          cmake --build build_dvt
-
-      - name: Create output directories
-        run: mkdir -p dvt/results
-
-      - name: Run unit tests
-        run: |
-          set -o pipefail
-          ./build_dvt/tests/test_unit.exe \
-            --gtest_output=xml:dvt/results/unit_results.xml \
-            2>&1 | tee dvt/results/unit_raw.txt
-
-      - name: Run integration tests
-        run: |
-          set -o pipefail
-          ./build_dvt/tests/test_integration.exe \
-            --gtest_output=xml:dvt/results/integration_results.xml \
-            2>&1 | tee dvt/results/integration_raw.txt
+          name: test-results-${{ github.run_number }}
+          path: dvt/results
 
       - name: Generate DVT report
         run: |
@@ -465,8 +539,8 @@ jobs:
               except Exception:
                   return 0, 0, -1
 
-          u_total, u_pass, u_fail = parse_gtest_xml("dvt/results/unit_results.xml")
-          i_total, i_pass, i_fail = parse_gtest_xml("dvt/results/integration_results.xml")
+          u_total, u_pass, u_fail = parse_gtest_xml("dvt/results/results_unit.xml")
+          i_total, i_pass, i_fail = parse_gtest_xml("dvt/results/results_integration.xml")
           overall = "PASS" if (u_fail == 0 and i_fail == 0) else "FAIL"
 
           lines = [
@@ -517,8 +591,8 @@ jobs:
               except:
                   return 0, 0, -1
 
-          u_t, u_p, u_f = parse_xml("dvt/results/unit_results.xml")
-          i_t, i_p, i_f = parse_xml("dvt/results/integration_results.xml")
+          u_t, u_p, u_f = parse_xml("dvt/results/results_unit.xml")
+          i_t, i_p, i_f = parse_xml("dvt/results/results_integration.xml")
           status = lambda f: "PASS" if f == 0 else "FAIL"
 
           summary = "## DVT Results\n\n"
@@ -555,8 +629,8 @@ jobs:
                   return int(root.attrib.get("failures", 0)) + int(root.attrib.get("errors", 0))
               except:
                   return 1
-          uf = get_failures("dvt/results/unit_results.xml")
-          if_ = get_failures("dvt/results/integration_results.xml")
+          uf = get_failures("dvt/results/results_unit.xml")
+          if_ = get_failures("dvt/results/results_integration.xml")
           total = uf + if_
           if total > 0:
               print(f"DVT FAIL: {total} test(s) failed")
@@ -574,16 +648,12 @@ jobs:
   # View at: https://<owner>.github.io/<repo>/
   # ═══════════════════════════════════════════════════════════════════
   publish-reports:
-    name: "Publish Reports (GitHub Pages)"
+    name: "6 — Publish Reports"
     needs: dvt
-    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       pages: write
       id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
 
@@ -732,11 +802,20 @@ jobs:
           print(f"Tests: {total_t} total, {total_f} failed")
           PYEOF
 
+      - name: Upload report as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pipeline-report-${{ github.run_number }}
+          path: site/
+          retention-days: 90
+
       - name: Upload Pages artifact
+        if: github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v3
         with:
           path: site
 
       - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main'
         id: deploy
         uses: actions/deploy-pages@v4
