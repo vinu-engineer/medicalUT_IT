@@ -1063,7 +1063,7 @@ static LRESULT CALLBACK settings_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
                 16, 140, 220, 200, w, (HMENU)(INT_PTR)IDC_CMB_LANG,
                 g_app.inst, NULL);
             int cur_lang = (int)localization_get_language();
-            for (i = 0; i < LANG_COUNT; ++i) {
+            for (i = 0; i < LOC_LANG_COUNT; ++i) {
                 SendMessageA(cmb, CB_ADDSTRING, 0,
                     (LPARAM)localization_get_language_name((Language)i));
             }
@@ -1225,7 +1225,7 @@ static LRESULT CALLBACK settings_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
         case IDC_BTN_LANG_APPLY: {  /* @req SWR-GUI-012 */
             HWND cmb = GetDlgItem(w, IDC_CMB_LANG);
             int sel_lang = (int)SendMessageA(cmb, CB_GETCURSEL, 0, 0);
-            if (sel_lang >= 0 && sel_lang < LANG_COUNT) {
+            if (sel_lang >= 0 && sel_lang < LOC_LANG_COUNT) {
                 localization_set_language((Language)sel_lang);
                 app_config_save_language(sel_lang);
                 /* Close and reopen Settings to refresh all localized labels */
