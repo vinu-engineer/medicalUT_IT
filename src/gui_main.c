@@ -1,6 +1,6 @@
 /**
  * @file gui_main.c
- * @brief Win32 GUI — Patient Vital Signs Monitor v2.1.0
+ * @brief Win32 GUI — Patient Vital Signs Monitor v2.3.0
  *
  * Windows:
  *   1. Login (PVM_Login)      — auth with role detection
@@ -14,6 +14,7 @@
  * @req SWR-GUI-001  @req SWR-GUI-002  @req SWR-GUI-003  @req SWR-GUI-004
  * @req SWR-SEC-001  @req SWR-SEC-002  @req SWR-SEC-003
  * @req SWR-GUI-007  @req SWR-GUI-008  @req SWR-GUI-009  @req SWR-GUI-010
+ * @req SWR-VIT-008  @req SWR-NEW-001
  */
 #ifdef _MSC_VER
 #  define _CRT_SECURE_NO_WARNINGS
@@ -29,6 +30,7 @@
 #include "vitals.h"
 #include "alerts.h"
 #include "patient.h"
+#include "news2.h"
 #include "gui_auth.h"
 #include "gui_users.h"
 #include "hw_vitals.h"
@@ -38,7 +40,7 @@
  * App metadata
  * =================================================================== */
 #define APP_TITLE   "Patient Vital Signs Monitor"
-#define APP_VERSION "v2.2.0"
+#define APP_VERSION "v2.3.0"
 #define IDI_APPICON 101
 
 /* ===================================================================
@@ -420,8 +422,28 @@ static void paint_tiles(HDC hdc, int cw)
     /* Row 2 */
     paint_tile(hdc, pad,             TILE_Y+pad+th+pad, tw, th, "SpO2",           sp_s, "%",      lsp);
     paint_tile(hdc, pad+tw+pad,      TILE_Y+pad+th+pad, tw, th, "RESP RATE",      rr_s, "br/min", lrr);
-    /* 6th tile: reserved for future (NEWS2 score - v2.3.0) */
-    (void)0; /* pad+2*(tw+pad), TILE_Y+pad+th+pad */
+    /* 6th tile: NEWS2 Early Warning Score @req SWR-NEW-001 */
+    {
+        char n2_score[8] = "--";
+        AlertLevel n2_lvl = ALERT_NORMAL;
+        const char *n2_unit = "";
+        if (g_app.sim_enabled && v) {
+            News2Result n2;
+            news2_calculate(v, 0, &n2);
+            snprintf(n2_score, sizeof(n2_score), "%d", n2.total_score);
+            n2_unit = n2.risk_label;
+            switch (n2.risk) {
+                case NEWS2_HIGH:   n2_lvl = ALERT_CRITICAL; break;
+                case NEWS2_MEDIUM: n2_lvl = ALERT_WARNING;  break;
+                default:           n2_lvl = ALERT_NORMAL;   break;
+            }
+        } else if (!g_app.sim_enabled) {
+            strncpy(n2_score, "N/A", sizeof(n2_score)-1);
+            n2_score[sizeof(n2_score)-1] = '\0';
+        }
+        paint_tile(hdc, pad+2*(tw+pad), TILE_Y+pad+th+pad, tw, th,
+                   "NEWS2 SCORE", n2_score, n2_unit, n2_lvl);
+    }
 }
 
 static void paint_status_banner(HDC hdc, int cw)

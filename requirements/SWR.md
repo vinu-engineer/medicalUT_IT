@@ -140,6 +140,47 @@ in the critical phase, recovering to 14–19).
 
 ---
 
+## Module UNIT-NEW — NEWS2 Early Warning Score (`news2.c`)
+
+### SWR-NEW-001 — NEWS2 Aggregate Clinical Risk Score
+**Requirement:** The system shall implement the National Early Warning Score 2 (NEWS2)
+as defined by the Royal College of Physicians (2017). `news2_calculate()` shall:
+
+1. Compute individual sub-scores from a `VitalSigns` structure using the RCP NEWS2
+   scoring tables for each of five physiological parameters plus AVPU:
+
+| Parameter         | 3        | 2          | 1          | 0           | 1          | 2          | 3          |
+|-------------------|----------|------------|------------|-------------|------------|------------|------------|
+| Resp Rate (br/min)| ≤8       |            | 9–11       | 12–20       |            | 21–24      | ≥25        |
+| SpO2 (%)          | ≤91      | 92–93      | 94–95      | ≥96         |            |            |            |
+| Systolic BP (mmHg)| ≤90      | 91–100     | 101–110    | 111–219     |            |            | ≥220       |
+| HR (bpm)          | ≤40      |            | 41–50      | 51–90       | 91–110     | 111–130    | ≥131       |
+| Temperature (°C)  | ≤35.0    |            | 35.1–36.0  | 36.1–38.0   | 38.1–39.0  | ≥39.1      |            |
+| AVPU              | ≠ Alert  |            |            | Alert       |            |            |            |
+
+2. Sum all sub-scores to a `total_score`.
+3. Classify risk as follows:
+   - `total_score ≥ 7` → `NEWS2_HIGH` ("EMERGENCY")
+   - `total_score 5–6` OR any single score = 3 → `NEWS2_MEDIUM` ("Urgent review")
+   - `total_score 1–4` → `NEWS2_LOW_M` ("Increase monitoring")
+   - `total_score = 0` → `NEWS2_LOW` ("Routine monitoring")
+4. Populate all fields of the caller-supplied `News2Result` structure,
+   including `risk_label` and `response` string literals (never NULL).
+5. If `respiration_rate == 0` (not measured), the RR sub-score shall be 0
+   and shall not inflate the aggregate total.
+
+The dashboard shall display the NEWS2 score in the 6th tile (3rd column, 2nd row)
+colour-coded: green (LOW/LOW_M), amber (MEDIUM), red (HIGH).
+
+**Traces to:** SYS-018 (NEWS2 clinical decision support — RCP 2017 standard)
+**Implemented in:** `src/news2.c` — `news2_score_hr()`, `news2_score_rr()`,
+`news2_score_spo2()`, `news2_score_sbp()`, `news2_score_temp()`, `news2_calculate()`;
+`src/gui_main.c` — 6th tile (NEWS2 SCORE)
+**Verified by:** `tests/unit/test_news2.cpp` — `News2HR.*`, `News2RR.*`, `News2SpO2.*`,
+`News2SBP.*`, `News2Temp.*`, `News2Calc.*`
+
+---
+
 ## Module UNIT-ALT — Alert Generation (`alerts.c`)
 
 ### SWR-ALT-001 — One Alert Per Abnormal Parameter
