@@ -1,0 +1,100 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="struct_patient_record" kind="struct" language="C++" prot="public">
+    <compoundname>PatientRecord</compoundname>
+    <includes refid="patient_8h" local="no">patient.h</includes>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct_patient_record_1ab7dbbd6e5424bac1e098abb80bfb1471" prot="public" static="no" mutable="no">
+        <type><ref refid="struct_patient_info" kindref="compound">PatientInfo</ref></type>
+        <definition>PatientInfo PatientRecord::info</definition>
+        <argsstring></argsstring>
+        <name>info</name>
+        <qualifiedname>PatientRecord::info</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Demographic data. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/patient.h" line="81" column="17" bodyfile="include/patient.h" bodystart="81" bodyend="-1"/>
+        <referencedby refid="main_8c_1a1a904050ef641d46ba74b91e8ff5b7f9" compoundref="main_8c" startline="73" endline="105">monitor_patient</referencedby>
+        <referencedby refid="main_8c_1a418db4bf280a08fda4493a816c841643" compoundref="main_8c" startline="114" endline="141">monitor_second_patient</referencedby>
+        <referencedby refid="patient_8c_1a8fa76aa96b383df3556d391e64953536" compoundref="patient_8c" startline="38" endline="49">patient_init</referencedby>
+        <referencedby refid="patient_8c_1a19d76f7281d5f5ad5408c1ff4dc2ee11" compoundref="patient_8c" startline="98" endline="145">patient_print_summary</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="struct_patient_record_1a7afb75ac040d473589a9e13a5c20529d" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int PatientRecord::reading_count</definition>
+        <argsstring></argsstring>
+        <name>reading_count</name>
+        <qualifiedname>PatientRecord::reading_count</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Number of valid entries in readings[]. Range: 0–MAX_READINGS. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/patient.h" line="83" column="17" bodyfile="include/patient.h" bodystart="83" bodyend="-1"/>
+        <referencedby refid="patient_8c_1a0e22c10046f3778c1f194cc6377d7984" compoundref="patient_8c" startline="56" endline="61">patient_add_reading</referencedby>
+        <referencedby refid="patient_8c_1a8fa76aa96b383df3556d391e64953536" compoundref="patient_8c" startline="38" endline="49">patient_init</referencedby>
+        <referencedby refid="patient_8c_1a8f247ea51062330ba04c15535d530190" compoundref="patient_8c" startline="88" endline="91">patient_is_full</referencedby>
+        <referencedby refid="patient_8c_1aaf2d461ddd1efafe4887647d0c8688d7" compoundref="patient_8c" startline="67" endline="71">patient_latest_reading</referencedby>
+        <referencedby refid="patient_8c_1a19d76f7281d5f5ad5408c1ff4dc2ee11" compoundref="patient_8c" startline="98" endline="145">patient_print_summary</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="struct_patient_record_1adccff17faadacdb6cce641680535a2d2" prot="public" static="no" mutable="no">
+        <type><ref refid="struct_vital_signs" kindref="compound">VitalSigns</ref></type>
+        <definition>VitalSigns PatientRecord::readings[10]</definition>
+        <argsstring>[10]</argsstring>
+        <name>readings</name>
+        <qualifiedname>PatientRecord::readings</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Historical vital sign readings. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/patient.h" line="82" column="17" bodyfile="include/patient.h" bodystart="82" bodyend="-1"/>
+        <referencedby refid="patient_8c_1a0e22c10046f3778c1f194cc6377d7984" compoundref="patient_8c" startline="56" endline="61">patient_add_reading</referencedby>
+        <referencedby refid="patient_8c_1aaf2d461ddd1efafe4887647d0c8688d7" compoundref="patient_8c" startline="67" endline="71">patient_latest_reading</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Complete patient record including demographics and vital sign history. </para>
+    </briefdescription>
+    <detaileddescription>
+<para>The readings array acts as a sequential log: index 0 holds the first reading, index reading_count-1 holds the most recent. The record is considered full when reading_count == MAX_READINGS.</para>
+<para><simplesect kind="note"><para>No dynamic memory is used. All storage is stack/static allocated. </para>
+</simplesect>
+</para>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="2">
+        <label>PatientInfo</label>
+        <link refid="struct_patient_info"/>
+      </node>
+      <node id="1">
+        <label>PatientRecord</label>
+        <link refid="struct_patient_record"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>+info</edgelabel>
+        </childnode>
+        <childnode refid="3" relation="usage">
+          <edgelabel>+readings</edgelabel>
+        </childnode>
+      </node>
+      <node id="3">
+        <label>VitalSigns</label>
+        <link refid="struct_vital_signs"/>
+      </node>
+    </collaborationgraph>
+    <location file="include/patient.h" line="80" column="1" bodyfile="include/patient.h" bodystart="80" bodyend="85"/>
+    <listofallmembers>
+      <member refid="struct_patient_record_1ab7dbbd6e5424bac1e098abb80bfb1471" prot="public" virt="non-virtual"><scope>PatientRecord</scope><name>info</name></member>
+      <member refid="struct_patient_record_1a7afb75ac040d473589a9e13a5c20529d" prot="public" virt="non-virtual"><scope>PatientRecord</scope><name>reading_count</name></member>
+      <member refid="struct_patient_record_1adccff17faadacdb6cce641680535a2d2" prot="public" virt="non-virtual"><scope>PatientRecord</scope><name>readings</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

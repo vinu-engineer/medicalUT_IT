@@ -1,0 +1,237 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="alerts_8c" kind="file" language="C++">
+    <compoundname>alerts.c</compoundname>
+    <includes refid="alerts_8h" local="yes">alerts.h</includes>
+    <includes local="no">stdio.h</includes>
+    <includes local="no">string.h</includes>
+    <incdepgraph>
+      <node id="2">
+        <label>alerts.h</label>
+        <link refid="alerts_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>vitals.h</label>
+        <link refid="vitals_8h"/>
+      </node>
+      <node id="1">
+        <label>src/alerts.c</label>
+        <link refid="alerts_8c"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>stdio.h</label>
+      </node>
+      <node id="5">
+        <label>string.h</label>
+      </node>
+    </incdepgraph>
+    <sectiondef kind="define">
+      <memberdef kind="define" id="alerts_8c_1af08ec37a8c99d747fb60fa15bc28678b" prot="public" static="no">
+        <name>_CRT_SECURE_NO_WARNINGS</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/alerts.c" line="24" column="9" bodyfile="src/alerts.c" bodystart="24" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="alerts_8c_1a7aa21ff5b5fcc955fb408e288a62b125" prot="public" static="no">
+        <name>PUSH_ALERT</name>
+        <param><defname>_al</defname></param>
+        <param><defname>param</defname></param>
+        <param><defname>fmt</defname></param>
+        <param><defname>...</defname></param>
+        <initializer>do {                                                                     \
+    if (count &lt; max_out) {                                               \
+        out[count].level = (_al);                                        \
+        strncpy(out[count].parameter, (param), 31);                      \
+        out[count].parameter[31] = &apos;\0&apos;;                                 \
+        snprintf(out[count].message, <ref refid="alerts_8h_1af4487b371ca7c67a8e7dd34f209fa870" kindref="member">ALERT_MSG_LEN</ref>, fmt, __VA_ARGS__);   \
+        count++;                                                          \
+    }                                                                     \
+} while (0)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/alerts.c" line="50" column="9"/>
+        <referencedby refid="alerts_8c_1a98b6140a4d21520d639bc81d1f7c08b7" compoundref="alerts_8c" startline="44" endline="87">generate_alerts</referencedby>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="alerts_8c_1a98b6140a4d21520d639bc81d1f7c08b7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int generate_alerts</definition>
+        <argsstring>(const VitalSigns *vitals, Alert *out, int max_out)</argsstring>
+        <name>generate_alerts</name>
+        <param>
+          <type>const <ref refid="struct_vital_signs" kindref="compound">VitalSigns</ref> *</type>
+          <declname>vitals</declname>
+        </param>
+        <param>
+          <type><ref refid="struct_alert" kindref="compound">Alert</ref> *</type>
+          <declname>out</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>max_out</declname>
+        </param>
+        <briefdescription>
+<para>Generate structured alert records for out-of-range vital signs. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Generate alert records for every vital sign parameter outside its normal clinical range.</para>
+<para>Internal flow for each parameter:<orderedlist>
+<listitem><para>Call the corresponding check_*() function.</para>
+</listitem><listitem><para>If the result is not ALERT_NORMAL, write an <ref refid="struct_alert" kindref="compound">Alert</ref> record via PUSH_ALERT.</para>
+</listitem><listitem><para>PUSH_ALERT enforces the max_out cap before writing.</para>
+</listitem></orderedlist>
+</para>
+<para>The PUSH_ALERT macro copies the parameter name with strncpy (max 31 chars<itemizedlist>
+<listitem><para>null) and formats the message with snprintf (max ALERT_MSG_LEN - 1 chars</para>
+</listitem><listitem><para>null), guaranteeing null-termination in both fields. </para>
+</listitem></itemizedlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/alerts.c" line="44" column="5" bodyfile="src/alerts.c" bodystart="44" bodyend="87"/>
+        <references refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324a719a508e583ddd6e5cc6d863fab2c6c8" compoundref="vitals_8h" startline="47">ALERT_NORMAL</references>
+        <references refid="vitals_8c_1a3c853e30a899042babf9fdd2bd2cbfc1" compoundref="vitals_8c" startline="45" endline="52">check_blood_pressure</references>
+        <references refid="vitals_8c_1a7604eb6b23010f139f6f960b184a3b28" compoundref="vitals_8c" startline="31" endline="36">check_heart_rate</references>
+        <references refid="vitals_8c_1ac0bc076e63894a96df90f2eab73c88fe" compoundref="vitals_8c" startline="75" endline="80">check_spo2</references>
+        <references refid="vitals_8c_1aef7f6fa183fbc5412c13ea63bd2b62ce" compoundref="vitals_8c" startline="61" endline="66">check_temperature</references>
+        <references refid="struct_vital_signs_1ab81723ab54ad295a71ba56f0ef52318f" compoundref="vitals_8h" startline="68">VitalSigns::diastolic_bp</references>
+        <references refid="struct_vital_signs_1ac7162369c92da33cc7a3279c37083f84" compoundref="vitals_8h" startline="66">VitalSigns::heart_rate</references>
+        <references refid="alerts_8c_1a7aa21ff5b5fcc955fb408e288a62b125">PUSH_ALERT</references>
+        <references refid="struct_vital_signs_1a1b524bb13d6c36ec564c7d94a5e953c1" compoundref="vitals_8h" startline="70">VitalSigns::spo2</references>
+        <references refid="struct_vital_signs_1a110b3f24528e0f5769cb82f3a0c07485" compoundref="vitals_8h" startline="67">VitalSigns::systolic_bp</references>
+        <references refid="struct_vital_signs_1af0a43a24a6e26683adde5612cf626365" compoundref="vitals_8h" startline="69">VitalSigns::temperature</references>
+        <referencedby refid="patient_8c_1a19d76f7281d5f5ad5408c1ff4dc2ee11" compoundref="patient_8c" startline="98" endline="145">patient_print_summary</referencedby>
+        <referencedby refid="main_8c_1a0082d156ee2712806a55606f6637d160" compoundref="main_8c" startline="38" endline="65">print_reading</referencedby>
+        <referencedby refid="gui__main_8c_1a8faad4cd27c161432ac3388959b1a766" compoundref="gui__main_8c" startline="508" endline="560">update_dashboard</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Implementation of alert record generation from vital sign readings. </para>
+    </briefdescription>
+    <detaileddescription>
+<para>Implements <ref refid="alerts_8c_1a98b6140a4d21520d639bc81d1f7c08b7" kindref="member">generate_alerts()</ref> declared in <ref refid="alerts_8h" kindref="compound">alerts.h</ref>. Each abnormal parameter produces exactly one <ref refid="struct_alert" kindref="compound">Alert</ref> record written into the caller&apos;s buffer. The internal PUSH_ALERT macro encapsulates the bounds check and string formatting to keep the function body concise and auditable.</para>
+<sect1 id="alerts_8c_1autotoc_md0_1s1"><sect2 id="alerts_8c_1autotoc_md0_1s2"><sect3 id="alerts_8c_1autotoc_md0">
+<title>Implementation Notes</title><para><itemizedlist>
+<listitem><para><computeroutput><ref refid="alerts_8c_1af08ec37a8c99d747fb60fa15bc28678b" kindref="member">_CRT_SECURE_NO_WARNINGS</ref></computeroutput> suppresses MSVC deprecation warnings for <computeroutput>strncpy</computeroutput> and <computeroutput>snprintf</computeroutput>. These functions are used with explicit length limits and guaranteed null-termination, so the usage is safe.</para>
+</listitem><listitem><para>The macro parameter is named <computeroutput>_al</computeroutput> (not <computeroutput>level</computeroutput>) to avoid shadowing the struct field <computeroutput><ref refid="struct_alert_1af56c1ce36b2939c0bb172344e1340346" kindref="member">Alert.level</ref></computeroutput> inside the macro expansion body.</para>
+</listitem></itemizedlist>
+</para>
+<para><simplesect kind="version"><para>1.0.0 </para>
+</simplesect>
+<simplesect kind="date"><para>2026-04-06 </para>
+</simplesect>
+<simplesect kind="author"><para>vinu-engineer </para>
+</simplesect>
+</para>
+</sect3></sect2></sect1>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/**</highlight></codeline>
+<codeline lineno="2"><highlight class="comment"><sp/>*<sp/>@file<sp/>alerts.c</highlight></codeline>
+<codeline lineno="3"><highlight class="comment"><sp/>*<sp/>@brief<sp/>Implementation<sp/>of<sp/>alert<sp/>record<sp/>generation<sp/>from<sp/>vital<sp/>sign<sp/>readings.</highlight></codeline>
+<codeline lineno="4"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/>*<sp/>@details</highlight></codeline>
+<codeline lineno="6"><highlight class="comment"><sp/>*<sp/>Implements<sp/>generate_alerts()<sp/>declared<sp/>in<sp/>alerts.h.<sp/>Each<sp/>abnormal</highlight></codeline>
+<codeline lineno="7"><highlight class="comment"><sp/>*<sp/>parameter<sp/>produces<sp/>exactly<sp/>one<sp/>Alert<sp/>record<sp/>written<sp/>into<sp/>the<sp/>caller&apos;s</highlight></codeline>
+<codeline lineno="8"><highlight class="comment"><sp/>*<sp/>buffer.<sp/>The<sp/>internal<sp/>PUSH_ALERT<sp/>macro<sp/>encapsulates<sp/>the<sp/>bounds<sp/>check<sp/>and</highlight></codeline>
+<codeline lineno="9"><highlight class="comment"><sp/>*<sp/>string<sp/>formatting<sp/>to<sp/>keep<sp/>the<sp/>function<sp/>body<sp/>concise<sp/>and<sp/>auditable.</highlight></codeline>
+<codeline lineno="10"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="11"><highlight class="comment"><sp/>*<sp/>###<sp/>Implementation<sp/>Notes</highlight></codeline>
+<codeline lineno="12"><highlight class="comment"><sp/>*<sp/>-<sp/>`_CRT_SECURE_NO_WARNINGS`<sp/>suppresses<sp/>MSVC<sp/>deprecation<sp/>warnings<sp/>for</highlight></codeline>
+<codeline lineno="13"><highlight class="comment"><sp/>*<sp/><sp/><sp/>`strncpy`<sp/>and<sp/>`snprintf`.<sp/>These<sp/>functions<sp/>are<sp/>used<sp/>with<sp/>explicit</highlight></codeline>
+<codeline lineno="14"><highlight class="comment"><sp/>*<sp/><sp/><sp/>length<sp/>limits<sp/>and<sp/>guaranteed<sp/>null-termination,<sp/>so<sp/>the<sp/>usage<sp/>is<sp/>safe.</highlight></codeline>
+<codeline lineno="15"><highlight class="comment"><sp/>*<sp/>-<sp/>The<sp/>macro<sp/>parameter<sp/>is<sp/>named<sp/>`_al`<sp/>(not<sp/>`level`)<sp/>to<sp/>avoid<sp/>shadowing</highlight></codeline>
+<codeline lineno="16"><highlight class="comment"><sp/>*<sp/><sp/><sp/>the<sp/>struct<sp/>field<sp/>`Alert.level`<sp/>inside<sp/>the<sp/>macro<sp/>expansion<sp/>body.</highlight></codeline>
+<codeline lineno="17"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="18"><highlight class="comment"><sp/>*<sp/>@version<sp/>1.0.0</highlight></codeline>
+<codeline lineno="19"><highlight class="comment"><sp/>*<sp/>@date<sp/><sp/><sp/><sp/>2026-04-06</highlight></codeline>
+<codeline lineno="20"><highlight class="comment"><sp/>*<sp/>@author<sp/><sp/>vinu-engineer</highlight></codeline>
+<codeline lineno="21"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>_MSC_VER</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24" refid="alerts_8c_1af08ec37a8c99d747fb60fa15bc28678b" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>_CRT_SECURE_NO_WARNINGS</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="alerts_8h" kindref="compound">alerts.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdio.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="31"><highlight class="comment">/**</highlight></codeline>
+<codeline lineno="32"><highlight class="comment"><sp/>*<sp/>@brief<sp/>Generate<sp/>structured<sp/>alert<sp/>records<sp/>for<sp/>out-of-range<sp/>vital<sp/>signs.</highlight></codeline>
+<codeline lineno="33"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="34"><highlight class="comment"><sp/>*<sp/>@details</highlight></codeline>
+<codeline lineno="35"><highlight class="comment"><sp/>*<sp/>Internal<sp/>flow<sp/>for<sp/>each<sp/>parameter:</highlight></codeline>
+<codeline lineno="36"><highlight class="comment"><sp/>*<sp/>-#<sp/>Call<sp/>the<sp/>corresponding<sp/>check_*()<sp/>function.</highlight></codeline>
+<codeline lineno="37"><highlight class="comment"><sp/>*<sp/>-#<sp/>If<sp/>the<sp/>result<sp/>is<sp/>not<sp/>ALERT_NORMAL,<sp/>write<sp/>an<sp/>Alert<sp/>record<sp/>via<sp/>PUSH_ALERT.</highlight></codeline>
+<codeline lineno="38"><highlight class="comment"><sp/>*<sp/>-#<sp/>PUSH_ALERT<sp/>enforces<sp/>the<sp/>max_out<sp/>cap<sp/>before<sp/>writing.</highlight></codeline>
+<codeline lineno="39"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="40"><highlight class="comment"><sp/>*<sp/>The<sp/>PUSH_ALERT<sp/>macro<sp/>copies<sp/>the<sp/>parameter<sp/>name<sp/>with<sp/>strncpy<sp/>(max<sp/>31<sp/>chars</highlight></codeline>
+<codeline lineno="41"><highlight class="comment"><sp/>*<sp/>+<sp/>null)<sp/>and<sp/>formats<sp/>the<sp/>message<sp/>with<sp/>snprintf<sp/>(max<sp/>ALERT_MSG_LEN<sp/>-<sp/>1<sp/>chars</highlight></codeline>
+<codeline lineno="42"><highlight class="comment"><sp/>*<sp/>+<sp/>null),<sp/>guaranteeing<sp/>null-termination<sp/>in<sp/>both<sp/>fields.</highlight></codeline>
+<codeline lineno="43"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="44" refid="alerts_8c_1a98b6140a4d21520d639bc81d1f7c08b7" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="alerts_8c_1a98b6140a4d21520d639bc81d1f7c08b7" kindref="member">generate_alerts</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="struct_vital_signs" kindref="compound">VitalSigns</ref><sp/>*vitals,<sp/><ref refid="struct_alert" kindref="compound">Alert</ref><sp/>*out,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>max_out)</highlight></codeline>
+<codeline lineno="45"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>count<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324" kindref="member">AlertLevel</ref><sp/>lvl;</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Write<sp/>one<sp/>Alert<sp/>record<sp/>if<sp/>count<sp/>&lt;<sp/>max_out.<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PUSH_ALERT(_al,<sp/>param,<sp/>fmt,<sp/>...)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="51"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>do<sp/>{<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="52"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>if<sp/>(count<sp/>&lt;<sp/>max_out)<sp/>{<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="53"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>out[count].level<sp/>=<sp/>(_al);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="54"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>strncpy(out[count].parameter,<sp/>(param),<sp/>31);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="55"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>out[count].parameter[31]<sp/>=<sp/>&apos;\0&apos;;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="56"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>snprintf(out[count].message,<sp/>ALERT_MSG_LEN,<sp/>fmt,<sp/>__VA_ARGS__);<sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="57"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>count++;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="58"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="59"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>}<sp/>while<sp/>(0)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/>lvl<sp/>=<sp/><ref refid="vitals_8c_1a7604eb6b23010f139f6f960b184a3b28" kindref="member">check_heart_rate</ref>(vitals-&gt;<ref refid="struct_vital_signs_1ac7162369c92da33cc7a3279c37083f84" kindref="member">heart_rate</ref>);</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(lvl<sp/>!=<sp/><ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324a719a508e583ddd6e5cc6d863fab2c6c8" kindref="member">ALERT_NORMAL</ref>)</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="alerts_8c_1a7aa21ff5b5fcc955fb408e288a62b125" kindref="member">PUSH_ALERT</ref>(lvl,<sp/></highlight><highlight class="stringliteral">&quot;Heart<sp/>Rate&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Heart<sp/>rate<sp/>%d<sp/>bpm<sp/>[normal<sp/>60-100]&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>vitals-&gt;<ref refid="struct_vital_signs_1ac7162369c92da33cc7a3279c37083f84" kindref="member">heart_rate</ref>);</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"></highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/>lvl<sp/>=<sp/><ref refid="vitals_8c_1a3c853e30a899042babf9fdd2bd2cbfc1" kindref="member">check_blood_pressure</ref>(vitals-&gt;<ref refid="struct_vital_signs_1a110b3f24528e0f5769cb82f3a0c07485" kindref="member">systolic_bp</ref>,<sp/>vitals-&gt;<ref refid="struct_vital_signs_1ab81723ab54ad295a71ba56f0ef52318f" kindref="member">diastolic_bp</ref>);</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(lvl<sp/>!=<sp/><ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324a719a508e583ddd6e5cc6d863fab2c6c8" kindref="member">ALERT_NORMAL</ref>)</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="alerts_8c_1a7aa21ff5b5fcc955fb408e288a62b125" kindref="member">PUSH_ALERT</ref>(lvl,<sp/></highlight><highlight class="stringliteral">&quot;Blood<sp/>Pressure&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;BP<sp/>%d/%d<sp/>mmHg<sp/>[normal<sp/>90-140<sp/>/<sp/>60-90]&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>vitals-&gt;<ref refid="struct_vital_signs_1a110b3f24528e0f5769cb82f3a0c07485" kindref="member">systolic_bp</ref>,<sp/>vitals-&gt;<ref refid="struct_vital_signs_1ab81723ab54ad295a71ba56f0ef52318f" kindref="member">diastolic_bp</ref>);</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"></highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/>lvl<sp/>=<sp/><ref refid="vitals_8c_1aef7f6fa183fbc5412c13ea63bd2b62ce" kindref="member">check_temperature</ref>(vitals-&gt;<ref refid="struct_vital_signs_1af0a43a24a6e26683adde5612cf626365" kindref="member">temperature</ref>);</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(lvl<sp/>!=<sp/><ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324a719a508e583ddd6e5cc6d863fab2c6c8" kindref="member">ALERT_NORMAL</ref>)</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="alerts_8c_1a7aa21ff5b5fcc955fb408e288a62b125" kindref="member">PUSH_ALERT</ref>(lvl,<sp/></highlight><highlight class="stringliteral">&quot;Temperature&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Temp<sp/>%.1f<sp/>C<sp/>[normal<sp/>36.1-37.2]&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal">)vitals-&gt;<ref refid="struct_vital_signs_1af0a43a24a6e26683adde5612cf626365" kindref="member">temperature</ref>);</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/>lvl<sp/>=<sp/><ref refid="vitals_8c_1ac0bc076e63894a96df90f2eab73c88fe" kindref="member">check_spo2</ref>(vitals-&gt;<ref refid="struct_vital_signs_1a1b524bb13d6c36ec564c7d94a5e953c1" kindref="member">spo2</ref>);</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(lvl<sp/>!=<sp/><ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324a719a508e583ddd6e5cc6d863fab2c6c8" kindref="member">ALERT_NORMAL</ref>)</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="alerts_8c_1a7aa21ff5b5fcc955fb408e288a62b125" kindref="member">PUSH_ALERT</ref>(lvl,<sp/></highlight><highlight class="stringliteral">&quot;SpO2&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;SpO2<sp/>%d%%<sp/>[normal<sp/>95-100%%]&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>vitals-&gt;<ref refid="struct_vital_signs_1a1b524bb13d6c36ec564c7d94a5e953c1" kindref="member">spo2</ref>);</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"></highlight><highlight class="preprocessor">#undef<sp/>PUSH_ALERT</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>count;</highlight></codeline>
+<codeline lineno="87"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="src/alerts.c"/>
+  </compounddef>
+</doxygen>

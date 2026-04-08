@@ -1,0 +1,23 @@
+<map id="login_proc" name="login_proc">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,208,86,235"/>
+<area shape="rect" id="Node000002" href="$gui__main_8c.html#a51e990e1b26cc2a1c2e8e602d3b13cf5" title="Attempt login from the username/password controls." alt="" coords="142,81,241,108"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="53,206,85,164,107,139,132,118,142,114,138,118,135,122,111,143,89,167,58,209"/>
+<area shape="rect" id="Node000007" href="$gui__main_8c.html#a18faa01dfc1221353f0ca130f5647098" title=" " alt="" coords="142,132,241,159"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="67,205,132,168,146,164,142,167,135,173,71,210"/>
+<area shape="rect" id="Node000008" href="$gui__main_8c.html#a44c4ee73fc9a634398e794afaf73d079" title=" " alt="" coords="160,183,223,209"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="85,212,146,202,142,206,87,217"/>
+<area shape="rect" id="Node000009" href="$gui__main_8c.html#ae6a2186998a99a63c5e56e56fcb3174d" title=" " alt="" coords="134,233,249,260"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="86,226,121,233,116,235,87,231"/>
+<area shape="rect" id="Node000010" href="$gui__main_8c.html#aba2b03bc9043c42771599f03493ddb81" title=" " alt="" coords="151,284,232,311"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="69,232,135,270,147,277,141,277,132,274,69,238"/>
+<area shape="rect" id="Node000011" href="$gui__main_8c.html#a68601212c34811f3fdfa6c26760d3b3b" title=" " alt="" coords="148,335,235,361"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="56,233,89,276,111,299,135,321,143,327,137,327,132,325,107,303,85,279,55,238"/>
+<area shape="rect" id="Node000003" href="$gui__auth_8c.html#a92304d324761670e4b4267b7a3c0693a" title="Return a human&#45;readable display name for a validated username." alt="" coords="297,5,430,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="218,79,296,42,313,37,309,40,298,46,221,83"/>
+<area shape="rect" id="Node000004" href="$gui__auth_8c.html#a89879c6685a6b662a08bd4e868130363" title="Validate a username/password pair against the built&#45;in credential." alt="" coords="314,56,413,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="240,85,302,77,297,80,242,90"/>
+<area shape="rect" id="Node000005" href="$gui__main_8c.html#a05facbe4e175f66ff55a4882c983d058" title=" " alt="" coords="302,107,426,133"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="241,99,288,108,284,110,242,105"/>
+<area shape="rect" id="Node000006" href="$gui__main_8c.html#adfa90e96e8fab8b5af641dd49e420791" title=" " alt="" coords="333,157,394,184"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="224,106,250,118,298,143,322,154,316,155,296,148,248,122,225,111"/>
+</map>

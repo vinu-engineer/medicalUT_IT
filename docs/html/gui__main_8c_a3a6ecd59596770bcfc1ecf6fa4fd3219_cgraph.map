@@ -1,0 +1,11 @@
+<map id="paint_patient_bar" name="paint_patient_bar">
+<area shape="rect" id="Node000001" title="Paint the patient summary bar. @req SWR&#45;GUI&#45;003." alt="" coords="5,81,126,108"/>
+<area shape="rect" id="Node000002" href="$vitals_8c.html#a7a7981a0a087b3b98763ed48bc789888" title="Map a BMI value to a WHO weight&#45;status category string." alt="" coords="175,5,274,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="94,78,182,37,179,41,97,83"/>
+<area shape="rect" id="Node000003" href="$vitals_8c.html#a10dc695991eacf8ffea85c92b9331aec" title="Calculate BMI using the standard WHO formula." alt="" coords="174,56,275,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="125,83,161,79,156,81,127,88"/>
+<area shape="rect" id="Node000004" href="$gui__main_8c.html#a18faa01dfc1221353f0ca130f5647098" title=" " alt="" coords="175,107,274,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="126,102,162,109,157,110,127,107"/>
+<area shape="rect" id="Node000005" href="$gui__main_8c.html#a44c4ee73fc9a634398e794afaf73d079" title=" " alt="" coords="193,157,256,184"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="96,106,183,149,178,151,95,111"/>
+</map>

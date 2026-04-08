@@ -1,0 +1,13 @@
+<map id="do_admit" name="do_admit">
+<area shape="rect" id="Node000001" title="Admit a patient from the identity fields. @req SWR&#45;GUI&#45;004." alt="" coords="415,23,490,49"/>
+<area shape="rect" id="Node000002" href="$gui__main_8c.html#a50c9496063704973573429586a90b27d" title=" " alt="" coords="126,23,207,49"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="398,18,367,13,311,8,255,13,207,25,206,20,255,8,311,3,368,8,403,18"/>
+<area shape="rect" id="Node000004" href="$gui__main_8c.html#a9d7273263f3a31bf701590beb4c5b1d1" title="Record a new vital signs reading from the vitals entry fields. @req SWR&#45;GUI&#45;004." alt="" coords="255,23,367,49"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="397,36,368,39,367,33,402,36"/>
+<area shape="rect" id="Node000005" href="$gui__main_8c.html#a9106ea80981b1db52b607a5e58f0ecf3" title=" " alt="" coords="266,73,357,100"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="403,54,351,75,350,70,398,55"/>
+<area shape="rect" id="Node000003" href="$gui__main_8c.html#aab234127c99873cb463e482155cb679f" title=" " alt="" coords="5,23,78,49"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="108,37,79,39,78,33,113,35"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="237,37,208,39,207,33,242,36"/>
+<area shape="poly" id="edge6_Node000005_Node000002" title=" " alt="" coords="254,68,206,53,207,47,259,68"/>
+</map>

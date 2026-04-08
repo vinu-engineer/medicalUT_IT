@@ -1,0 +1,11 @@
+<map id="overall_alert_level" name="overall_alert_level">
+<area shape="rect" id="Node000001" title="Return the highest alert level across all four vital parameters." alt="" coords="5,81,131,108"/>
+<area shape="rect" id="Node000002" href="$vitals_8c.html#a3c853e30a899042babf9fdd2bd2cbfc1" title="Classify a blood pressure reading." alt="" coords="179,5,330,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,78,178,42,198,36,193,39,180,46,99,83"/>
+<area shape="rect" id="Node000003" href="$vitals_8c.html#a7604eb6b23010f139f6f960b184a3b28" title="Classify a heart rate reading." alt="" coords="194,56,315,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="130,84,181,78,176,81,132,89"/>
+<area shape="rect" id="Node000004" href="$vitals_8c.html#ac0bc076e63894a96df90f2eab73c88fe" title="Classify an SpO2 reading." alt="" coords="209,107,300,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="131,101,196,111,191,113,131,106"/>
+<area shape="rect" id="Node000005" href="$vitals_8c.html#aef7f6fa183fbc5412c13ea63bd2b62ce" title="Classify a temperature reading." alt="" coords="188,157,320,184"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="98,106,180,143,198,152,193,152,178,148,97,111"/>
+</map>

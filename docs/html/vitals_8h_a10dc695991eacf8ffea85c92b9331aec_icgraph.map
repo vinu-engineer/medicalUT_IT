@@ -1,0 +1,20 @@
+<map id="calculate_bmi" name="calculate_bmi">
+<area shape="rect" id="Node000001" title="Calculate Body Mass Index (BMI) from weight and height." alt="" coords="534,56,636,83"/>
+<area shape="rect" id="Node000002" href="$main_8c.html#a1a904050ef641d46ba74b91e8ff5b7f9" title="Run the monitoring session for Patient 1 (deterioration scenario)." alt="" coords="150,5,260,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="549,47,519,34,486,21,426,11,366,8,261,14,260,9,366,3,427,6,487,16,522,29,554,48"/>
+<area shape="rect" id="Node000004" href="$main_8c.html#a418db4bf280a08fda4493a816c841643" title="Run the monitoring session for Patient 2 (bradycardia scenario)." alt="" coords="126,56,285,83"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="516,71,286,72,285,67,521,68"/>
+<area shape="rect" id="Node000005" href="$gui__main_8c.html#a3a6ecd59596770bcfc1ecf6fa4fd3219" title="Paint the patient summary bar. @req SWR&#45;GUI&#45;003." alt="" coords="350,132,470,159"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="542,89,487,116,445,134,443,129,485,111,537,90"/>
+<area shape="rect" id="Node000008" href="$patient_8c.html#a19d76f7281d5f5ad5408c1ff4dc2ee11" title="Print a formatted patient summary including vitals and active alerts." alt="" coords="333,31,486,57"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="516,60,487,58,487,52,521,60"/>
+<area shape="rect" id="Node000003" href="$main_8c.html#a840291bc02cba5474a4cb46a9b9566fe" title="Application entry point." alt="" coords="17,31,66,57"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="133,32,67,43,65,38,137,28"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="108,56,67,50,66,45,112,53"/>
+<area shape="rect" id="Node000006" href="$gui__main_8c.html#a50c9496063704973573429586a90b27d" title=" " alt="" coords="165,132,246,159"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="331,146,247,148,246,143,336,145"/>
+<area shape="rect" id="Node000007" href="$gui__main_8c.html#aab234127c99873cb463e482155cb679f" title=" " alt="" coords="5,132,78,159"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="147,147,78,148,78,143,151,144"/>
+<area shape="poly" id="edge9_Node000008_Node000002" title=" " alt="" coords="315,33,261,28,260,23,320,32"/>
+<area shape="poly" id="edge10_Node000008_Node000004" title=" " alt="" coords="315,56,286,62,285,57,320,55"/>
+</map>

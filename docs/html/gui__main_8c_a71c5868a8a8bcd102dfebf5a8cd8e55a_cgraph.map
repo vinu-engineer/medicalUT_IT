@@ -1,0 +1,21 @@
+<map id="paint_status_banner" name="paint_status_banner">
+<area shape="rect" id="Node000001" title="Paint the aggregate status banner. @req SWR&#45;GUI&#45;003." alt="" coords="5,56,144,83"/>
+<area shape="rect" id="Node000002" href="$gui__main_8c.html#a18faa01dfc1221353f0ca130f5647098" title=" " alt="" coords="217,5,316,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="127,53,204,34,200,37,129,58"/>
+<area shape="rect" id="Node000003" href="$gui__main_8c.html#a44c4ee73fc9a634398e794afaf73d079" title=" " alt="" coords="235,56,298,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="144,67,222,68,218,71,145,72"/>
+<area shape="rect" id="Node000004" href="$patient_8c.html#a7efb2602c9a2566fee89ff6d6af42bcf" title="Return the overall status from the latest reading." alt="" coords="192,107,342,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="128,81,201,101,196,103,128,86"/>
+<area shape="rect" id="Node000005" href="$vitals_8c.html#af7201b2a5a70f76ab81ade218a863830" title="Return the highest alert level across all four vital parameters." alt="" coords="402,81,527,108"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="342,108,388,104,383,105,343,113"/>
+<area shape="rect" id="Node000010" href="$patient_8c.html#aaf2d461ddd1efafe4887647d0c8688d7" title="Return a pointer to the most recent reading, or NULL if none exist." alt="" coords="390,132,538,159"/>
+<area shape="poly" id="edge9_Node000004_Node000010" title=" " alt="" coords="342,127,377,134,372,134,342,132"/>
+<area shape="rect" id="Node000006" href="$vitals_8c.html#a3c853e30a899042babf9fdd2bd2cbfc1" title="Classify a blood pressure reading." alt="" coords="586,5,738,32"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="496,78,585,42,601,38,606,37,587,46,498,83"/>
+<area shape="rect" id="Node000007" href="$vitals_8c.html#a7604eb6b23010f139f6f960b184a3b28" title="Classify a heart rate reading." alt="" coords="601,56,723,83"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="527,84,589,79,584,79,528,89"/>
+<area shape="rect" id="Node000008" href="$vitals_8c.html#ac0bc076e63894a96df90f2eab73c88fe" title="Classify an SpO2 reading." alt="" coords="616,107,708,133"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="527,100,604,112,598,112,527,105"/>
+<area shape="rect" id="Node000009" href="$vitals_8c.html#aef7f6fa183fbc5412c13ea63bd2b62ce" title="Classify a temperature reading." alt="" coords="596,157,728,184"/>
+<area shape="poly" id="edge8_Node000005_Node000009" title=" " alt="" coords="509,106,539,118,587,143,605,152,599,151,585,148,537,122,509,111"/>
+</map>

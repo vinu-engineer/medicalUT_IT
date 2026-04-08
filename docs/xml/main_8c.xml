@@ -1,0 +1,364 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="main_8c" kind="file" language="C++">
+    <compoundname>main.c</compoundname>
+    <includes local="no">stdio.h</includes>
+    <includes refid="patient_8h" local="yes">patient.h</includes>
+    <incdepgraph>
+      <node id="5">
+        <label>alerts.h</label>
+        <link refid="alerts_8h"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>patient.h</label>
+        <link refid="patient_8h"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>vitals.h</label>
+        <link refid="vitals_8h"/>
+      </node>
+      <node id="1">
+        <label>src/main.c</label>
+        <link refid="main_8c"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>stdio.h</label>
+      </node>
+    </incdepgraph>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="main_8c_1a840291bc02cba5474a4cb46a9b9566fe" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int main</definition>
+        <argsstring>(void)</argsstring>
+        <name>main</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+<para>Application entry point. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>0 on successful completion. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/main.c" line="147" column="5" bodyfile="src/main.c" bodystart="147" bodyend="152"/>
+        <references refid="main_8c_1a1a904050ef641d46ba74b91e8ff5b7f9" compoundref="main_8c" startline="73" endline="105">monitor_patient</references>
+        <references refid="main_8c_1a418db4bf280a08fda4493a816c841643" compoundref="main_8c" startline="114" endline="141">monitor_second_patient</references>
+      </memberdef>
+      <memberdef kind="function" id="main_8c_1a1a904050ef641d46ba74b91e8ff5b7f9" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>static void monitor_patient</definition>
+        <argsstring>(void)</argsstring>
+        <name>monitor_patient</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+<para>Run the monitoring session for Patient 1 (deterioration scenario). </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Admits Sarah Johnson and records three readings that progress from NORMAL → WARNING → CRITICAL to demonstrate full alert escalation. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/main.c" line="73" column="13" bodyfile="src/main.c" bodystart="73" bodyend="105"/>
+        <references refid="struct_patient_info_1adfb737e9dc8cfca072ad572e3796530e" compoundref="patient_8h" startline="66">PatientInfo::age</references>
+        <references refid="vitals_8c_1a7a7981a0a087b3b98763ed48bc789888" compoundref="vitals_8c" startline="121" endline="128">bmi_category</references>
+        <references refid="vitals_8c_1a10dc695991eacf8ffea85c92b9331aec" compoundref="vitals_8c" startline="111" endline="115">calculate_bmi</references>
+        <references refid="struct_patient_info_1a3660352e74d08d02b4039ce9ee4413dd" compoundref="patient_8h" startline="68">PatientInfo::height_m</references>
+        <references refid="struct_patient_info_1a1f5ee862f6bc0244c79ac1088753455b" compoundref="patient_8h" startline="63">PatientInfo::id</references>
+        <references refid="struct_patient_record_1ab7dbbd6e5424bac1e098abb80bfb1471" compoundref="patient_8h" startline="81">PatientRecord::info</references>
+        <references refid="struct_patient_info_1a3776b66e6a77da15c48178e2fdccb509" compoundref="patient_8h" startline="64">PatientInfo::name</references>
+        <references refid="patient_8c_1a0e22c10046f3778c1f194cc6377d7984" compoundref="patient_8c" startline="56" endline="61">patient_add_reading</references>
+        <references refid="patient_8c_1a8fa76aa96b383df3556d391e64953536" compoundref="patient_8c" startline="38" endline="49">patient_init</references>
+        <references refid="patient_8c_1a19d76f7281d5f5ad5408c1ff4dc2ee11" compoundref="patient_8c" startline="98" endline="145">patient_print_summary</references>
+        <references refid="main_8c_1a0082d156ee2712806a55606f6637d160" compoundref="main_8c" startline="38" endline="65">print_reading</references>
+        <references refid="struct_patient_info_1a611e10017c955370cc2314da85a6b2c2" compoundref="patient_8h" startline="67">PatientInfo::weight_kg</references>
+        <referencedby refid="main_8c_1a840291bc02cba5474a4cb46a9b9566fe" compoundref="main_8c" startline="147" endline="152">main</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="main_8c_1a418db4bf280a08fda4493a816c841643" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>static void monitor_second_patient</definition>
+        <argsstring>(void)</argsstring>
+        <name>monitor_second_patient</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+<para>Run the monitoring session for Patient 2 (bradycardia scenario). </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Admits David Okonkwo and records two readings, with the second showing isolated severe bradycardia (38 bpm) while all other parameters remain normal. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/main.c" line="114" column="13" bodyfile="src/main.c" bodystart="114" bodyend="141"/>
+        <references refid="struct_patient_info_1adfb737e9dc8cfca072ad572e3796530e" compoundref="patient_8h" startline="66">PatientInfo::age</references>
+        <references refid="vitals_8c_1a7a7981a0a087b3b98763ed48bc789888" compoundref="vitals_8c" startline="121" endline="128">bmi_category</references>
+        <references refid="vitals_8c_1a10dc695991eacf8ffea85c92b9331aec" compoundref="vitals_8c" startline="111" endline="115">calculate_bmi</references>
+        <references refid="struct_patient_info_1a3660352e74d08d02b4039ce9ee4413dd" compoundref="patient_8h" startline="68">PatientInfo::height_m</references>
+        <references refid="struct_patient_info_1a1f5ee862f6bc0244c79ac1088753455b" compoundref="patient_8h" startline="63">PatientInfo::id</references>
+        <references refid="struct_patient_record_1ab7dbbd6e5424bac1e098abb80bfb1471" compoundref="patient_8h" startline="81">PatientRecord::info</references>
+        <references refid="struct_patient_info_1a3776b66e6a77da15c48178e2fdccb509" compoundref="patient_8h" startline="64">PatientInfo::name</references>
+        <references refid="patient_8c_1a0e22c10046f3778c1f194cc6377d7984" compoundref="patient_8c" startline="56" endline="61">patient_add_reading</references>
+        <references refid="patient_8c_1a8fa76aa96b383df3556d391e64953536" compoundref="patient_8c" startline="38" endline="49">patient_init</references>
+        <references refid="patient_8c_1a19d76f7281d5f5ad5408c1ff4dc2ee11" compoundref="patient_8c" startline="98" endline="145">patient_print_summary</references>
+        <references refid="main_8c_1a0082d156ee2712806a55606f6637d160" compoundref="main_8c" startline="38" endline="65">print_reading</references>
+        <references refid="struct_patient_info_1a611e10017c955370cc2314da85a6b2c2" compoundref="patient_8h" startline="67">PatientInfo::weight_kg</references>
+        <referencedby refid="main_8c_1a840291bc02cba5474a4cb46a9b9566fe" compoundref="main_8c" startline="147" endline="152">main</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="main_8c_1a0082d156ee2712806a55606f6637d160" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>static void print_reading</definition>
+        <argsstring>(int num, const VitalSigns *v)</argsstring>
+        <name>print_reading</name>
+        <param>
+          <type>int</type>
+          <declname>num</declname>
+        </param>
+        <param>
+          <type>const <ref refid="struct_vital_signs" kindref="compound">VitalSigns</ref> *</type>
+          <declname>v</declname>
+        </param>
+        <briefdescription>
+<para>Print a single vital sign reading with per-parameter status and alerts. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">num</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Reading sequence number (1-based), used in the heading. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">v</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to the <ref refid="struct_vital_signs" kindref="compound">VitalSigns</ref> to display. Must not be NULL. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/main.c" line="38" column="13" bodyfile="src/main.c" bodystart="38" bodyend="65"/>
+        <references refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324a4a380f84419fb8940cfc9bde871a26e7" compoundref="vitals_8h" startline="50">ALERT_CRITICAL</references>
+        <references refid="vitals_8c_1a20a209843ea1eeff8484a7998d492615" compoundref="vitals_8c" startline="135" endline="143">alert_level_str</references>
+        <references refid="vitals_8c_1a3c853e30a899042babf9fdd2bd2cbfc1" compoundref="vitals_8c" startline="45" endline="52">check_blood_pressure</references>
+        <references refid="vitals_8c_1a7604eb6b23010f139f6f960b184a3b28" compoundref="vitals_8c" startline="31" endline="36">check_heart_rate</references>
+        <references refid="vitals_8c_1ac0bc076e63894a96df90f2eab73c88fe" compoundref="vitals_8c" startline="75" endline="80">check_spo2</references>
+        <references refid="vitals_8c_1aef7f6fa183fbc5412c13ea63bd2b62ce" compoundref="vitals_8c" startline="61" endline="66">check_temperature</references>
+        <references refid="struct_vital_signs_1ab81723ab54ad295a71ba56f0ef52318f" compoundref="vitals_8h" startline="68">VitalSigns::diastolic_bp</references>
+        <references refid="alerts_8c_1a98b6140a4d21520d639bc81d1f7c08b7" compoundref="alerts_8c" startline="44" endline="87">generate_alerts</references>
+        <references refid="struct_vital_signs_1ac7162369c92da33cc7a3279c37083f84" compoundref="vitals_8h" startline="66">VitalSigns::heart_rate</references>
+        <references refid="struct_alert_1af56c1ce36b2939c0bb172344e1340346" compoundref="alerts_8h" startline="57">Alert::level</references>
+        <references refid="alerts_8h_1a40c583285d17e2d0ab75aca5669f53d0" compoundref="alerts_8h" startline="41">MAX_ALERTS</references>
+        <references refid="vitals_8c_1af7201b2a5a70f76ab81ade218a863830" compoundref="vitals_8c" startline="88" endline="103">overall_alert_level</references>
+        <references refid="struct_vital_signs_1a1b524bb13d6c36ec564c7d94a5e953c1" compoundref="vitals_8h" startline="70">VitalSigns::spo2</references>
+        <references refid="struct_vital_signs_1a110b3f24528e0f5769cb82f3a0c07485" compoundref="vitals_8h" startline="67">VitalSigns::systolic_bp</references>
+        <references refid="struct_vital_signs_1af0a43a24a6e26683adde5612cf626365" compoundref="vitals_8h" startline="69">VitalSigns::temperature</references>
+        <referencedby refid="main_8c_1a1a904050ef641d46ba74b91e8ff5b7f9" compoundref="main_8c" startline="73" endline="105">monitor_patient</referencedby>
+        <referencedby refid="main_8c_1a418db4bf280a08fda4493a816c841643" compoundref="main_8c" startline="114" endline="141">monitor_second_patient</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Application entry point — simulated patient monitoring session. </para>
+    </briefdescription>
+    <detaileddescription>
+<para>Demonstrates the Patient Vital Signs Monitor with two simulated patients:</para>
+<para><bold>Patient 1 — Sarah Johnson (ID 1001)</bold> Simulates a deterioration trajectory across three readings:<itemizedlist>
+<listitem><para>Reading 1: All normal (admission baseline)</para>
+</listitem><listitem><para>Reading 2: All WARNING (developing sepsis-like presentation)</para>
+</listitem><listitem><para>Reading 3: Temperature and SpO2 CRITICAL (acute crisis)</para>
+</listitem></itemizedlist>
+</para>
+<para><bold>Patient 2 — David Okonkwo (ID 1002)</bold> Simulates an isolated bradycardia episode:<itemizedlist>
+<listitem><para>Reading 1: All normal (stable)</para>
+</listitem><listitem><para>Reading 2: Heart rate CRITICAL (severe bradycardia at 38 bpm)</para>
+</listitem></itemizedlist>
+</para>
+<sect1 id="main_8c_1autotoc_md1_1s1"><sect2 id="main_8c_1autotoc_md1_1s2"><sect3 id="main_8c_1autotoc_md1">
+<title>Output Format</title><para>Each reading shows per-parameter classification in brackets and any active alerts prefixed with <computeroutput>! WARNING</computeroutput> or <computeroutput>!! CRITICAL</computeroutput>. A summary block is printed at the end of each patient&apos;s session.</para>
+<para><simplesect kind="version"><para>1.0.0 </para>
+</simplesect>
+<simplesect kind="date"><para>2026-04-06 </para>
+</simplesect>
+<simplesect kind="author"><para>vinu-engineer </para>
+</simplesect>
+</para>
+</sect3></sect2></sect1>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/**</highlight></codeline>
+<codeline lineno="2"><highlight class="comment"><sp/>*<sp/>@file<sp/>main.c</highlight></codeline>
+<codeline lineno="3"><highlight class="comment"><sp/>*<sp/>@brief<sp/>Application<sp/>entry<sp/>point<sp/>—<sp/>simulated<sp/>patient<sp/>monitoring<sp/>session.</highlight></codeline>
+<codeline lineno="4"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/>*<sp/>@details</highlight></codeline>
+<codeline lineno="6"><highlight class="comment"><sp/>*<sp/>Demonstrates<sp/>the<sp/>Patient<sp/>Vital<sp/>Signs<sp/>Monitor<sp/>with<sp/>two<sp/>simulated<sp/>patients:</highlight></codeline>
+<codeline lineno="7"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="8"><highlight class="comment"><sp/>*<sp/>**Patient<sp/>1<sp/>—<sp/>Sarah<sp/>Johnson<sp/>(ID<sp/>1001)**</highlight></codeline>
+<codeline lineno="9"><highlight class="comment"><sp/>*<sp/>Simulates<sp/>a<sp/>deterioration<sp/>trajectory<sp/>across<sp/>three<sp/>readings:</highlight></codeline>
+<codeline lineno="10"><highlight class="comment"><sp/>*<sp/>-<sp/>Reading<sp/>1:<sp/>All<sp/>normal<sp/>(admission<sp/>baseline)</highlight></codeline>
+<codeline lineno="11"><highlight class="comment"><sp/>*<sp/>-<sp/>Reading<sp/>2:<sp/>All<sp/>WARNING<sp/>(developing<sp/>sepsis-like<sp/>presentation)</highlight></codeline>
+<codeline lineno="12"><highlight class="comment"><sp/>*<sp/>-<sp/>Reading<sp/>3:<sp/>Temperature<sp/>and<sp/>SpO2<sp/>CRITICAL<sp/>(acute<sp/>crisis)</highlight></codeline>
+<codeline lineno="13"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="14"><highlight class="comment"><sp/>*<sp/>**Patient<sp/>2<sp/>—<sp/>David<sp/>Okonkwo<sp/>(ID<sp/>1002)**</highlight></codeline>
+<codeline lineno="15"><highlight class="comment"><sp/>*<sp/>Simulates<sp/>an<sp/>isolated<sp/>bradycardia<sp/>episode:</highlight></codeline>
+<codeline lineno="16"><highlight class="comment"><sp/>*<sp/>-<sp/>Reading<sp/>1:<sp/>All<sp/>normal<sp/>(stable)</highlight></codeline>
+<codeline lineno="17"><highlight class="comment"><sp/>*<sp/>-<sp/>Reading<sp/>2:<sp/>Heart<sp/>rate<sp/>CRITICAL<sp/>(severe<sp/>bradycardia<sp/>at<sp/>38<sp/>bpm)</highlight></codeline>
+<codeline lineno="18"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="19"><highlight class="comment"><sp/>*<sp/>###<sp/>Output<sp/>Format</highlight></codeline>
+<codeline lineno="20"><highlight class="comment"><sp/>*<sp/>Each<sp/>reading<sp/>shows<sp/>per-parameter<sp/>classification<sp/>in<sp/>brackets<sp/>and<sp/>any</highlight></codeline>
+<codeline lineno="21"><highlight class="comment"><sp/>*<sp/>active<sp/>alerts<sp/>prefixed<sp/>with<sp/>`!<sp/><sp/>WARNING`<sp/>or<sp/>`!!<sp/>CRITICAL`.<sp/>A<sp/>summary</highlight></codeline>
+<codeline lineno="22"><highlight class="comment"><sp/>*<sp/>block<sp/>is<sp/>printed<sp/>at<sp/>the<sp/>end<sp/>of<sp/>each<sp/>patient&apos;s<sp/>session.</highlight></codeline>
+<codeline lineno="23"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="24"><highlight class="comment"><sp/>*<sp/>@version<sp/>1.0.0</highlight></codeline>
+<codeline lineno="25"><highlight class="comment"><sp/>*<sp/>@date<sp/><sp/><sp/><sp/>2026-04-06</highlight></codeline>
+<codeline lineno="26"><highlight class="comment"><sp/>*<sp/>@author<sp/><sp/>vinu-engineer</highlight></codeline>
+<codeline lineno="27"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdio.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="patient_8h" kindref="compound">patient.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="32"><highlight class="comment">/**</highlight></codeline>
+<codeline lineno="33"><highlight class="comment"><sp/>*<sp/>@brief<sp/>Print<sp/>a<sp/>single<sp/>vital<sp/>sign<sp/>reading<sp/>with<sp/>per-parameter<sp/>status<sp/>and<sp/>alerts.</highlight></codeline>
+<codeline lineno="34"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="35"><highlight class="comment"><sp/>*<sp/>@param[in]<sp/>num<sp/><sp/>Reading<sp/>sequence<sp/>number<sp/>(1-based),<sp/>used<sp/>in<sp/>the<sp/>heading.</highlight></codeline>
+<codeline lineno="36"><highlight class="comment"><sp/>*<sp/>@param[in]<sp/>v<sp/><sp/><sp/><sp/>Pointer<sp/>to<sp/>the<sp/>VitalSigns<sp/>to<sp/>display.<sp/>Must<sp/>not<sp/>be<sp/>NULL.</highlight></codeline>
+<codeline lineno="37"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="38" refid="main_8c_1a0082d156ee2712806a55606f6637d160" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="main_8c_1a0082d156ee2712806a55606f6637d160" kindref="member">print_reading</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>num,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="struct_vital_signs" kindref="compound">VitalSigns</ref><sp/>*v)</highlight></codeline>
+<codeline lineno="39"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="struct_alert" kindref="compound">Alert</ref><sp/>alerts[<ref refid="alerts_8h_1a40c583285d17e2d0ab75aca5669f53d0" kindref="member">MAX_ALERTS</ref>];</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><sp/><sp/>n,<sp/>i;</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324" kindref="member">AlertLevel</ref><sp/>status<sp/>=<sp/><ref refid="vitals_8c_1af7201b2a5a70f76ab81ade218a863830" kindref="member">overall_alert_level</ref>(v);</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;\n<sp/><sp/>---<sp/>Reading<sp/>#%d<sp/>---\n&quot;</highlight><highlight class="normal">,<sp/>num);</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/><sp/>Heart<sp/>Rate<sp/><sp/>:<sp/>%3d<sp/>bpm<sp/><sp/><sp/><sp/><sp/><sp/><sp/>[%s]\n&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>v-&gt;<ref refid="struct_vital_signs_1ac7162369c92da33cc7a3279c37083f84" kindref="member">heart_rate</ref>,</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="vitals_8c_1a20a209843ea1eeff8484a7998d492615" kindref="member">alert_level_str</ref>(<ref refid="vitals_8c_1a7604eb6b23010f139f6f960b184a3b28" kindref="member">check_heart_rate</ref>(v-&gt;<ref refid="struct_vital_signs_1ac7162369c92da33cc7a3279c37083f84" kindref="member">heart_rate</ref>)));</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/><sp/>BP<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/>%3d/%-3d<sp/>mmHg<sp/><sp/>[%s]\n&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>v-&gt;<ref refid="struct_vital_signs_1a110b3f24528e0f5769cb82f3a0c07485" kindref="member">systolic_bp</ref>,<sp/>v-&gt;<ref refid="struct_vital_signs_1ab81723ab54ad295a71ba56f0ef52318f" kindref="member">diastolic_bp</ref>,</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="vitals_8c_1a20a209843ea1eeff8484a7998d492615" kindref="member">alert_level_str</ref>(<ref refid="vitals_8c_1a3c853e30a899042babf9fdd2bd2cbfc1" kindref="member">check_blood_pressure</ref>(v-&gt;<ref refid="struct_vital_signs_1a110b3f24528e0f5769cb82f3a0c07485" kindref="member">systolic_bp</ref>,<sp/>v-&gt;<ref refid="struct_vital_signs_1ab81723ab54ad295a71ba56f0ef52318f" kindref="member">diastolic_bp</ref>)));</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/><sp/>Temperature<sp/>:<sp/>%.1f<sp/>C<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[%s]\n&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>v-&gt;<ref refid="struct_vital_signs_1af0a43a24a6e26683adde5612cf626365" kindref="member">temperature</ref>,</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="vitals_8c_1a20a209843ea1eeff8484a7998d492615" kindref="member">alert_level_str</ref>(<ref refid="vitals_8c_1aef7f6fa183fbc5412c13ea63bd2b62ce" kindref="member">check_temperature</ref>(v-&gt;<ref refid="struct_vital_signs_1af0a43a24a6e26683adde5612cf626365" kindref="member">temperature</ref>)));</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/><sp/>SpO2<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/>%3d%%<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[%s]\n&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>v-&gt;<ref refid="struct_vital_signs_1a1b524bb13d6c36ec564c7d94a5e953c1" kindref="member">spo2</ref>,</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="vitals_8c_1a20a209843ea1eeff8484a7998d492615" kindref="member">alert_level_str</ref>(<ref refid="vitals_8c_1ac0bc076e63894a96df90f2eab73c88fe" kindref="member">check_spo2</ref>(v-&gt;<ref refid="struct_vital_signs_1a1b524bb13d6c36ec564c7d94a5e953c1" kindref="member">spo2</ref>)));</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/><sp/>Status<sp/><sp/><sp/><sp/><sp/><sp/>:<sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="vitals_8c_1a20a209843ea1eeff8484a7998d492615" kindref="member">alert_level_str</ref>(status));</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/>n<sp/>=<sp/><ref refid="alerts_8c_1a98b6140a4d21520d639bc81d1f7c08b7" kindref="member">generate_alerts</ref>(v,<sp/>alerts,<sp/><ref refid="alerts_8h_1a40c583285d17e2d0ab75aca5669f53d0" kindref="member">MAX_ALERTS</ref>);</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>n;<sp/>i++)<sp/>{</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*pfx<sp/>=<sp/>(alerts[i].<ref refid="struct_alert_1af56c1ce36b2939c0bb172344e1340346" kindref="member">level</ref><sp/>==<sp/><ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324a4a380f84419fb8940cfc9bde871a26e7" kindref="member">ALERT_CRITICAL</ref>)</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>?<sp/></highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/><sp/>!!<sp/>CRITICAL&quot;</highlight><highlight class="normal"><sp/>:<sp/></highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/><sp/>!<sp/><sp/>WARNING<sp/>&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;%s<sp/><sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/>pfx,<sp/>alerts[i].message);</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="65"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="67"><highlight class="comment">/**</highlight></codeline>
+<codeline lineno="68"><highlight class="comment"><sp/>*<sp/>@brief<sp/>Run<sp/>the<sp/>monitoring<sp/>session<sp/>for<sp/>Patient<sp/>1<sp/>(deterioration<sp/>scenario).</highlight></codeline>
+<codeline lineno="69"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="70"><highlight class="comment"><sp/>*<sp/>@details<sp/>Admits<sp/>Sarah<sp/>Johnson<sp/>and<sp/>records<sp/>three<sp/>readings<sp/>that<sp/>progress</highlight></codeline>
+<codeline lineno="71"><highlight class="comment"><sp/>*<sp/>from<sp/>NORMAL<sp/>→<sp/>WARNING<sp/>→<sp/>CRITICAL<sp/>to<sp/>demonstrate<sp/>full<sp/>alert<sp/>escalation.</highlight></codeline>
+<codeline lineno="72"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="73" refid="main_8c_1a1a904050ef641d46ba74b91e8ff5b7f9" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="main_8c_1a1a904050ef641d46ba74b91e8ff5b7f9" kindref="member">monitor_patient</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="74"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="struct_patient_record" kindref="compound">PatientRecord</ref><sp/>rec;</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="struct_vital_signs" kindref="compound">VitalSigns</ref><sp/>v;</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"></highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="patient_8c_1a8fa76aa96b383df3556d391e64953536" kindref="member">patient_init</ref>(&amp;rec,<sp/>1001,<sp/></highlight><highlight class="stringliteral">&quot;Sarah<sp/>Johnson&quot;</highlight><highlight class="normal">,<sp/>52,<sp/>72.5f,<sp/>1.66f);</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"></highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;==================================================\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;<sp/><sp/>PATIENT<sp/>VITAL<sp/>SIGNS<sp/>MONITOR<sp/><sp/>v1.0\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;<sp/><sp/>Medical<sp/>Device<sp/>|<sp/>IEC<sp/>62304<sp/>Compliant\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;==================================================\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;\n<sp/><sp/>Admitting:<sp/>%s<sp/><sp/>(ID<sp/>%d,<sp/>Age<sp/>%d)\n&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>rec.<ref refid="struct_patient_record_1ab7dbbd6e5424bac1e098abb80bfb1471" kindref="member">info</ref>.<ref refid="struct_patient_info_1a3776b66e6a77da15c48178e2fdccb509" kindref="member">name</ref>,<sp/>rec.<ref refid="struct_patient_record_1ab7dbbd6e5424bac1e098abb80bfb1471" kindref="member">info</ref>.<ref refid="struct_patient_info_1a1f5ee862f6bc0244c79ac1088753455b" kindref="member">id</ref>,<sp/>rec.<ref refid="struct_patient_record_1ab7dbbd6e5424bac1e098abb80bfb1471" kindref="member">info</ref>.<ref refid="struct_patient_info_1adfb737e9dc8cfca072ad572e3796530e" kindref="member">age</ref>);</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;<sp/><sp/>BMI<sp/>:<sp/>%.1f<sp/><sp/>(%s)\n&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="vitals_8c_1a10dc695991eacf8ffea85c92b9331aec" kindref="member">calculate_bmi</ref>(rec.<ref refid="struct_patient_record_1ab7dbbd6e5424bac1e098abb80bfb1471" kindref="member">info</ref>.<ref refid="struct_patient_info_1a611e10017c955370cc2314da85a6b2c2" kindref="member">weight_kg</ref>,<sp/>rec.<ref refid="struct_patient_record_1ab7dbbd6e5424bac1e098abb80bfb1471" kindref="member">info</ref>.<ref refid="struct_patient_info_1a3660352e74d08d02b4039ce9ee4413dd" kindref="member">height_m</ref>),</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="vitals_8c_1a7a7981a0a087b3b98763ed48bc789888" kindref="member">bmi_category</ref>(<ref refid="vitals_8c_1a10dc695991eacf8ffea85c92b9331aec" kindref="member">calculate_bmi</ref>(rec.<ref refid="struct_patient_record_1ab7dbbd6e5424bac1e098abb80bfb1471" kindref="member">info</ref>.<ref refid="struct_patient_info_1a611e10017c955370cc2314da85a6b2c2" kindref="member">weight_kg</ref>,<sp/>rec.<ref refid="struct_patient_record_1ab7dbbd6e5424bac1e098abb80bfb1471" kindref="member">info</ref>.<ref refid="struct_patient_info_1a3660352e74d08d02b4039ce9ee4413dd" kindref="member">height_m</ref>)));</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"></highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/>v<sp/>=<sp/>(<ref refid="struct_vital_signs" kindref="compound">VitalSigns</ref>){<sp/>78,<sp/>122,<sp/>82,<sp/>36.7f,<sp/>98<sp/>};<sp/></highlight><highlight class="comment">/*<sp/>normal<sp/>admission<sp/><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="patient_8c_1a0e22c10046f3778c1f194cc6377d7984" kindref="member">patient_add_reading</ref>(&amp;rec,<sp/>&amp;v);</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="main_8c_1a0082d156ee2712806a55606f6637d160" kindref="member">print_reading</ref>(1,<sp/>&amp;v);</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/>v<sp/>=<sp/>(<ref refid="struct_vital_signs" kindref="compound">VitalSigns</ref>){<sp/>108,<sp/>148,<sp/>94,<sp/>37.9f,<sp/>93<sp/>};<sp/></highlight><highlight class="comment">/*<sp/>mild<sp/>deterioration<sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="patient_8c_1a0e22c10046f3778c1f194cc6377d7984" kindref="member">patient_add_reading</ref>(&amp;rec,<sp/>&amp;v);</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="main_8c_1a0082d156ee2712806a55606f6637d160" kindref="member">print_reading</ref>(2,<sp/>&amp;v);</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"></highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/>v<sp/>=<sp/>(<ref refid="struct_vital_signs" kindref="compound">VitalSigns</ref>){<sp/>135,<sp/>175,<sp/>112,<sp/>39.8f,<sp/>87<sp/>};<sp/></highlight><highlight class="comment">/*<sp/>acute<sp/>crisis<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="patient_8c_1a0e22c10046f3778c1f194cc6377d7984" kindref="member">patient_add_reading</ref>(&amp;rec,<sp/>&amp;v);</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="main_8c_1a0082d156ee2712806a55606f6637d160" kindref="member">print_reading</ref>(3,<sp/>&amp;v);</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"></highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="patient_8c_1a19d76f7281d5f5ad5408c1ff4dc2ee11" kindref="member">patient_print_summary</ref>(&amp;rec);</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="105"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="107"><highlight class="comment">/**</highlight></codeline>
+<codeline lineno="108"><highlight class="comment"><sp/>*<sp/>@brief<sp/>Run<sp/>the<sp/>monitoring<sp/>session<sp/>for<sp/>Patient<sp/>2<sp/>(bradycardia<sp/>scenario).</highlight></codeline>
+<codeline lineno="109"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="110"><highlight class="comment"><sp/>*<sp/>@details<sp/>Admits<sp/>David<sp/>Okonkwo<sp/>and<sp/>records<sp/>two<sp/>readings,<sp/>with<sp/>the<sp/>second</highlight></codeline>
+<codeline lineno="111"><highlight class="comment"><sp/>*<sp/>showing<sp/>isolated<sp/>severe<sp/>bradycardia<sp/>(38<sp/>bpm)<sp/>while<sp/>all<sp/>other<sp/>parameters</highlight></codeline>
+<codeline lineno="112"><highlight class="comment"><sp/>*<sp/>remain<sp/>normal.</highlight></codeline>
+<codeline lineno="113"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="114" refid="main_8c_1a418db4bf280a08fda4493a816c841643" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="main_8c_1a418db4bf280a08fda4493a816c841643" kindref="member">monitor_second_patient</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="115"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="struct_patient_record" kindref="compound">PatientRecord</ref><sp/>rec;</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="struct_vital_signs" kindref="compound">VitalSigns</ref><sp/>v;</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"></highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="patient_8c_1a8fa76aa96b383df3556d391e64953536" kindref="member">patient_init</ref>(&amp;rec,<sp/>1002,<sp/></highlight><highlight class="stringliteral">&quot;David<sp/>Okonkwo&quot;</highlight><highlight class="normal">,<sp/>34,<sp/>85.0f,<sp/>1.80f);</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"></highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;\n==================================================\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;<sp/><sp/>SECOND<sp/>PATIENT\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;==================================================\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;\n<sp/><sp/>Admitting:<sp/>%s<sp/><sp/>(ID<sp/>%d,<sp/>Age<sp/>%d)\n&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>rec.<ref refid="struct_patient_record_1ab7dbbd6e5424bac1e098abb80bfb1471" kindref="member">info</ref>.<ref refid="struct_patient_info_1a3776b66e6a77da15c48178e2fdccb509" kindref="member">name</ref>,<sp/>rec.<ref refid="struct_patient_record_1ab7dbbd6e5424bac1e098abb80bfb1471" kindref="member">info</ref>.<ref refid="struct_patient_info_1a1f5ee862f6bc0244c79ac1088753455b" kindref="member">id</ref>,<sp/>rec.<ref refid="struct_patient_record_1ab7dbbd6e5424bac1e098abb80bfb1471" kindref="member">info</ref>.<ref refid="struct_patient_info_1adfb737e9dc8cfca072ad572e3796530e" kindref="member">age</ref>);</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;<sp/><sp/>BMI<sp/>:<sp/>%.1f<sp/><sp/>(%s)\n&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="vitals_8c_1a10dc695991eacf8ffea85c92b9331aec" kindref="member">calculate_bmi</ref>(rec.<ref refid="struct_patient_record_1ab7dbbd6e5424bac1e098abb80bfb1471" kindref="member">info</ref>.<ref refid="struct_patient_info_1a611e10017c955370cc2314da85a6b2c2" kindref="member">weight_kg</ref>,<sp/>rec.<ref refid="struct_patient_record_1ab7dbbd6e5424bac1e098abb80bfb1471" kindref="member">info</ref>.<ref refid="struct_patient_info_1a3660352e74d08d02b4039ce9ee4413dd" kindref="member">height_m</ref>),</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="vitals_8c_1a7a7981a0a087b3b98763ed48bc789888" kindref="member">bmi_category</ref>(<ref refid="vitals_8c_1a10dc695991eacf8ffea85c92b9331aec" kindref="member">calculate_bmi</ref>(rec.<ref refid="struct_patient_record_1ab7dbbd6e5424bac1e098abb80bfb1471" kindref="member">info</ref>.<ref refid="struct_patient_info_1a611e10017c955370cc2314da85a6b2c2" kindref="member">weight_kg</ref>,<sp/>rec.<ref refid="struct_patient_record_1ab7dbbd6e5424bac1e098abb80bfb1471" kindref="member">info</ref>.<ref refid="struct_patient_info_1a3660352e74d08d02b4039ce9ee4413dd" kindref="member">height_m</ref>)));</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"></highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/>v<sp/>=<sp/>(<ref refid="struct_vital_signs" kindref="compound">VitalSigns</ref>){<sp/>68,<sp/>118,<sp/>76,<sp/>36.5f,<sp/>99<sp/>};<sp/></highlight><highlight class="comment">/*<sp/>stable<sp/>baseline<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="patient_8c_1a0e22c10046f3778c1f194cc6377d7984" kindref="member">patient_add_reading</ref>(&amp;rec,<sp/>&amp;v);</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="main_8c_1a0082d156ee2712806a55606f6637d160" kindref="member">print_reading</ref>(1,<sp/>&amp;v);</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"></highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/>v<sp/>=<sp/>(<ref refid="struct_vital_signs" kindref="compound">VitalSigns</ref>){<sp/>38,<sp/>110,<sp/>72,<sp/>36.6f,<sp/>97<sp/>};<sp/></highlight><highlight class="comment">/*<sp/>bradycardia<sp/>episode<sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="patient_8c_1a0e22c10046f3778c1f194cc6377d7984" kindref="member">patient_add_reading</ref>(&amp;rec,<sp/>&amp;v);</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="main_8c_1a0082d156ee2712806a55606f6637d160" kindref="member">print_reading</ref>(2,<sp/>&amp;v);</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"></highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="patient_8c_1a19d76f7281d5f5ad5408c1ff4dc2ee11" kindref="member">patient_print_summary</ref>(&amp;rec);</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="141"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="143"><highlight class="comment">/**</highlight></codeline>
+<codeline lineno="144"><highlight class="comment"><sp/>*<sp/>@brief<sp/>Application<sp/>entry<sp/>point.</highlight></codeline>
+<codeline lineno="145"><highlight class="comment"><sp/>*<sp/>@return<sp/>0<sp/>on<sp/>successful<sp/>completion.</highlight></codeline>
+<codeline lineno="146"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="147" refid="main_8c_1a840291bc02cba5474a4cb46a9b9566fe" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="main_8c_1a840291bc02cba5474a4cb46a9b9566fe" kindref="member">main</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="148"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="main_8c_1a1a904050ef641d46ba74b91e8ff5b7f9" kindref="member">monitor_patient</ref>();</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="main_8c_1a418db4bf280a08fda4493a816c841643" kindref="member">monitor_second_patient</ref>();</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="152"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="src/main.c"/>
+  </compounddef>
+</doxygen>

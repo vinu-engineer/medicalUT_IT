@@ -1,0 +1,21 @@
+<map id="update_dashboard" name="update_dashboard">
+<area shape="rect" id="Node000001" title="Refresh all dynamic dashboard content after any data change. @req SWR&#45;GUI&#45;003 @req SWR&#45;GUI&#45;004." alt="" coords="538,82,665,108"/>
+<area shape="rect" id="Node000002" href="$gui__main_8c.html#a50c9496063704973573429586a90b27d" title=" " alt="" coords="126,82,207,108"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="561,74,503,47,426,21,383,12,340,8,297,11,256,22,233,34,212,50,180,83,176,79,208,46,230,29,254,17,296,6,340,3,384,7,427,16,505,43,567,74"/>
+<area shape="rect" id="Node000004" href="$gui__main_8c.html#a9d7273263f3a31bf701590beb4c5b1d1" title="Record a new vital signs reading from the vitals entry fields. @req SWR&#45;GUI&#45;004." alt="" coords="255,31,367,58"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="526,78,489,72,368,54,368,48,490,67,531,78"/>
+<area shape="rect" id="Node000005" href="$gui__main_8c.html#a6bed6b36812029c7bc2eb263a12e5c98" title="Admit a patient from the identity fields. @req SWR&#45;GUI&#45;004." alt="" coords="415,82,490,108"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="519,95,490,98,490,92,525,95"/>
+<area shape="rect" id="Node000006" href="$gui__main_8c.html#a9106ea80981b1db52b607a5e58f0ecf3" title=" " alt="" coords="266,132,357,159"/>
+<area shape="poly" id="edge12_Node000001_Node000006" title=" " alt="" coords="531,112,490,123,358,143,357,138,489,118,526,113"/>
+<area shape="rect" id="Node000007" href="$gui__main_8c.html#a11329148e25059d43a9d848bf4f90d4b" title=" " alt="" coords="417,183,488,210"/>
+<area shape="poly" id="edge10_Node000001_Node000007" title=" " alt="" coords="570,117,475,185,473,180,565,118"/>
+<area shape="rect" id="Node000003" href="$gui__main_8c.html#aab234127c99873cb463e482155cb679f" title=" " alt="" coords="5,82,78,108"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="108,97,79,98,77,93,112,94"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="254,65,208,84,206,79,259,62"/>
+<area shape="poly" id="edge6_Node000005_Node000002" title=" " alt="" coords="398,97,208,98,207,92,402,93"/>
+<area shape="poly" id="edge7_Node000005_Node000004" title=" " alt="" coords="398,77,350,61,351,56,403,76"/>
+<area shape="poly" id="edge8_Node000005_Node000006" title=" " alt="" coords="403,113,351,134,350,129,398,114"/>
+<area shape="poly" id="edge9_Node000006_Node000002" title=" " alt="" coords="254,127,207,112,207,106,259,126"/>
+<area shape="poly" id="edge11_Node000007_Node000002" title=" " alt="" coords="399,198,330,195,291,187,254,173,230,160,209,143,178,112,180,107,213,139,233,156,256,169,293,181,331,189,404,198"/>
+</map>

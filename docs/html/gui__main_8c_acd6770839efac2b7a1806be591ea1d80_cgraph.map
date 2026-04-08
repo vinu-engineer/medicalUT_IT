@@ -1,0 +1,7 @@
+<map id="paint_tile" name="paint_tile">
+<area shape="rect" id="Node000001" title="Paint one colour&#45;coded vital sign tile." alt="" coords="5,31,79,57"/>
+<area shape="rect" id="Node000002" href="$gui__main_8c.html#a18faa01dfc1221353f0ca130f5647098" title=" " alt="" coords="127,5,226,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="79,35,114,30,109,32,80,40"/>
+<area shape="rect" id="Node000003" href="$gui__main_8c.html#a44c4ee73fc9a634398e794afaf73d079" title=" " alt="" coords="145,56,208,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="79,48,132,59,127,62,79,54"/>
+</map>

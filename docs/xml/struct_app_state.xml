@@ -1,0 +1,222 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="struct_app_state" kind="struct" language="C++" prot="public">
+    <compoundname>AppState</compoundname>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct_app_state_1a34780c5265691b9078b8ffd2466fdc86" prot="public" static="no" mutable="no">
+        <type>HFONT</type>
+        <definition>HFONT AppState::font_hdr</definition>
+        <argsstring></argsstring>
+        <name>font_hdr</name>
+        <qualifiedname>AppState::font_hdr</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/gui_main.c" line="133" column="11" bodyfile="src/gui_main.c" bodystart="133" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_app_state_1ab32dd57b5cbdac43f1ee6cac827a2d9f" prot="public" static="no" mutable="no">
+        <type>HFONT</type>
+        <definition>HFONT AppState::font_status</definition>
+        <argsstring></argsstring>
+        <name>font_status</name>
+        <qualifiedname>AppState::font_status</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/gui_main.c" line="136" column="11" bodyfile="src/gui_main.c" bodystart="136" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_app_state_1a17ac085ad68ac3edb3fce102d470f8c5" prot="public" static="no" mutable="no">
+        <type>HFONT</type>
+        <definition>HFONT AppState::font_tile_lbl</definition>
+        <argsstring></argsstring>
+        <name>font_tile_lbl</name>
+        <qualifiedname>AppState::font_tile_lbl</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/gui_main.c" line="135" column="11" bodyfile="src/gui_main.c" bodystart="135" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_app_state_1a8194637f0c7e1a4274c1e7f87b7edce4" prot="public" static="no" mutable="no">
+        <type>HFONT</type>
+        <definition>HFONT AppState::font_tile_val</definition>
+        <argsstring></argsstring>
+        <name>font_tile_val</name>
+        <qualifiedname>AppState::font_tile_val</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/gui_main.c" line="134" column="11" bodyfile="src/gui_main.c" bodystart="134" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_app_state_1adc53484fc19ebd9353a65f8c8229fb8e" prot="public" static="no" mutable="no">
+        <type>HFONT</type>
+        <definition>HFONT AppState::font_ui</definition>
+        <argsstring></argsstring>
+        <name>font_ui</name>
+        <qualifiedname>AppState::font_ui</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/gui_main.c" line="137" column="11" bodyfile="src/gui_main.c" bodystart="137" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_app_state_1a36f1793418c74c7addfa202bd541a62a" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int AppState::has_patient</definition>
+        <argsstring></argsstring>
+        <name>has_patient</name>
+        <qualifiedname>AppState::has_patient</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/gui_main.c" line="127" column="19" bodyfile="src/gui_main.c" bodystart="127" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_app_state_1a034c8f76bfad471f4c9f297de1b3ff72" prot="public" static="no" mutable="no">
+        <type>HWND</type>
+        <definition>HWND AppState::hwnd_dash</definition>
+        <argsstring></argsstring>
+        <name>hwnd_dash</name>
+        <qualifiedname>AppState::hwnd_dash</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/gui_main.c" line="120" column="15" bodyfile="src/gui_main.c" bodystart="120" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_app_state_1a9faaf3f49935e3924a54f2cbe733b16b" prot="public" static="no" mutable="no">
+        <type>HWND</type>
+        <definition>HWND AppState::hwnd_login</definition>
+        <argsstring></argsstring>
+        <name>hwnd_login</name>
+        <qualifiedname>AppState::hwnd_login</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/gui_main.c" line="119" column="15" bodyfile="src/gui_main.c" bodystart="119" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_app_state_1a986799462ede8a725d35ab7ae156d3e2" prot="public" static="no" mutable="no">
+        <type>HINSTANCE</type>
+        <definition>HINSTANCE AppState::instance</definition>
+        <argsstring></argsstring>
+        <name>instance</name>
+        <qualifiedname>AppState::instance</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/gui_main.c" line="118" column="15" bodyfile="src/gui_main.c" bodystart="118" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_app_state_1a2620ae898d57e0d38f6afa6d8ebde90d" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char AppState::logged_user[AUTH_MAX_CREDENTIAL_LEN]</definition>
+        <argsstring>[AUTH_MAX_CREDENTIAL_LEN]</argsstring>
+        <name>logged_user</name>
+        <qualifiedname>AppState::logged_user</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/gui_main.c" line="123" column="10" bodyfile="src/gui_main.c" bodystart="123" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_app_state_1ab1c026589e038b34111768749a5fa35c" prot="public" static="no" mutable="no">
+        <type><ref refid="struct_patient_record" kindref="compound">PatientRecord</ref></type>
+        <definition>PatientRecord AppState::patient</definition>
+        <argsstring></argsstring>
+        <name>patient</name>
+        <qualifiedname>AppState::patient</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/gui_main.c" line="126" column="19" bodyfile="src/gui_main.c" bodystart="126" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_app_state_1a0728ad57f68566bfde6d68eff446dea3" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int AppState::sim_paused</definition>
+        <argsstring></argsstring>
+        <name>sim_paused</name>
+        <qualifiedname>AppState::sim_paused</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/gui_main.c" line="130" column="19" bodyfile="src/gui_main.c" bodystart="130" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>AppState</label>
+        <link refid="struct_app_state"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>+patient</edgelabel>
+        </childnode>
+      </node>
+      <node id="3">
+        <label>PatientInfo</label>
+        <link refid="struct_patient_info"/>
+      </node>
+      <node id="2">
+        <label>PatientRecord</label>
+        <link refid="struct_patient_record"/>
+        <childnode refid="3" relation="usage">
+          <edgelabel>+info</edgelabel>
+        </childnode>
+        <childnode refid="4" relation="usage">
+          <edgelabel>+readings</edgelabel>
+        </childnode>
+      </node>
+      <node id="4">
+        <label>VitalSigns</label>
+        <link refid="struct_vital_signs"/>
+      </node>
+    </collaborationgraph>
+    <location file="src/gui_main.c" line="117" column="1" bodyfile="src/gui_main.c" bodystart="117" bodyend="138"/>
+    <listofallmembers>
+      <member refid="struct_app_state_1a34780c5265691b9078b8ffd2466fdc86" prot="public" virt="non-virtual"><scope>AppState</scope><name>font_hdr</name></member>
+      <member refid="struct_app_state_1ab32dd57b5cbdac43f1ee6cac827a2d9f" prot="public" virt="non-virtual"><scope>AppState</scope><name>font_status</name></member>
+      <member refid="struct_app_state_1a17ac085ad68ac3edb3fce102d470f8c5" prot="public" virt="non-virtual"><scope>AppState</scope><name>font_tile_lbl</name></member>
+      <member refid="struct_app_state_1a8194637f0c7e1a4274c1e7f87b7edce4" prot="public" virt="non-virtual"><scope>AppState</scope><name>font_tile_val</name></member>
+      <member refid="struct_app_state_1adc53484fc19ebd9353a65f8c8229fb8e" prot="public" virt="non-virtual"><scope>AppState</scope><name>font_ui</name></member>
+      <member refid="struct_app_state_1a36f1793418c74c7addfa202bd541a62a" prot="public" virt="non-virtual"><scope>AppState</scope><name>has_patient</name></member>
+      <member refid="struct_app_state_1a034c8f76bfad471f4c9f297de1b3ff72" prot="public" virt="non-virtual"><scope>AppState</scope><name>hwnd_dash</name></member>
+      <member refid="struct_app_state_1a9faaf3f49935e3924a54f2cbe733b16b" prot="public" virt="non-virtual"><scope>AppState</scope><name>hwnd_login</name></member>
+      <member refid="struct_app_state_1a986799462ede8a725d35ab7ae156d3e2" prot="public" virt="non-virtual"><scope>AppState</scope><name>instance</name></member>
+      <member refid="struct_app_state_1a2620ae898d57e0d38f6afa6d8ebde90d" prot="public" virt="non-virtual"><scope>AppState</scope><name>logged_user</name></member>
+      <member refid="struct_app_state_1ab1c026589e038b34111768749a5fa35c" prot="public" virt="non-virtual"><scope>AppState</scope><name>patient</name></member>
+      <member refid="struct_app_state_1a0728ad57f68566bfde6d68eff446dea3" prot="public" virt="non-virtual"><scope>AppState</scope><name>sim_paused</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

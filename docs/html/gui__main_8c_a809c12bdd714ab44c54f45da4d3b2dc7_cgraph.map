@@ -1,0 +1,20 @@
+<map id="paint_tiles" name="paint_tiles">
+<area shape="rect" id="Node000001" title="Paint the 2×2 vital sign tile grid. @req SWR&#45;GUI&#45;003." alt="" coords="5,157,86,184"/>
+<area shape="rect" id="Node000002" href="$vitals_8c.html#a3c853e30a899042babf9fdd2bd2cbfc1" title="Classify a blood pressure reading." alt="" coords="134,5,285,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="50,156,80,101,103,69,132,42,142,38,138,42,135,46,107,73,85,104,55,158"/>
+<area shape="rect" id="Node000003" href="$vitals_8c.html#a7604eb6b23010f139f6f960b184a3b28" title="Classify a heart rate reading." alt="" coords="149,56,270,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="57,155,89,124,132,92,146,87,143,91,135,97,93,128,61,159"/>
+<area shape="rect" id="Node000004" href="$vitals_8c.html#ac0bc076e63894a96df90f2eab73c88fe" title="Classify an SpO2 reading." alt="" coords="164,107,255,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="85,156,151,136,148,140,88,161"/>
+<area shape="rect" id="Node000005" href="$vitals_8c.html#aef7f6fa183fbc5412c13ea63bd2b62ce" title="Classify a temperature reading." alt="" coords="143,157,276,184"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="85,168,130,169,126,172,87,173"/>
+<area shape="rect" id="Node000006" href="$gui__main_8c.html#a44c4ee73fc9a634398e794afaf73d079" title=" " alt="" coords="351,208,414,235"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="86,181,134,193,242,209,338,218,333,220,242,214,133,199,87,186"/>
+<area shape="rect" id="Node000007" href="$gui__main_8c.html#acd6770839efac2b7a1806be591ea1d80" title="Paint one colour&#45;coded vital sign tile." alt="" coords="173,259,246,285"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="61,182,95,209,135,238,161,252,156,253,132,242,92,214,61,187"/>
+<area shape="rect" id="Node000009" href="$patient_8c.html#aaf2d461ddd1efafe4887647d0c8688d7" title="Return a pointer to the most recent reading, or NULL if none exist." alt="" coords="135,309,284,336"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="54,182,85,238,107,269,135,295,143,302,137,301,132,299,103,272,80,241,52,187"/>
+<area shape="poly" id="edge8_Node000007_Node000006" title=" " alt="" coords="246,259,339,234,333,236,247,264"/>
+<area shape="rect" id="Node000008" href="$gui__main_8c.html#a18faa01dfc1221353f0ca130f5647098" title=" " alt="" coords="333,259,432,285"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="246,269,320,272,315,272,247,275"/>
+</map>

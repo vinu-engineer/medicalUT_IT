@@ -1,0 +1,265 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="sim__vitals_8c" kind="file" language="C++">
+    <compoundname>sim_vitals.c</compoundname>
+    <includes refid="hw__vitals_8h" local="yes">hw_vitals.h</includes>
+    <incdepgraph>
+      <node id="2">
+        <label>hw_vitals.h</label>
+        <link refid="hw__vitals_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>vitals.h</label>
+        <link refid="vitals_8h"/>
+      </node>
+      <node id="1">
+        <label>src/sim_vitals.c</label>
+        <link refid="sim__vitals_8c"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+    <sectiondef kind="define">
+      <memberdef kind="define" id="sim__vitals_8c_1a63817750df660b5125ca53cad7689339" prot="public" static="no">
+        <name>SIM_SEQUENCE_LEN</name>
+        <initializer>20</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/sim_vitals.c" line="39" column="9" bodyfile="src/sim_vitals.c" bodystart="39" bodyend="-1"/>
+        <referencedby refid="sim__vitals_8c_1ac277bf28fcc192d8dd7cd5b3466a4fa9" compoundref="sim__vitals_8c" startline="103" endline="107">hw_get_next_reading</referencedby>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="var">
+      <memberdef kind="variable" id="sim__vitals_8c_1afc77b868eb0e1ef26395ac498e0eedf4" prot="public" static="yes" mutable="no">
+        <type>int</type>
+        <definition>int g_sim_index</definition>
+        <argsstring></argsstring>
+        <name>g_sim_index</name>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Current position within SIM_SEQUENCE. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/sim_vitals.c" line="80" column="12" bodyfile="src/sim_vitals.c" bodystart="80" bodyend="-1"/>
+        <referencedby refid="sim__vitals_8c_1ac277bf28fcc192d8dd7cd5b3466a4fa9" compoundref="sim__vitals_8c" startline="103" endline="107">hw_get_next_reading</referencedby>
+        <referencedby refid="sim__vitals_8c_1ae58df14f30461cb37e8607aca5522846" compoundref="sim__vitals_8c" startline="90" endline="93">hw_init</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="sim__vitals_8c_1a53df7844b81fc29d058537c3ca28e87f" prot="public" static="yes" mutable="no">
+        <type>const <ref refid="struct_vital_signs" kindref="compound">VitalSigns</ref></type>
+        <definition>const VitalSigns SIM_SEQUENCE[20]</definition>
+        <argsstring>[20]</argsstring>
+        <name>SIM_SEQUENCE</name>
+        <briefdescription>
+<para>Fixed 20-reading clinical scenario used by the simulation. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Values are representative of realistic clinical deterioration and recovery patterns. They are NOT to be used as diagnostic thresholds. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/sim_vitals.c" line="47" column="25" bodyfile="src/sim_vitals.c" bodystart="47" bodyend="77"/>
+        <referencedby refid="sim__vitals_8c_1ac277bf28fcc192d8dd7cd5b3466a4fa9" compoundref="sim__vitals_8c" startline="103" endline="107">hw_get_next_reading</referencedby>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="sim__vitals_8c_1ac277bf28fcc192d8dd7cd5b3466a4fa9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void hw_get_next_reading</definition>
+        <argsstring>(VitalSigns *out)</argsstring>
+        <name>hw_get_next_reading</name>
+        <param>
+          <type><ref refid="struct_vital_signs" kindref="compound">VitalSigns</ref> *</type>
+          <declname>out</declname>
+        </param>
+        <briefdescription>
+<para>Return the next entry from the scenario table, then advance. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Acquire the next vital signs reading from the data source.</para>
+<para>Wraps back to index 0 after index 19, producing a continuous cycle.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="out">out</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Written with the next <ref refid="struct_vital_signs" kindref="compound">VitalSigns</ref> sample. Must not be NULL. @req SWR-GUI-006 </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/sim_vitals.c" line="103" column="6" bodyfile="src/sim_vitals.c" bodystart="103" bodyend="107"/>
+        <references refid="sim__vitals_8c_1afc77b868eb0e1ef26395ac498e0eedf4" compoundref="sim__vitals_8c" startline="80">g_sim_index</references>
+        <references refid="sim__vitals_8c_1a53df7844b81fc29d058537c3ca28e87f" compoundref="sim__vitals_8c" startline="47" endline="77">SIM_SEQUENCE</references>
+        <references refid="sim__vitals_8c_1a63817750df660b5125ca53cad7689339" compoundref="sim__vitals_8c" startline="39">SIM_SEQUENCE_LEN</references>
+        <referencedby refid="gui__main_8c_1a50c9496063704973573429586a90b27d" compoundref="gui__main_8c" startline="726" endline="847">dash_proc</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="sim__vitals_8c_1ae58df14f30461cb37e8607aca5522846" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void hw_init</definition>
+        <argsstring>(void)</argsstring>
+        <name>hw_init</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+<para>Reset simulation index to the start of the scenario table. @req SWR-GUI-006. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Initialise the vital signs acquisition source. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/sim_vitals.c" line="90" column="6" bodyfile="src/sim_vitals.c" bodystart="90" bodyend="93"/>
+        <references refid="sim__vitals_8c_1afc77b868eb0e1ef26395ac498e0eedf4" compoundref="sim__vitals_8c" startline="80">g_sim_index</references>
+        <referencedby refid="gui__main_8c_1a50c9496063704973573429586a90b27d" compoundref="gui__main_8c" startline="726" endline="847">dash_proc</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Simulation back-end for the vital signs HAL (<ref refid="hw__vitals_8h" kindref="compound">hw_vitals.h</ref>). </para>
+    </briefdescription>
+    <detaileddescription>
+<para>Provides <ref refid="sim__vitals_8c_1ae58df14f30461cb37e8607aca5522846" kindref="member">hw_init()</ref> and <ref refid="sim__vitals_8c_1ac277bf28fcc192d8dd7cd5b3466a4fa9" kindref="member">hw_get_next_reading()</ref> using a fixed 20-entry clinical scenario table that cycles through four phases:</para>
+<para>Index 0– 4 : STABLE NORMAL — resting, all parameters within range Index 5– 8 : DETERIORATING — gradual rise into WARNING territory Index 9–11 : CRITICAL — life-threatening values Index 12–18 : RECOVERING — progressive return to normal Index 19 : STABLE NORMAL — cycle repeats</para>
+<para>To connect real hardware, replace this file with hw_driver.c that implements the same two function signatures without modifying any other source file (see <ref refid="hw__vitals_8h" kindref="compound">hw_vitals.h</ref> for the full contract).</para>
+<para>All storage is static — no heap allocation (SYS-012).</para>
+<sect1 id="sim__vitals_8c_1autotoc_md3_1s1"><sect2 id="sim__vitals_8c_1autotoc_md3_1s2"><sect3 id="sim__vitals_8c_1autotoc_md3">
+<title>IEC 62304 Traceability</title><para><itemizedlist>
+<listitem><para>Software Unit: UNIT-SIM</para>
+</listitem><listitem><para>Requirements covered: SWR-GUI-006</para>
+</listitem></itemizedlist>
+</para>
+<para><simplesect kind="version"><para>1.0.0 </para>
+</simplesect>
+<simplesect kind="date"><para>2026-04-07 </para>
+</simplesect>
+<simplesect kind="author"><para>vinu-engineer</para>
+</simplesect>
+<simplesect kind="copyright"><para>Medical Device Software — IEC 62304 Class B compliant. All rights reserved. </para>
+</simplesect>
+</para>
+</sect3></sect2></sect1>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/**</highlight></codeline>
+<codeline lineno="2"><highlight class="comment"><sp/>*<sp/>@file<sp/>sim_vitals.c</highlight></codeline>
+<codeline lineno="3"><highlight class="comment"><sp/>*<sp/>@brief<sp/>Simulation<sp/>back-end<sp/>for<sp/>the<sp/>vital<sp/>signs<sp/>HAL<sp/>(hw_vitals.h).</highlight></codeline>
+<codeline lineno="4"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/>*<sp/>@details</highlight></codeline>
+<codeline lineno="6"><highlight class="comment"><sp/>*<sp/>Provides<sp/>hw_init()<sp/>and<sp/>hw_get_next_reading()<sp/>using<sp/>a<sp/>fixed<sp/>20-entry</highlight></codeline>
+<codeline lineno="7"><highlight class="comment"><sp/>*<sp/>clinical<sp/>scenario<sp/>table<sp/>that<sp/>cycles<sp/>through<sp/>four<sp/>phases:</highlight></codeline>
+<codeline lineno="8"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="9"><highlight class="comment"><sp/>*<sp/><sp/><sp/>Index<sp/><sp/>0–<sp/>4<sp/>:<sp/>STABLE<sp/>NORMAL<sp/><sp/><sp/><sp/><sp/>—<sp/>resting,<sp/>all<sp/>parameters<sp/>within<sp/>range</highlight></codeline>
+<codeline lineno="10"><highlight class="comment"><sp/>*<sp/><sp/><sp/>Index<sp/><sp/>5–<sp/>8<sp/>:<sp/>DETERIORATING<sp/><sp/><sp/><sp/><sp/>—<sp/>gradual<sp/>rise<sp/>into<sp/>WARNING<sp/>territory</highlight></codeline>
+<codeline lineno="11"><highlight class="comment"><sp/>*<sp/><sp/><sp/>Index<sp/><sp/>9–11<sp/>:<sp/>CRITICAL<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>—<sp/>life-threatening<sp/>values</highlight></codeline>
+<codeline lineno="12"><highlight class="comment"><sp/>*<sp/><sp/><sp/>Index<sp/>12–18<sp/>:<sp/>RECOVERING<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>—<sp/>progressive<sp/>return<sp/>to<sp/>normal</highlight></codeline>
+<codeline lineno="13"><highlight class="comment"><sp/>*<sp/><sp/><sp/>Index<sp/>19<sp/><sp/><sp/><sp/>:<sp/>STABLE<sp/>NORMAL<sp/><sp/><sp/><sp/><sp/>—<sp/>cycle<sp/>repeats</highlight></codeline>
+<codeline lineno="14"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="15"><highlight class="comment"><sp/>*<sp/>To<sp/>connect<sp/>real<sp/>hardware,<sp/>replace<sp/>this<sp/>file<sp/>with<sp/>hw_driver.c<sp/>that</highlight></codeline>
+<codeline lineno="16"><highlight class="comment"><sp/>*<sp/>implements<sp/>the<sp/>same<sp/>two<sp/>function<sp/>signatures<sp/>without<sp/>modifying<sp/>any</highlight></codeline>
+<codeline lineno="17"><highlight class="comment"><sp/>*<sp/>other<sp/>source<sp/>file<sp/>(see<sp/>hw_vitals.h<sp/>for<sp/>the<sp/>full<sp/>contract).</highlight></codeline>
+<codeline lineno="18"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="19"><highlight class="comment"><sp/>*<sp/>All<sp/>storage<sp/>is<sp/>static<sp/>—<sp/>no<sp/>heap<sp/>allocation<sp/>(SYS-012).</highlight></codeline>
+<codeline lineno="20"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="21"><highlight class="comment"><sp/>*<sp/>###<sp/>IEC<sp/>62304<sp/>Traceability</highlight></codeline>
+<codeline lineno="22"><highlight class="comment"><sp/>*<sp/>-<sp/>Software<sp/>Unit:<sp/>UNIT-SIM</highlight></codeline>
+<codeline lineno="23"><highlight class="comment"><sp/>*<sp/>-<sp/>Requirements<sp/>covered:<sp/>SWR-GUI-006</highlight></codeline>
+<codeline lineno="24"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="25"><highlight class="comment"><sp/>*<sp/>@version<sp/>1.0.0</highlight></codeline>
+<codeline lineno="26"><highlight class="comment"><sp/>*<sp/>@date<sp/><sp/><sp/><sp/>2026-04-07</highlight></codeline>
+<codeline lineno="27"><highlight class="comment"><sp/>*<sp/>@author<sp/><sp/>vinu-engineer</highlight></codeline>
+<codeline lineno="28"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="29"><highlight class="comment"><sp/>*<sp/>@copyright<sp/>Medical<sp/>Device<sp/>Software<sp/>—<sp/>IEC<sp/>62304<sp/>Class<sp/>B<sp/>compliant.</highlight></codeline>
+<codeline lineno="30"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>All<sp/>rights<sp/>reserved.</highlight></codeline>
+<codeline lineno="31"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="hw__vitals_8h" kindref="compound">hw_vitals.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>=========================================================================</highlight></codeline>
+<codeline lineno="36"><highlight class="comment"><sp/>*<sp/>Simulation<sp/>scenario<sp/>table<sp/><sp/>(static<sp/>—<sp/>no<sp/>heap)</highlight></codeline>
+<codeline lineno="37"><highlight class="comment"><sp/>*<sp/>=========================================================================<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39" refid="sim__vitals_8c_1a63817750df660b5125ca53cad7689339" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SIM_SEQUENCE_LEN<sp/>20</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="41"><highlight class="comment">/**</highlight></codeline>
+<codeline lineno="42"><highlight class="comment"><sp/>*<sp/>@brief<sp/>Fixed<sp/>20-reading<sp/>clinical<sp/>scenario<sp/>used<sp/>by<sp/>the<sp/>simulation.</highlight></codeline>
+<codeline lineno="43"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="44"><highlight class="comment"><sp/>*<sp/>Values<sp/>are<sp/>representative<sp/>of<sp/>realistic<sp/>clinical<sp/>deterioration<sp/>and</highlight></codeline>
+<codeline lineno="45"><highlight class="comment"><sp/>*<sp/>recovery<sp/>patterns.<sp/>They<sp/>are<sp/>NOT<sp/>to<sp/>be<sp/>used<sp/>as<sp/>diagnostic<sp/>thresholds.</highlight></codeline>
+<codeline lineno="46"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="47" refid="sim__vitals_8c_1a53df7844b81fc29d058537c3ca28e87f" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="struct_vital_signs" kindref="compound">VitalSigns</ref><sp/><ref refid="sim__vitals_8c_1a53df7844b81fc29d058537c3ca28e87f" kindref="member">SIM_SEQUENCE</ref>[<ref refid="sim__vitals_8c_1a63817750df660b5125ca53cad7689339" kindref="member">SIM_SEQUENCE_LEN</ref>]<sp/>=<sp/>{</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>----<sp/>Phase<sp/>1:<sp/>Stable<sp/>NORMAL<sp/>(indices<sp/>0–4)<sp/>----<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/>{<sp/>74,<sp/>122,<sp/><sp/>80,<sp/>36.7f,<sp/>97<sp/>},</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/>{<sp/>72,<sp/>118,<sp/><sp/>78,<sp/>36.8f,<sp/>98<sp/>},</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/>{<sp/>76,<sp/>124,<sp/><sp/>82,<sp/>36.6f,<sp/>97<sp/>},</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/>{<sp/>71,<sp/>120,<sp/><sp/>79,<sp/>36.9f,<sp/>98<sp/>},</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/>{<sp/>73,<sp/>122,<sp/><sp/>80,<sp/>36.8f,<sp/>97<sp/>},</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>----<sp/>Phase<sp/>2:<sp/>Deteriorating<sp/>→<sp/>WARNING<sp/>(indices<sp/>5–8)<sp/>----<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/>{<sp/>85,<sp/>132,<sp/><sp/>84,<sp/>37.1f,<sp/>95<sp/>},</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/>{<sp/>92,<sp/>138,<sp/><sp/>87,<sp/>37.5f,<sp/>93<sp/>},</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/>{<sp/>98,<sp/>142,<sp/><sp/>91,<sp/>37.9f,<sp/>92<sp/>},</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/>{105,<sp/>148,<sp/><sp/>94,<sp/>38.4f,<sp/>91<sp/>},</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>----<sp/>Phase<sp/>3:<sp/>CRITICAL<sp/>(indices<sp/>9–11)<sp/>----<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/>{128,<sp/>168,<sp/>108,<sp/>39.2f,<sp/>88<sp/>},</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/>{142,<sp/>178,<sp/>114,<sp/>39.8f,<sp/>86<sp/>},</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/>{152,<sp/>182,<sp/>122,<sp/>39.9f,<sp/>84<sp/>},</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>----<sp/>Phase<sp/>4:<sp/>Recovering<sp/>(indices<sp/>12–18)<sp/>----<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/>{136,<sp/>172,<sp/>108,<sp/>39.4f,<sp/>87<sp/>},</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/>{118,<sp/>158,<sp/><sp/>96,<sp/>38.8f,<sp/>91<sp/>},</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/>{104,<sp/>144,<sp/><sp/>90,<sp/>38.2f,<sp/>93<sp/>},</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/>{<sp/>96,<sp/>136,<sp/><sp/>86,<sp/>37.6f,<sp/>94<sp/>},</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/>{<sp/>88,<sp/>128,<sp/><sp/>83,<sp/>37.3f,<sp/>95<sp/>},</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/>{<sp/>80,<sp/>124,<sp/><sp/>82,<sp/>37.2f,<sp/>96<sp/>},</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/>{<sp/>76,<sp/>122,<sp/><sp/>80,<sp/>36.9f,<sp/>97<sp/>},</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"></highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>----<sp/>Back<sp/>to<sp/>stable<sp/>(index<sp/>19)<sp/>—<sp/>cycle<sp/>repeats<sp/>----<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/>{<sp/>73,<sp/>120,<sp/><sp/>78,<sp/>36.8f,<sp/>98<sp/>}</highlight></codeline>
+<codeline lineno="77"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="79"><highlight class="comment">/**<sp/>Current<sp/>position<sp/>within<sp/>SIM_SEQUENCE.<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="80" refid="sim__vitals_8c_1afc77b868eb0e1ef26395ac498e0eedf4" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="sim__vitals_8c_1afc77b868eb0e1ef26395ac498e0eedf4" kindref="member">g_sim_index</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"></highlight></codeline>
+<codeline lineno="82"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>=========================================================================</highlight></codeline>
+<codeline lineno="83"><highlight class="comment"><sp/>*<sp/>HAL<sp/>implementation</highlight></codeline>
+<codeline lineno="84"><highlight class="comment"><sp/>*<sp/>=========================================================================<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="86"><highlight class="comment">/**</highlight></codeline>
+<codeline lineno="87"><highlight class="comment"><sp/>*<sp/>@brief<sp/>Reset<sp/>simulation<sp/>index<sp/>to<sp/>the<sp/>start<sp/>of<sp/>the<sp/>scenario<sp/>table.</highlight></codeline>
+<codeline lineno="88"><highlight class="comment"><sp/>*<sp/>@req<sp/>SWR-GUI-006</highlight></codeline>
+<codeline lineno="89"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="90" refid="sim__vitals_8c_1ae58df14f30461cb37e8607aca5522846" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="sim__vitals_8c_1ae58df14f30461cb37e8607aca5522846" kindref="member">hw_init</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="91"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="sim__vitals_8c_1afc77b868eb0e1ef26395ac498e0eedf4" kindref="member">g_sim_index</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="93"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="95"><highlight class="comment">/**</highlight></codeline>
+<codeline lineno="96"><highlight class="comment"><sp/>*<sp/>@brief<sp/>Return<sp/>the<sp/>next<sp/>entry<sp/>from<sp/>the<sp/>scenario<sp/>table,<sp/>then<sp/>advance.</highlight></codeline>
+<codeline lineno="97"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="98"><highlight class="comment"><sp/>*<sp/>Wraps<sp/>back<sp/>to<sp/>index<sp/>0<sp/>after<sp/>index<sp/>19,<sp/>producing<sp/>a<sp/>continuous<sp/>cycle.</highlight></codeline>
+<codeline lineno="99"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="100"><highlight class="comment"><sp/>*<sp/>@param[out]<sp/>out<sp/><sp/>Written<sp/>with<sp/>the<sp/>next<sp/>VitalSigns<sp/>sample.<sp/>Must<sp/>not<sp/>be<sp/>NULL.</highlight></codeline>
+<codeline lineno="101"><highlight class="comment"><sp/>*<sp/>@req<sp/>SWR-GUI-006</highlight></codeline>
+<codeline lineno="102"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="103" refid="sim__vitals_8c_1ac277bf28fcc192d8dd7cd5b3466a4fa9" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="sim__vitals_8c_1ac277bf28fcc192d8dd7cd5b3466a4fa9" kindref="member">hw_get_next_reading</ref>(<ref refid="struct_vital_signs" kindref="compound">VitalSigns</ref><sp/>*out)</highlight></codeline>
+<codeline lineno="104"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/>*out<sp/>=<sp/><ref refid="sim__vitals_8c_1a53df7844b81fc29d058537c3ca28e87f" kindref="member">SIM_SEQUENCE</ref>[<ref refid="sim__vitals_8c_1afc77b868eb0e1ef26395ac498e0eedf4" kindref="member">g_sim_index</ref>];</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="sim__vitals_8c_1afc77b868eb0e1ef26395ac498e0eedf4" kindref="member">g_sim_index</ref><sp/>=<sp/>(<ref refid="sim__vitals_8c_1afc77b868eb0e1ef26395ac498e0eedf4" kindref="member">g_sim_index</ref><sp/>+<sp/>1)<sp/>%<sp/><ref refid="sim__vitals_8c_1a63817750df660b5125ca53cad7689339" kindref="member">SIM_SEQUENCE_LEN</ref>;</highlight></codeline>
+<codeline lineno="107"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="src/sim_vitals.c"/>
+  </compounddef>
+</doxygen>

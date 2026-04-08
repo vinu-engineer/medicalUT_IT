@@ -103,28 +103,58 @@ TEST(SpO2, REQ_VIT_004_Critical_Zero)    { EXPECT_EQ(check_spo2(0),   ALERT_CRIT
 TEST(SpO2, REQ_VIT_004_Critical_Neg)     { EXPECT_EQ(check_spo2(-1),  ALERT_CRITICAL); }
 
 // =============================================================
+// SWR-VIT-008  check_respiration_rate()
+// =============================================================
+
+TEST(RespRate, SWR_VIT_008_Normal_12)      { EXPECT_EQ(check_respiration_rate(12), ALERT_NORMAL);   }
+TEST(RespRate, SWR_VIT_008_Normal_16)      { EXPECT_EQ(check_respiration_rate(16), ALERT_NORMAL);   }
+TEST(RespRate, SWR_VIT_008_Normal_20)      { EXPECT_EQ(check_respiration_rate(20), ALERT_NORMAL);   }
+TEST(RespRate, SWR_VIT_008_Warning_Low_9)  { EXPECT_EQ(check_respiration_rate(9),  ALERT_WARNING);  }
+TEST(RespRate, SWR_VIT_008_Warning_Low_11) { EXPECT_EQ(check_respiration_rate(11), ALERT_WARNING);  }
+TEST(RespRate, SWR_VIT_008_Warning_Hi_21)  { EXPECT_EQ(check_respiration_rate(21), ALERT_WARNING);  }
+TEST(RespRate, SWR_VIT_008_Warning_Hi_24)  { EXPECT_EQ(check_respiration_rate(24), ALERT_WARNING);  }
+TEST(RespRate, SWR_VIT_008_Critical_Lo_8)  { EXPECT_EQ(check_respiration_rate(8),  ALERT_CRITICAL); }
+TEST(RespRate, SWR_VIT_008_Critical_Lo_0)  { EXPECT_EQ(check_respiration_rate(0),  ALERT_CRITICAL); }
+TEST(RespRate, SWR_VIT_008_Critical_Lo_Neg){ EXPECT_EQ(check_respiration_rate(-1), ALERT_CRITICAL); }
+TEST(RespRate, SWR_VIT_008_Critical_Hi_25) { EXPECT_EQ(check_respiration_rate(25), ALERT_CRITICAL); }
+TEST(RespRate, SWR_VIT_008_Critical_Hi_40) { EXPECT_EQ(check_respiration_rate(40), ALERT_CRITICAL); }
+
+// =============================================================
 // REQ-VIT-005  overall_alert_level() — highest level wins
 // =============================================================
 
 TEST(OverallAlert, REQ_VIT_005_AllNormal) {
-    VitalSigns v = {80, 120, 80, 36.6f, 98};
+    VitalSigns v = {80, 120, 80, 36.6f, 98, 15};
     EXPECT_EQ(overall_alert_level(&v), ALERT_NORMAL);
 }
 TEST(OverallAlert, REQ_VIT_005_OneWarning) {
-    VitalSigns v = {105, 120, 80, 36.6f, 98}; // HR warning only
+    VitalSigns v = {105, 120, 80, 36.6f, 98, 15}; // HR warning only
     EXPECT_EQ(overall_alert_level(&v), ALERT_WARNING);
 }
 TEST(OverallAlert, REQ_VIT_005_OneCritical) {
-    VitalSigns v = {80, 120, 80, 36.6f, 85}; // SpO2 critical only
+    VitalSigns v = {80, 120, 80, 36.6f, 85, 15}; // SpO2 critical only
     EXPECT_EQ(overall_alert_level(&v), ALERT_CRITICAL);
 }
 TEST(OverallAlert, REQ_VIT_005_CriticalOverridesWarning) {
-    VitalSigns v = {105, 120, 80, 40.0f, 98}; // HR=warning, Temp=critical
+    VitalSigns v = {105, 120, 80, 40.0f, 98, 15}; // HR=warning, Temp=critical
     EXPECT_EQ(overall_alert_level(&v), ALERT_CRITICAL);
 }
 TEST(OverallAlert, REQ_VIT_005_AllCritical) {
-    VitalSigns v = {30, 50, 30, 34.0f, 80};
+    VitalSigns v = {30, 50, 30, 34.0f, 80, 30};
     EXPECT_EQ(overall_alert_level(&v), ALERT_CRITICAL);
+}
+TEST(OverallAlert, SWR_VIT_008_RRZeroSkipped) {
+    /* RR=0 means not measured — must NOT raise a spurious critical alert */
+    VitalSigns v = {80, 120, 80, 36.6f, 98, 0};
+    EXPECT_EQ(overall_alert_level(&v), ALERT_NORMAL);
+}
+TEST(OverallAlert, SWR_VIT_008_RRCriticalElevatesOverall) {
+    VitalSigns v = {80, 120, 80, 36.6f, 98, 30}; // RR=30 → CRITICAL
+    EXPECT_EQ(overall_alert_level(&v), ALERT_CRITICAL);
+}
+TEST(OverallAlert, SWR_VIT_008_RRWarningElevatesOverall) {
+    VitalSigns v = {80, 120, 80, 36.6f, 98, 22}; // RR=22 → WARNING
+    EXPECT_EQ(overall_alert_level(&v), ALERT_WARNING);
 }
 
 // =============================================================

@@ -1,0 +1,7 @@
+<map id="PatientRecord" name="PatientRecord">
+<area shape="rect" id="Node000001" title="Complete patient record including demographics and vital sign history." alt="" coords="50,232,155,301"/>
+<area shape="rect" id="Node000002" href="$struct_patient_info.html" title="Demographic information for a monitored patient." alt="" coords="5,5,88,160"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="72,158,90,216,85,216,69,162"/>
+<area shape="rect" id="Node000003" href="$struct_vital_signs.html" title="A single set of patient vital sign measurements." alt="" coords="112,5,205,160"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="143,158,129,209,126,218,122,215,124,207,139,162"/>
+</map>

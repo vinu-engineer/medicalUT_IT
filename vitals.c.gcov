@@ -1,0 +1,214 @@
+        -:    0:Source:C:/Users/vinun/claude AI/src/vitals.c
+        -:    0:Graph:build_cov\CMakeFiles\monitor_lib.dir\src\vitals.c.gcno
+        -:    0:Data:build_cov\CMakeFiles\monitor_lib.dir\src\vitals.c.gcda
+        -:    0:Runs:2
+        -:    0:Programs:2
+        -:    1:/**
+        -:    2: * @file vitals.c
+        -:    3: * @brief Implementation of vital sign validation and BMI calculation.
+        -:    4: *
+        -:    5: * @details
+        -:    6: * Implements all functions declared in vitals.h. Threshold values are
+        -:    7: * defined as inline literals within each function rather than as macros
+        -:    8: * to keep the code readable and auditable during IEC 62304 code review.
+        -:    9: *
+        -:   10: * ### Threshold Sources
+        -:   11: * - Heart rate: AHA/ACC 2019 guidelines
+        -:   12: * - Blood pressure: JNC-8 / ESC 2018 guidelines
+        -:   13: * - Temperature: WHO clinical reference ranges
+        -:   14: * - SpO2: British Thoracic Society supplemental oxygen guidelines
+        -:   15: * - BMI: WHO classification 2004
+        -:   16: *
+        -:   17: * @version 1.0.0
+        -:   18: * @date    2026-04-06
+        -:   19: * @author  vinu-engineer
+        -:   20: */
+        -:   21:
+        -:   22:#include "vitals.h"
+        -:   23:
+        -:   24:/**
+        -:   25: * @brief Classify a heart rate reading.
+        -:   26: * @details Implements SWR-VIT-001 threshold logic.
+        -:   27: *          Critical: bpm < 40 (severe bradycardia) or bpm > 150 (severe tachycardia).
+        -:   28: *          Warning:  bpm < 60 or bpm > 100.
+        -:   29: *          Normal:   60 <= bpm <= 100.
+        -:   30: */
+function check_heart_rate called 76 returned 100% blocks executed 100%
+       76:   31:AlertLevel check_heart_rate(int bpm)
+        -:   32:{
+       76:   33:    if (bpm < 40  || bpm > 150) return ALERT_CRITICAL;
+branch  0 taken 74% (fallthrough)
+branch  1 taken 26%
+branch  2 taken 13% (fallthrough)
+branch  3 taken 88%
+       49:   34:    if (bpm < 60  || bpm > 100) return ALERT_WARNING;
+branch  0 taken 86% (fallthrough)
+branch  1 taken 14%
+branch  2 taken 24% (fallthrough)
+branch  3 taken 76%
+       32:   35:    return ALERT_NORMAL;
+        -:   36:}
+        -:   37:
+        -:   38:/**
+        -:   39: * @brief Classify a blood pressure reading.
+        -:   40: * @details Implements SWR-VIT-002 threshold logic.
+        -:   41: *          Critical thresholds are evaluated first (fail-safe ordering).
+        -:   42: *          If either systolic or diastolic is critical, CRITICAL is returned.
+        -:   43: *          If either is outside the normal range, WARNING is returned.
+        -:   44: */
+function check_blood_pressure called 74 returned 100% blocks executed 100%
+       74:   45:AlertLevel check_blood_pressure(int systolic, int diastolic)
+        -:   46:{
+       74:   47:    if (systolic  <  70 || systolic  > 180) return ALERT_CRITICAL;
+branch  0 taken 80% (fallthrough)
+branch  1 taken 20%
+branch  2 taken 7% (fallthrough)
+branch  3 taken 93%
+       55:   48:    if (diastolic <  40 || diastolic > 120) return ALERT_CRITICAL;
+branch  0 taken 98% (fallthrough)
+branch  1 taken 2%
+branch  2 taken 2% (fallthrough)
+branch  3 taken 98%
+       53:   49:    if (systolic  <  90 || systolic  > 140) return ALERT_WARNING;
+branch  0 taken 98% (fallthrough)
+branch  1 taken 2%
+branch  2 taken 8% (fallthrough)
+branch  3 taken 92%
+       48:   50:    if (diastolic <  60 || diastolic >  90) return ALERT_WARNING;
+branch  0 taken 98% (fallthrough)
+branch  1 taken 2%
+branch  2 taken 2% (fallthrough)
+branch  3 taken 98%
+       46:   51:    return ALERT_NORMAL;
+        -:   52:}
+        -:   53:
+        -:   54:/**
+        -:   55: * @brief Classify a temperature reading.
+        -:   56: * @details Implements SWR-VIT-003 threshold logic.
+        -:   57: *          <35.0 °C = hypothermia (CRITICAL).
+        -:   58: *          >39.5 °C = hyperpyrexia (CRITICAL).
+        -:   59: *          Values outside 36.1–37.2 but within critical bounds = WARNING.
+        -:   60: */
+function check_temperature called 72 returned 100% blocks executed 100%
+       72:   61:AlertLevel check_temperature(float temp_c)
+        -:   62:{
+       72:   63:    if (temp_c < 35.0f || temp_c > 39.5f) return ALERT_CRITICAL;
+branch  0 taken 97% (fallthrough)
+branch  1 taken 3%
+branch  2 taken 26% (fallthrough)
+branch  3 taken 74%
+       52:   64:    if (temp_c < 36.1f || temp_c > 37.2f) return ALERT_WARNING;
+branch  0 taken 96% (fallthrough)
+branch  1 taken 4%
+branch  2 taken 10% (fallthrough)
+branch  3 taken 90%
+       45:   65:    return ALERT_NORMAL;
+        -:   66:}
+        -:   67:
+        -:   68:/**
+        -:   69: * @brief Classify an SpO2 reading.
+        -:   70: * @details Implements SWR-VIT-004 threshold logic.
+        -:   71: *          <90% = hypoxaemia (CRITICAL).
+        -:   72: *          90–94% = mild hypoxaemia (WARNING).
+        -:   73: *          95–100% = normal saturation.
+        -:   74: */
+function check_spo2 called 70 returned 100% blocks executed 100%
+       70:   75:AlertLevel check_spo2(int spo2)
+        -:   76:{
+       70:   77:    if (spo2 < 90) return ALERT_CRITICAL;
+branch  0 taken 34% (fallthrough)
+branch  1 taken 66%
+       46:   78:    if (spo2 < 95) return ALERT_WARNING;
+branch  0 taken 17% (fallthrough)
+branch  1 taken 83%
+       38:   79:    return ALERT_NORMAL;
+        -:   80:}
+        -:   81:
+        -:   82:/**
+        -:   83: * @brief Return the highest alert level across all four vital parameters.
+        -:   84: * @details Implements SWR-VIT-005. Iterates all four checks and tracks the
+        -:   85: *          maximum. Uses a fixed-size array to avoid branch explosion and
+        -:   86: *          keep cyclomatic complexity low for IEC 62304 review.
+        -:   87: */
+function overall_alert_level called 43 returned 100% blocks executed 100%
+       43:   88:AlertLevel overall_alert_level(const VitalSigns *vitals)
+        -:   89:{
+        -:   90:    AlertLevel levels[4];
+       43:   91:    AlertLevel max = ALERT_NORMAL;
+        -:   92:    int i;
+        -:   93:
+       43:   94:    levels[0] = check_heart_rate(vitals->heart_rate);
+call    0 returned 100%
+       43:   95:    levels[1] = check_blood_pressure(vitals->systolic_bp, vitals->diastolic_bp);
+call    0 returned 100%
+       43:   96:    levels[2] = check_temperature(vitals->temperature);
+call    0 returned 100%
+       43:   97:    levels[3] = check_spo2(vitals->spo2);
+call    0 returned 100%
+        -:   98:
+      215:   99:    for (i = 0; i < 4; i++) {
+branch  0 taken 80%
+branch  1 taken 20% (fallthrough)
+      172:  100:        if (levels[i] > max) max = levels[i];
+branch  0 taken 17% (fallthrough)
+branch  1 taken 83%
+        -:  101:    }
+       43:  102:    return max;
+        -:  103:}
+        -:  104:
+        -:  105:/**
+        -:  106: * @brief Calculate BMI using the standard WHO formula.
+        -:  107: * @details BMI = weight_kg / (height_m^2).
+        -:  108: *          Returns -1.0 for invalid (zero or negative) height to allow callers
+        -:  109: *          to distinguish an error from a legitimate very-low BMI.
+        -:  110: */
+function calculate_bmi called 10 returned 100% blocks executed 100%
+       10:  111:float calculate_bmi(float weight_kg, float height_m)
+        -:  112:{
+       10:  113:    if (height_m <= 0.0f) return -1.0f;
+branch  0 taken 20% (fallthrough)
+branch  1 taken 80%
+        8:  114:    return weight_kg / (height_m * height_m);
+        -:  115:}
+        -:  116:
+        -:  117:/**
+        -:  118: * @brief Map a BMI value to a WHO weight-status category string.
+        -:  119: * @details Uses half-open intervals consistent with WHO classification 2004.
+        -:  120: */
+function bmi_category called 10 returned 100% blocks executed 100%
+       10:  121:const char *bmi_category(float bmi)
+        -:  122:{
+       10:  123:    if (bmi < 0.0f)  return "Invalid";
+branch  0 taken 10% (fallthrough)
+branch  1 taken 90%
+        9:  124:    if (bmi < 18.5f) return "Underweight";
+branch  0 taken 11% (fallthrough)
+branch  1 taken 89%
+        8:  125:    if (bmi < 25.0f) return "Normal weight";
+branch  0 taken 50% (fallthrough)
+branch  1 taken 50%
+        4:  126:    if (bmi < 30.0f) return "Overweight";
+branch  0 taken 50% (fallthrough)
+branch  1 taken 50%
+        2:  127:    return "Obese";
+        -:  128:}
+        -:  129:
+        -:  130:/**
+        -:  131: * @brief Convert an AlertLevel enum to a display string.
+        -:  132: * @details Returns "UNKNOWN" for any value not in the enum to defend against
+        -:  133: *          undefined enum casts — important for IEC 62304 defensive coding.
+        -:  134: */
+function alert_level_str called 14 returned 100% blocks executed 83%
+       14:  135:const char *alert_level_str(AlertLevel level)
+        -:  136:{
+       14:  137:    switch (level) {
+branch  0 taken 50%
+branch  1 taken 7%
+branch  2 taken 43%
+branch  3 taken 0%
+        7:  138:        case ALERT_NORMAL:   return "NORMAL";
+        1:  139:        case ALERT_WARNING:  return "WARNING";
+        6:  140:        case ALERT_CRITICAL: return "CRITICAL";
+    #####:  141:        default:             return "UNKNOWN";
+        -:  142:    }
+        -:  143:}

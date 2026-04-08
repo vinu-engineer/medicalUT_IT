@@ -1,0 +1,25 @@
+<map id="include/vitals.h" name="include/vitals.h">
+<area shape="rect" id="Node000001" title="Vital signs data types, thresholds, and validation functions." alt="" coords="304,5,413,32"/>
+<area shape="rect" id="Node000002" href="$alerts_8h.html" title="Alert record generation from a set of vital sign measurements." alt="" coords="194,80,304,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="324,42,270,82,267,77,329,39"/>
+<area shape="rect" id="Node000003" href="$patient_8h.html" title="Patient record management — demographic data and vital sign history." alt="" coords="44,155,161,181"/>
+<area shape="poly" id="edge11_Node000001_Node000003" title=" " alt="" coords="287,37,236,56,184,82,162,100,142,120,113,156,109,152,138,116,158,96,181,78,234,51,291,34"/>
+<area shape="rect" id="Node000004" href="$gui__main_8c.html" title="Win32 GUI entry point — Patient Vital Signs Monitor." alt="" coords="267,229,373,256"/>
+<area shape="poly" id="edge12_Node000001_Node000004" title=" " alt="" coords="357,46,336,182,325,231,321,227,331,181,353,49"/>
+<area shape="rect" id="Node000008" href="$hw__vitals_8h.html" title="Hardware Abstraction Layer (HAL) for vital signs acquisition." alt="" coords="396,80,529,107"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="389,38,447,79,442,79,388,44"/>
+<area shape="rect" id="Node000010" href="$vitals_8c.html" title="Implementation of vital sign validation and BMI calculation." alt="" coords="553,80,638,107"/>
+<area shape="poly" id="edge13_Node000001_Node000010" title=" " alt="" coords="414,34,557,79,552,80,414,40"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="208,116,130,156,127,152,212,112"/>
+<area shape="poly" id="edge7_Node000002_Node000004" title=" " alt="" coords="234,118,223,151,222,166,226,180,237,195,252,208,286,229,280,228,249,212,233,199,221,183,217,166,217,150,230,122"/>
+<area shape="rect" id="Node000007" href="$alerts_8c.html" title="Implementation of alert record generation from vital sign readings." alt="" coords="235,155,322,181"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="261,119,276,155,271,154,259,124"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="155,184,284,227,279,230,154,189"/>
+<area shape="rect" id="Node000005" href="$main_8c.html" title="Application entry point — simulated patient monitoring session." alt="" coords="5,229,88,256"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="86,193,58,231,54,227,81,194"/>
+<area shape="rect" id="Node000006" href="$patient_8c.html" title="Implementation of patient record management functions." alt="" coords="112,229,205,256"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="123,191,152,229,146,229,120,196"/>
+<area shape="poly" id="edge9_Node000008_Node000004" title=" " alt="" coords="442,117,334,231,330,227,437,119"/>
+<area shape="rect" id="Node000009" href="$sim__vitals_8c.html" title="Simulation back&#45;end for the vital signs HAL (hw_vitals.h)." alt="" coords="447,155,560,181"/>
+<area shape="poly" id="edge10_Node000008_Node000009" title=" " alt="" coords="478,118,499,155,494,153,476,123"/>
+</map>

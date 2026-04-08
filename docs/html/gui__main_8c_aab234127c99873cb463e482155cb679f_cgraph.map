@@ -1,0 +1,131 @@
+<map id="WinMain" name="WinMain">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,715,78,741"/>
+<area shape="rect" id="Node000002" href="$gui__main_8c.html#a50c9496063704973573429586a90b27d" title=" " alt="" coords="126,715,208,741"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,726,113,726,109,730,80,730"/>
+<area shape="rect" id="Node000040" href="$gui__main_8c.html#ab5a6eab1941232f61da34dc646009e99" title=" " alt="" coords="288,208,369,235"/>
+<area shape="poly" id="edge73_Node000001_Node000040" title=" " alt="" coords="47,713,126,554,187,439,254,323,309,244,307,249,258,325,192,441,131,556,52,715"/>
+<area shape="rect" id="Node000045" href="$gui__main_8c.html#abf6d0a77509e094deadd10535041af4c" title=" " alt="" coords="126,765,208,792"/>
+<area shape="poly" id="edge84_Node000001_Node000045" title=" " alt="" coords="75,739,120,758,116,760,78,744"/>
+<area shape="rect" id="Node000003" href="$gui__main_8c.html#a6abeadd1e2c5eabbf581278df6fc80dc" title="Create all dashboard child controls. @req SWR&#45;GUI&#45;004." alt="" coords="256,411,401,437"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="166,714,169,665,182,594,193,555,208,516,228,480,254,448,260,444,258,449,258,451,233,483,213,519,198,557,187,595,175,665,171,715"/>
+<area shape="rect" id="Node000004" href="$gui__main_8c.html#a24031f98b0d723d6ab3ec6b06912fcef" title=" " alt="" coords="479,411,558,437"/>
+<area shape="poly" id="edge43_Node000002_Node000004" title=" " alt="" coords="179,713,212,681,255,650,296,632,332,626,366,617,382,608,399,593,413,575,419,557,423,522,426,485,433,466,447,447,467,436,463,440,451,451,438,469,431,486,428,522,425,559,417,578,403,596,385,612,368,622,334,631,298,638,257,654,215,685,184,715"/>
+<area shape="rect" id="Node000007" href="$gui__main_8c.html#a9d7273263f3a31bf701590beb4c5b1d1" title="Record a new vital signs reading from the vitals entry fields. @req SWR&#45;GUI&#45;004." alt="" coords="272,1025,385,1052"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="196,739,210,752,226,778,235,803,239,848,242,895,247,920,258,948,280,983,305,1014,300,1014,276,986,254,951,242,922,237,895,234,849,229,804,221,781,206,755,197,744"/>
+<area shape="rect" id="Node000008" href="$gui__main_8c.html#a6bed6b36812029c7bc2eb263a12e5c98" title="Admit a patient from the identity fields. @req SWR&#45;GUI&#45;004." alt="" coords="481,1272,556,1299"/>
+<area shape="poly" id="edge31_Node000002_Node000008" title=" " alt="" coords="197,739,210,752,226,782,237,812,243,841,244,868,239,922,228,974,218,1025,215,1076,218,1102,226,1128,239,1155,258,1182,274,1198,289,1209,321,1217,358,1221,402,1232,476,1265,471,1266,400,1237,357,1226,320,1223,287,1213,270,1203,254,1186,234,1157,221,1130,213,1103,210,1076,212,1024,223,973,234,921,239,868,237,841,232,813,222,785,206,755,198,744"/>
+<area shape="rect" id="Node000012" href="$patient_8c.html#a8fa76aa96b383df3556d391e64953536" title="Initialise a PatientRecord, zeroing all fields before populating." alt="" coords="669,1323,753,1349"/>
+<area shape="poly" id="edge69_Node000002_Node000012" title=" " alt="" coords="197,739,210,752,221,777,228,807,234,881,231,967,225,1058,220,1149,221,1232,225,1268,232,1300,243,1326,258,1346,279,1364,302,1379,354,1397,409,1405,467,1403,523,1395,576,1383,661,1356,667,1355,578,1388,524,1400,467,1409,409,1410,352,1403,300,1383,276,1368,254,1350,238,1329,227,1301,220,1269,216,1232,215,1149,220,1058,226,967,228,881,223,808,216,779,206,755,198,744"/>
+<area shape="rect" id="Node000013" href="$gui__main_8c.html#a8faad4cd27c161432ac3388959b1a766" title="Refresh all dynamic dashboard content after any data change. @req SWR&#45;GUI&#45;003 @req SWR&#45;GUI&#45;004." alt="" coords="647,968,774,995"/>
+<area shape="poly" id="edge72_Node000002_Node000013" title=" " alt="" coords="191,739,210,751,234,777,258,802,303,832,352,859,453,905,550,939,634,963,629,965,548,944,451,910,349,864,300,837,254,806,230,781,206,755,193,744"/>
+<area shape="rect" id="Node000022" href="$patient_8c.html#a0e22c10046f3778c1f194cc6377d7984" title="Append a vital signs reading, enforcing the MAX_READINGS cap." alt="" coords="450,1120,587,1147"/>
+<area shape="poly" id="edge68_Node000002_Node000022" title=" " alt="" coords="196,739,210,752,231,795,237,836,235,876,228,914,223,951,222,988,233,1025,258,1062,296,1093,341,1113,388,1125,437,1133,432,1135,387,1131,339,1118,293,1097,254,1066,228,1027,217,988,217,951,223,913,229,875,232,837,226,797,206,755,198,745"/>
+<area shape="rect" id="Node000023" href="$gui__main_8c.html#a11329148e25059d43a9d848bf4f90d4b" title=" " alt="" coords="294,1247,364,1273"/>
+<area shape="poly" id="edge32_Node000002_Node000023" title=" " alt="" coords="197,739,210,752,228,785,239,818,246,849,248,880,242,938,230,994,218,1050,214,1107,218,1135,225,1165,239,1195,258,1226,268,1237,282,1247,277,1247,265,1241,254,1230,234,1198,220,1167,212,1136,209,1107,213,1049,225,993,237,937,242,879,240,850,234,819,223,788,206,755,198,744"/>
+<area shape="rect" id="Node000024" href="$gui__main_8c.html#aea86431d3096bc14f4f06eb7906f8278" title=" " alt="" coords="488,1323,549,1349"/>
+<area shape="poly" id="edge71_Node000002_Node000024" title=" " alt="" coords="197,739,210,752,220,774,227,801,233,867,232,943,228,1024,225,1105,226,1179,236,1241,245,1265,258,1284,280,1303,306,1318,334,1329,363,1336,421,1341,475,1342,470,1342,421,1346,362,1341,332,1334,303,1323,277,1307,254,1287,241,1267,231,1242,221,1180,219,1105,223,1024,227,943,228,867,222,802,215,776,206,755,198,744"/>
+<area shape="rect" id="Node000025" href="$gui__main_8c.html#a9106ea80981b1db52b607a5e58f0ecf3" title=" " alt="" coords="283,1145,374,1172"/>
+<area shape="poly" id="edge35_Node000002_Node000025" title=" " alt="" coords="196,739,210,752,234,802,243,848,241,892,234,935,228,977,226,1020,235,1065,258,1113,281,1137,276,1137,254,1116,230,1067,221,1020,222,976,229,934,236,892,237,848,229,803,206,755,198,745"/>
+<area shape="rect" id="Node000026" href="$gui__main_8c.html#ae6a2186998a99a63c5e56e56fcb3174d" title=" " alt="" coords="461,309,576,336"/>
+<area shape="poly" id="edge40_Node000002_Node000026" title=" " alt="" coords="172,713,203,660,226,630,254,603,275,591,295,584,332,579,366,573,383,564,399,549,416,524,423,499,425,474,423,450,421,424,422,399,430,373,447,346,453,343,450,348,451,350,435,375,427,400,426,424,428,449,430,474,429,500,421,526,403,552,386,568,368,578,333,584,296,589,277,595,258,607,230,633,207,663,177,715"/>
+<area shape="rect" id="Node000027" href="$sim__vitals_8c.html#ac277bf28fcc192d8dd7cd5b3466a4fa9" title="Return the next entry from the scenario table, then advance." alt="" coords="256,360,401,387"/>
+<area shape="poly" id="edge41_Node000002_Node000027" title=" " alt="" coords="165,714,166,657,176,573,187,526,203,480,225,436,254,397,260,393,258,398,258,400,229,439,208,482,192,528,181,574,171,658,170,715"/>
+<area shape="rect" id="Node000028" href="$sim__vitals_8c.html#ae58df14f30461cb37e8607aca5522846" title="Reset simulation index to the start of the scenario table. @req SWR&#45;GUI&#45;006." alt="" coords="298,461,360,488"/>
+<area shape="poly" id="edge42_Node000002_Node000028" title=" " alt="" coords="167,714,173,672,188,615,214,553,232,524,254,498,284,482,281,486,258,502,236,527,219,555,193,616,179,673,172,715"/>
+<area shape="rect" id="Node000029" href="$gui__main_8c.html#a188d44abc7793a822368986491e74f37" title="Paint the application header bar. @req SWR&#45;GUI&#45;002." alt="" coords="471,461,566,488"/>
+<area shape="poly" id="edge44_Node000002_Node000029" title=" " alt="" coords="204,712,255,693,299,683,334,678,366,668,399,643,413,626,420,608,423,573,426,536,433,517,447,498,459,491,456,495,451,502,438,520,431,537,428,573,425,610,417,628,403,647,369,673,335,683,300,688,257,699,208,716"/>
+<area shape="rect" id="Node000032" href="$gui__main_8c.html#a3a6ecd59596770bcfc1ecf6fa4fd3219" title="Paint the patient summary bar. @req SWR&#45;GUI&#45;003." alt="" coords="458,360,579,387"/>
+<area shape="poly" id="edge47_Node000002_Node000032" title=" " alt="" coords="168,714,203,515,229,405,242,367,254,346,269,339,288,335,338,335,394,343,450,355,445,357,393,348,337,341,289,340,271,344,258,350,247,369,234,407,208,516,173,715"/>
+<area shape="rect" id="Node000035" href="$gui__main_8c.html#a71c5868a8a8bcd102dfebf5a8cd8e55a" title="Paint the aggregate status banner. @req SWR&#45;GUI&#45;003." alt="" coords="449,563,588,589"/>
+<area shape="poly" id="edge52_Node000002_Node000035" title=" " alt="" coords="206,731,251,732,301,728,353,717,400,694,417,675,424,653,431,630,447,606,465,595,462,599,451,610,436,632,429,655,422,677,403,698,355,722,302,733,251,737,209,735"/>
+<area shape="rect" id="Node000037" href="$gui__main_8c.html#a809c12bdd714ab44c54f45da4d3b2dc7" title="Paint the 2×2 vital sign tile grid. @req SWR&#45;GUI&#45;003." alt="" coords="288,765,369,792"/>
+<area shape="poly" id="edge58_Node000002_Node000037" title=" " alt="" coords="207,738,276,760,271,763,209,743"/>
+<area shape="rect" id="Node000039" href="$patient_8c.html#a8f247ea51062330ba04c15535d530190" title="Check if the reading buffer is at capacity." alt="" coords="278,512,379,539"/>
+<area shape="poly" id="edge70_Node000002_Node000039" title=" " alt="" coords="169,713,197,640,221,595,254,555,272,544,269,549,258,559,226,598,202,642,174,715"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="400,422,466,422,462,426,403,426"/>
+<area shape="rect" id="Node000005" href="$gui__main_8c.html#aba2b03bc9043c42771599f03493ddb81" title=" " alt="" coords="478,208,559,235"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="384,409,399,397,413,378,420,360,423,323,426,284,433,265,447,245,465,234,462,238,451,249,438,267,431,285,428,323,425,361,418,381,403,401,388,412"/>
+<area shape="rect" id="Node000006" href="$gui__main_8c.html#a68601212c34811f3fdfa6c26760d3b3b" title=" " alt="" coords="475,259,562,285"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="382,408,400,397,410,385,417,373,423,347,429,322,436,308,448,295,462,287,459,291,451,299,440,312,434,324,428,349,422,374,415,388,403,401,386,412"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="342,1050,500,1259,495,1260,339,1055"/>
+<area shape="rect" id="Node000010" href="$gui__main_8c.html#ac1006f93610e33d2d6f27dd2b1fb95a8" title=" " alt="" coords="660,1056,762,1083"/>
+<area shape="poly" id="edge27_Node000007_Node000010" title=" " alt="" coords="385,1040,646,1063,642,1066,386,1046"/>
+<area shape="rect" id="Node000011" href="$gui__main_8c.html#a4f193d8e3ae8fd0a97d129b3437d8e86" title=" " alt="" coords="658,1107,764,1133"/>
+<area shape="poly" id="edge28_Node000007_Node000011" title=" " alt="" coords="385,1048,645,1104,641,1107,385,1053"/>
+<area shape="poly" id="edge30_Node000007_Node000013" title=" " alt="" coords="384,1028,634,991,629,995,386,1033"/>
+<area shape="poly" id="edge29_Node000007_Node000022" title=" " alt="" coords="355,1050,451,1099,476,1113,470,1113,448,1104,355,1055"/>
+<area shape="rect" id="Node000009" href="$gui__main_8c.html#adfa90e96e8fab8b5af641dd49e420791" title=" " alt="" coords="878,1081,939,1108"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="549,1269,587,1251,863,1116,868,1115,589,1256,551,1274"/>
+<area shape="poly" id="edge9_Node000008_Node000010" title=" " alt="" coords="555,1272,572,1264,586,1252,599,1231,606,1212,608,1173,611,1133,619,1113,634,1093,644,1088,648,1085,638,1097,623,1116,616,1135,613,1173,611,1213,604,1234,590,1255,575,1268,557,1277"/>
+<area shape="poly" id="edge11_Node000008_Node000011" title=" " alt="" coords="555,1269,586,1251,617,1225,645,1197,689,1147,693,1144,649,1201,620,1229,589,1256,557,1274"/>
+<area shape="poly" id="edge13_Node000008_Node000012" title=" " alt="" coords="556,1292,656,1321,651,1321,556,1298"/>
+<area shape="poly" id="edge14_Node000008_Node000013" title=" " alt="" coords="555,1273,572,1264,586,1252,602,1225,611,1200,613,1176,613,1151,613,1100,619,1072,633,1043,651,1020,672,1006,676,1002,655,1024,638,1045,624,1074,618,1101,618,1151,619,1176,616,1201,607,1227,590,1255,575,1268,557,1278"/>
+<area shape="poly" id="edge10_Node000010_Node000009" title=" " alt="" coords="762,1073,864,1088,859,1089,763,1079"/>
+<area shape="poly" id="edge12_Node000011_Node000009" title=" " alt="" coords="763,1111,865,1100,860,1101,764,1116"/>
+<area shape="rect" id="Node000014" href="$vitals_8c.html#a20a209843ea1eeff8484a7998d492615" title="Convert an AlertLevel enum to a display string." alt="" coords="857,968,959,995"/>
+<area shape="poly" id="edge15_Node000013_Node000014" title=" " alt="" coords="774,979,844,981,839,982,775,984"/>
+<area shape="rect" id="Node000015" href="$alerts_8c.html#a98b6140a4d21520d639bc81d1f7c08b7" title="Generate structured alert records for out&#45;of&#45;range vital signs." alt="" coords="853,816,963,843"/>
+<area shape="poly" id="edge16_Node000013_Node000015" title=" " alt="" coords="728,965,876,853,880,851,731,970"/>
+<area shape="rect" id="Node000020" href="$vitals_8c.html#af7201b2a5a70f76ab81ade218a863830" title="Return the highest alert level across all four vital parameters." alt="" coords="846,765,971,792"/>
+<area shape="poly" id="edge21_Node000013_Node000020" title=" " alt="" coords="716,966,731,933,757,889,790,843,832,802,843,798,838,801,836,806,794,846,761,892,736,936,720,969"/>
+<area shape="rect" id="Node000021" href="$patient_8c.html#aaf2d461ddd1efafe4887647d0c8688d7" title="Return a pointer to the most recent reading, or NULL if none exist." alt="" coords="834,715,982,741"/>
+<area shape="poly" id="edge26_Node000013_Node000021" title=" " alt="" coords="713,966,726,926,750,868,785,806,807,777,832,751,841,748,837,751,836,755,811,780,789,809,754,870,731,927,718,969"/>
+<area shape="rect" id="Node000016" href="$vitals_8c.html#a3c853e30a899042babf9fdd2bd2cbfc1" title="Classify a blood pressure reading." alt="" coords="1030,816,1182,843"/>
+<area shape="poly" id="edge17_Node000015_Node000016" title=" " alt="" coords="963,827,1017,829,1012,830,965,832"/>
+<area shape="rect" id="Node000017" href="$vitals_8c.html#a7604eb6b23010f139f6f960b184a3b28" title="Classify a heart rate reading." alt="" coords="1045,765,1167,792"/>
+<area shape="poly" id="edge18_Node000015_Node000017" title=" " alt="" coords="962,813,1039,795,1034,797,964,818"/>
+<area shape="rect" id="Node000018" href="$vitals_8c.html#ac0bc076e63894a96df90f2eab73c88fe" title="Classify an SpO2 reading." alt="" coords="1060,867,1152,893"/>
+<area shape="poly" id="edge19_Node000015_Node000018" title=" " alt="" coords="963,841,1048,864,1043,865,964,846"/>
+<area shape="rect" id="Node000019" href="$vitals_8c.html#aef7f6fa183fbc5412c13ea63bd2b62ce" title="Classify a temperature reading." alt="" coords="1040,715,1172,741"/>
+<area shape="poly" id="edge20_Node000015_Node000019" title=" " alt="" coords="959,813,981,802,995,790,1004,777,1014,764,1029,751,1042,747,1037,750,1032,756,1017,768,1008,780,999,793,984,806,961,818"/>
+<area shape="poly" id="edge22_Node000020_Node000016" title=" " alt="" coords="963,790,1039,811,1034,812,964,795"/>
+<area shape="poly" id="edge23_Node000020_Node000017" title=" " alt="" coords="971,776,1033,778,1028,779,972,781"/>
+<area shape="poly" id="edge24_Node000020_Node000018" title=" " alt="" coords="960,790,984,802,999,815,1008,828,1017,840,1032,852,1049,863,1043,863,1029,857,1014,844,1004,831,995,818,981,806,960,795"/>
+<area shape="poly" id="edge25_Node000020_Node000019" title=" " alt="" coords="962,762,1039,745,1034,747,964,767"/>
+<area shape="poly" id="edge34_Node000023_Node000013" title=" " alt="" coords="364,1258,413,1255,472,1246,533,1225,561,1210,586,1190,600,1173,608,1156,613,1121,616,1084,622,1064,633,1043,652,1020,673,1006,677,1003,656,1024,638,1045,627,1066,622,1085,619,1122,613,1158,605,1176,590,1194,564,1214,535,1230,474,1251,414,1261,365,1263"/>
+<area shape="poly" id="edge33_Node000023_Node000024" title=" " alt="" coords="362,1271,450,1308,476,1320,471,1320,448,1313,361,1277"/>
+<area shape="poly" id="edge36_Node000025_Node000008" title=" " alt="" coords="366,1170,403,1188,452,1224,494,1261,489,1261,449,1228,400,1193,366,1175"/>
+<area shape="poly" id="edge39_Node000025_Node000013" title=" " alt="" coords="375,1170,423,1180,478,1184,535,1178,561,1170,586,1156,600,1145,608,1133,614,1106,618,1076,624,1059,634,1042,653,1021,674,1006,678,1003,657,1024,638,1046,629,1062,623,1077,619,1107,612,1135,604,1149,589,1161,563,1175,536,1183,478,1190,422,1185,375,1175"/>
+<area shape="poly" id="edge37_Node000025_Node000022" title=" " alt="" coords="374,1150,437,1143,432,1146,376,1155"/>
+<area shape="poly" id="edge38_Node000025_Node000024" title=" " alt="" coords="345,1170,403,1233,417,1255,425,1274,434,1291,451,1309,476,1325,471,1324,448,1313,430,1294,420,1276,412,1258,399,1236,344,1175"/>
+<area shape="rect" id="Node000030" href="$gui__main_8c.html#a18faa01dfc1221353f0ca130f5647098" title=" " alt="" coords="661,461,760,488"/>
+<area shape="poly" id="edge45_Node000029_Node000030" title=" " alt="" coords="566,472,648,473,643,476,568,477"/>
+<area shape="rect" id="Node000031" href="$gui__main_8c.html#a44c4ee73fc9a634398e794afaf73d079" title=" " alt="" coords="679,512,742,539"/>
+<area shape="poly" id="edge46_Node000029_Node000031" title=" " alt="" coords="566,485,666,512,662,514,567,490"/>
+<area shape="poly" id="edge50_Node000032_Node000030" title=" " alt="" coords="560,385,589,396,637,423,680,452,675,453,634,427,586,401,562,390"/>
+<area shape="poly" id="edge51_Node000032_Node000031" title=" " alt="" coords="570,385,589,397,601,410,608,423,614,449,620,474,627,486,637,498,667,515,661,517,634,502,622,489,615,476,609,450,603,425,597,413,586,401,571,390"/>
+<area shape="rect" id="Node000033" href="$vitals_8c.html#a7a7981a0a087b3b98763ed48bc789888" title="Map a BMI value to a WHO weight&#45;status category string." alt="" coords="661,385,760,412"/>
+<area shape="poly" id="edge48_Node000032_Node000033" title=" " alt="" coords="578,379,648,389,644,391,580,384"/>
+<area shape="rect" id="Node000034" href="$vitals_8c.html#a10dc695991eacf8ffea85c92b9331aec" title="Calculate BMI using the standard WHO formula." alt="" coords="660,335,762,361"/>
+<area shape="poly" id="edge49_Node000032_Node000034" title=" " alt="" coords="578,363,647,355,643,358,581,368"/>
+<area shape="poly" id="edge53_Node000035_Node000030" title=" " alt="" coords="564,560,586,548,600,536,609,524,619,511,634,498,649,492,645,495,637,502,623,514,614,527,604,540,589,553,568,564"/>
+<area shape="poly" id="edge54_Node000035_Node000031" title=" " alt="" coords="571,560,666,536,662,539,574,564"/>
+<area shape="rect" id="Node000036" href="$patient_8c.html#a7efb2602c9a2566fee89ff6d6af42bcf" title="Return the overall status from the latest reading." alt="" coords="636,715,786,741"/>
+<area shape="poly" id="edge55_Node000035_Node000036" title=" " alt="" coords="537,587,683,704,678,705,537,592"/>
+<area shape="poly" id="edge56_Node000036_Node000020" title=" " alt="" coords="765,739,841,760,836,762,766,745"/>
+<area shape="poly" id="edge57_Node000036_Node000021" title=" " alt="" coords="785,725,821,727,816,729,787,731"/>
+<area shape="poly" id="edge59_Node000037_Node000016" title=" " alt="" coords="369,787,476,811,627,838,713,849,803,856,893,857,982,852,1037,845,1032,847,983,857,893,862,802,861,713,854,626,843,475,816,370,792"/>
+<area shape="poly" id="edge60_Node000037_Node000017" title=" " alt="" coords="368,763,487,729,561,712,635,700,734,684,813,670,851,668,890,672,934,682,984,700,1000,711,1009,725,1018,738,1032,751,1042,758,1037,759,1029,755,1014,742,1005,728,996,715,981,705,932,687,890,677,851,674,814,675,735,689,636,705,562,718,488,734,371,768"/>
+<area shape="poly" id="edge61_Node000037_Node000018" title=" " alt="" coords="351,790,397,814,450,836,531,857,615,872,700,881,782,887,932,888,1047,885,1042,886,932,893,782,892,699,887,614,877,530,862,448,841,395,819,352,795"/>
+<area shape="poly" id="edge62_Node000037_Node000019" title=" " alt="" coords="356,763,400,738,423,720,448,704,499,686,540,677,635,668,810,648,887,649,983,665,1031,682,1074,706,1069,707,1029,687,982,671,886,654,810,653,636,673,541,682,500,691,450,709,426,724,403,742,359,767"/>
+<area shape="poly" id="edge67_Node000037_Node000021" title=" " alt="" coords="368,776,550,771,667,763,786,751,837,744,832,746,786,756,668,768,550,776,370,781"/>
+<area shape="poly" id="edge63_Node000037_Node000031" title=" " alt="" coords="363,763,399,738,415,718,422,698,430,678,448,657,483,633,514,622,547,614,586,599,679,546,675,550,589,604,549,620,516,628,485,638,451,661,435,680,427,700,419,720,403,742,366,767"/>
+<area shape="rect" id="Node000038" href="$gui__main_8c.html#acd6770839efac2b7a1806be591ea1d80" title="Paint one colour&#45;coded vital sign tile." alt="" coords="482,512,555,539"/>
+<area shape="poly" id="edge64_Node000037_Node000038" title=" " alt="" coords="343,763,371,733,399,695,409,674,414,655,418,619,424,585,433,567,448,549,469,536,466,540,451,553,437,570,429,587,423,620,419,656,414,676,404,697,376,736,347,766"/>
+<area shape="poly" id="edge65_Node000038_Node000030" title=" " alt="" coords="554,514,648,490,644,493,557,518"/>
+<area shape="poly" id="edge66_Node000038_Node000031" title=" " alt="" coords="554,523,666,524,661,527,557,528"/>
+<area shape="poly" id="edge82_Node000040_Node000005" title=" " alt="" coords="368,219,464,220,460,223,371,224"/>
+<area shape="poly" id="edge83_Node000040_Node000006" title=" " alt="" coords="368,230,462,255,458,258,370,234"/>
+<area shape="poly" id="edge81_Node000040_Node000026" title=" " alt="" coords="348,233,395,263,451,295,464,302,459,304,448,300,392,268,350,238"/>
+<area shape="poly" id="edge79_Node000040_Node000030" title=" " alt="" coords="345,206,392,173,456,141,491,131,526,127,559,133,589,150,616,181,628,213,629,246,625,279,619,314,616,349,621,385,638,423,651,438,669,453,663,454,647,442,633,425,616,387,611,349,613,313,619,278,624,245,623,214,612,183,586,154,557,138,526,133,492,136,458,146,395,178,349,209"/>
+<area shape="poly" id="edge80_Node000040_Node000031" title=" " alt="" coords="355,206,404,185,466,169,499,166,531,168,562,177,589,194,606,211,618,229,629,266,628,304,620,343,612,382,608,421,615,460,624,479,638,498,650,509,667,517,662,519,647,513,634,502,619,482,610,461,603,421,607,381,615,341,623,303,624,267,614,231,602,215,586,198,560,182,530,173,499,171,467,174,406,190,359,209"/>
+<area shape="rect" id="Node000041" href="$gui__main_8c.html#a51e990e1b26cc2a1c2e8e602d3b13cf5" title="Attempt login from the username/password controls." alt="" coords="469,56,568,83"/>
+<area shape="poly" id="edge74_Node000040_Node000041" title=" " alt="" coords="339,206,384,156,414,126,448,99,470,88,467,92,451,104,418,130,387,159,343,209"/>
+<area shape="poly" id="edge78_Node000041_Node000009" title=" " alt="" coords="543,81,599,116,668,170,703,202,736,239,765,279,788,322,809,372,822,420,830,464,833,507,829,587,817,663,805,739,799,820,801,862,807,907,819,955,836,1006,857,1040,883,1071,877,1070,852,1044,832,1008,814,956,802,908,796,863,794,819,800,739,812,662,824,586,828,507,825,465,817,421,804,374,784,324,760,282,732,242,699,206,664,174,596,120,545,86"/>
+<area shape="rect" id="Node000042" href="$gui__auth_8c.html#a92304d324761670e4b4267b7a3c0693a" title="Return a human&#45;readable display name for a validated username." alt="" coords="644,56,778,83"/>
+<area shape="poly" id="edge75_Node000041_Node000042" title=" " alt="" coords="567,67,631,68,626,71,570,72"/>
+<area shape="rect" id="Node000043" href="$gui__auth_8c.html#a89879c6685a6b662a08bd4e868130363" title="Validate a username/password pair against the built&#45;in credential." alt="" coords="662,107,760,133"/>
+<area shape="poly" id="edge76_Node000041_Node000043" title=" " alt="" coords="568,80,649,102,645,105,570,85"/>
+<area shape="rect" id="Node000044" href="$gui__main_8c.html#a05facbe4e175f66ff55a4882c983d058" title=" " alt="" coords="649,5,773,32"/>
+<area shape="poly" id="edge77_Node000041_Node000044" title=" " alt="" coords="567,54,644,35,640,38,570,58"/>
+</map>

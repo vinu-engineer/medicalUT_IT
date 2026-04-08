@@ -1,0 +1,7 @@
+<map id="include/hw_vitals.h" name="include/hw_vitals.h">
+<area shape="rect" id="Node000001" title="Hardware Abstraction Layer (HAL) for vital signs acquisition." alt="" coords="59,5,191,32"/>
+<area shape="rect" id="Node000002" href="$gui__main_8c.html" title="Win32 GUI entry point — Patient Vital Signs Monitor." alt="" coords="5,80,112,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,43,72,82,68,78,101,44"/>
+<area shape="rect" id="Node000003" href="$sim__vitals_8c.html" title="Simulation back&#45;end for the vital signs HAL (hw_vitals.h)." alt="" coords="135,80,248,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="148,41,183,80,178,79,146,46"/>
+</map>

@@ -1,0 +1,209 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygenindex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="index.xsd" version="1.16.1" xml:lang="en-US">
+  <compound refid="struct_alert" kind="struct"><name>Alert</name>
+    <member refid="struct_alert_1af56c1ce36b2939c0bb172344e1340346" kind="variable"><name>level</name></member>
+    <member refid="struct_alert_1a6008a21e423d540d643a21ae45ebd36e" kind="variable"><name>message</name></member>
+    <member refid="struct_alert_1a0e0b585cee2b4029fe0585688d030614" kind="variable"><name>parameter</name></member>
+  </compound>
+  <compound refid="struct_app_state" kind="struct"><name>AppState</name>
+    <member refid="struct_app_state_1a34780c5265691b9078b8ffd2466fdc86" kind="variable"><name>font_hdr</name></member>
+    <member refid="struct_app_state_1ab32dd57b5cbdac43f1ee6cac827a2d9f" kind="variable"><name>font_status</name></member>
+    <member refid="struct_app_state_1a17ac085ad68ac3edb3fce102d470f8c5" kind="variable"><name>font_tile_lbl</name></member>
+    <member refid="struct_app_state_1a8194637f0c7e1a4274c1e7f87b7edce4" kind="variable"><name>font_tile_val</name></member>
+    <member refid="struct_app_state_1adc53484fc19ebd9353a65f8c8229fb8e" kind="variable"><name>font_ui</name></member>
+    <member refid="struct_app_state_1a36f1793418c74c7addfa202bd541a62a" kind="variable"><name>has_patient</name></member>
+    <member refid="struct_app_state_1a034c8f76bfad471f4c9f297de1b3ff72" kind="variable"><name>hwnd_dash</name></member>
+    <member refid="struct_app_state_1a9faaf3f49935e3924a54f2cbe733b16b" kind="variable"><name>hwnd_login</name></member>
+    <member refid="struct_app_state_1a986799462ede8a725d35ab7ae156d3e2" kind="variable"><name>instance</name></member>
+    <member refid="struct_app_state_1a2620ae898d57e0d38f6afa6d8ebde90d" kind="variable"><name>logged_user</name></member>
+    <member refid="struct_app_state_1ab1c026589e038b34111768749a5fa35c" kind="variable"><name>patient</name></member>
+    <member refid="struct_app_state_1a0728ad57f68566bfde6d68eff446dea3" kind="variable"><name>sim_paused</name></member>
+  </compound>
+  <compound refid="struct_patient_info" kind="struct"><name>PatientInfo</name>
+    <member refid="struct_patient_info_1adfb737e9dc8cfca072ad572e3796530e" kind="variable"><name>age</name></member>
+    <member refid="struct_patient_info_1a3660352e74d08d02b4039ce9ee4413dd" kind="variable"><name>height_m</name></member>
+    <member refid="struct_patient_info_1a1f5ee862f6bc0244c79ac1088753455b" kind="variable"><name>id</name></member>
+    <member refid="struct_patient_info_1a3776b66e6a77da15c48178e2fdccb509" kind="variable"><name>name</name></member>
+    <member refid="struct_patient_info_1a611e10017c955370cc2314da85a6b2c2" kind="variable"><name>weight_kg</name></member>
+  </compound>
+  <compound refid="struct_patient_record" kind="struct"><name>PatientRecord</name>
+    <member refid="struct_patient_record_1ab7dbbd6e5424bac1e098abb80bfb1471" kind="variable"><name>info</name></member>
+    <member refid="struct_patient_record_1a7afb75ac040d473589a9e13a5c20529d" kind="variable"><name>reading_count</name></member>
+    <member refid="struct_patient_record_1adccff17faadacdb6cce641680535a2d2" kind="variable"><name>readings</name></member>
+  </compound>
+  <compound refid="struct_vital_signs" kind="struct"><name>VitalSigns</name>
+    <member refid="struct_vital_signs_1ab81723ab54ad295a71ba56f0ef52318f" kind="variable"><name>diastolic_bp</name></member>
+    <member refid="struct_vital_signs_1ac7162369c92da33cc7a3279c37083f84" kind="variable"><name>heart_rate</name></member>
+    <member refid="struct_vital_signs_1a1b524bb13d6c36ec564c7d94a5e953c1" kind="variable"><name>spo2</name></member>
+    <member refid="struct_vital_signs_1a110b3f24528e0f5769cb82f3a0c07485" kind="variable"><name>systolic_bp</name></member>
+    <member refid="struct_vital_signs_1af0a43a24a6e26683adde5612cf626365" kind="variable"><name>temperature</name></member>
+  </compound>
+  <compound refid="alerts_8h" kind="file"><name>alerts.h</name>
+    <member refid="alerts_8h_1af4487b371ca7c67a8e7dd34f209fa870" kind="define"><name>ALERT_MSG_LEN</name></member>
+    <member refid="alerts_8h_1a40c583285d17e2d0ab75aca5669f53d0" kind="define"><name>MAX_ALERTS</name></member>
+    <member refid="alerts_8h_1a98b6140a4d21520d639bc81d1f7c08b7" kind="function"><name>generate_alerts</name></member>
+  </compound>
+  <compound refid="gui__auth_8h" kind="file"><name>gui_auth.h</name>
+    <member refid="gui__auth_8h_1a822ffd181390612a0d23d52b43aee892" kind="define"><name>AUTH_MAX_CREDENTIAL_LEN</name></member>
+    <member refid="gui__auth_8h_1a92304d324761670e4b4267b7a3c0693a" kind="function"><name>auth_display_name</name></member>
+    <member refid="gui__auth_8h_1a89879c6685a6b662a08bd4e868130363" kind="function"><name>auth_validate</name></member>
+  </compound>
+  <compound refid="hw__vitals_8h" kind="file"><name>hw_vitals.h</name>
+    <member refid="hw__vitals_8h_1ac277bf28fcc192d8dd7cd5b3466a4fa9" kind="function"><name>hw_get_next_reading</name></member>
+    <member refid="hw__vitals_8h_1ae58df14f30461cb37e8607aca5522846" kind="function"><name>hw_init</name></member>
+  </compound>
+  <compound refid="patient_8h" kind="file"><name>patient.h</name>
+    <member refid="patient_8h_1afd709f201d7643c3909621f620ea648a" kind="define"><name>MAX_NAME_LEN</name></member>
+    <member refid="patient_8h_1a982953c568e76424021484a001e5c73b" kind="define"><name>MAX_READINGS</name></member>
+    <member refid="patient_8h_1a0e22c10046f3778c1f194cc6377d7984" kind="function"><name>patient_add_reading</name></member>
+    <member refid="patient_8h_1a7efb2602c9a2566fee89ff6d6af42bcf" kind="function"><name>patient_current_status</name></member>
+    <member refid="patient_8h_1a8fa76aa96b383df3556d391e64953536" kind="function"><name>patient_init</name></member>
+    <member refid="patient_8h_1a8f247ea51062330ba04c15535d530190" kind="function"><name>patient_is_full</name></member>
+    <member refid="patient_8h_1aaf2d461ddd1efafe4887647d0c8688d7" kind="function"><name>patient_latest_reading</name></member>
+    <member refid="patient_8h_1a19d76f7281d5f5ad5408c1ff4dc2ee11" kind="function"><name>patient_print_summary</name></member>
+  </compound>
+  <compound refid="vitals_8h" kind="file"><name>vitals.h</name>
+    <member refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324" kind="enum"><name>AlertLevel</name></member>
+    <member refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324a719a508e583ddd6e5cc6d863fab2c6c8" kind="enumvalue"><name>ALERT_NORMAL</name></member>
+    <member refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324ad2cdba508664e4d051ebc9ed5ded8185" kind="enumvalue"><name>ALERT_WARNING</name></member>
+    <member refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324a4a380f84419fb8940cfc9bde871a26e7" kind="enumvalue"><name>ALERT_CRITICAL</name></member>
+    <member refid="vitals_8h_1a20a209843ea1eeff8484a7998d492615" kind="function"><name>alert_level_str</name></member>
+    <member refid="vitals_8h_1a7a7981a0a087b3b98763ed48bc789888" kind="function"><name>bmi_category</name></member>
+    <member refid="vitals_8h_1a10dc695991eacf8ffea85c92b9331aec" kind="function"><name>calculate_bmi</name></member>
+    <member refid="vitals_8h_1a3c853e30a899042babf9fdd2bd2cbfc1" kind="function"><name>check_blood_pressure</name></member>
+    <member refid="vitals_8h_1a7604eb6b23010f139f6f960b184a3b28" kind="function"><name>check_heart_rate</name></member>
+    <member refid="vitals_8h_1ac0bc076e63894a96df90f2eab73c88fe" kind="function"><name>check_spo2</name></member>
+    <member refid="vitals_8h_1aef7f6fa183fbc5412c13ea63bd2b62ce" kind="function"><name>check_temperature</name></member>
+    <member refid="vitals_8h_1af7201b2a5a70f76ab81ade218a863830" kind="function"><name>overall_alert_level</name></member>
+  </compound>
+  <compound refid="alerts_8c" kind="file"><name>alerts.c</name>
+    <member refid="alerts_8c_1af08ec37a8c99d747fb60fa15bc28678b" kind="define"><name>_CRT_SECURE_NO_WARNINGS</name></member>
+    <member refid="alerts_8c_1a7aa21ff5b5fcc955fb408e288a62b125" kind="define"><name>PUSH_ALERT</name></member>
+    <member refid="alerts_8c_1a98b6140a4d21520d639bc81d1f7c08b7" kind="function"><name>generate_alerts</name></member>
+  </compound>
+  <compound refid="gui__auth_8c" kind="file"><name>gui_auth.c</name>
+    <member refid="gui__auth_8c_1af08ec37a8c99d747fb60fa15bc28678b" kind="define"><name>_CRT_SECURE_NO_WARNINGS</name></member>
+    <member refid="gui__auth_8c_1a019680be59a6d8d8467a5220efc73c98" kind="define"><name>BUILT_IN_PASSWORD</name></member>
+    <member refid="gui__auth_8c_1a6e7a9d966f71a493c6ebcb151d5165ab" kind="define"><name>BUILT_IN_USERNAME</name></member>
+    <member refid="gui__auth_8c_1af25d94d0eb021a4a043fc49f68256bc0" kind="define"><name>DISPLAY_NAME</name></member>
+    <member refid="gui__auth_8c_1a92304d324761670e4b4267b7a3c0693a" kind="function"><name>auth_display_name</name></member>
+    <member refid="gui__auth_8c_1a89879c6685a6b662a08bd4e868130363" kind="function"><name>auth_validate</name></member>
+  </compound>
+  <compound refid="gui__main_8c" kind="file"><name>gui_main.c</name>
+    <member refid="gui__main_8c_1af08ec37a8c99d747fb60fa15bc28678b" kind="define"><name>_CRT_SECURE_NO_WARNINGS</name></member>
+    <member refid="gui__main_8c_1abce3c9120e09e75fd797f72f1b4a4cfb" kind="define"><name>APP_TITLE</name></member>
+    <member refid="gui__main_8c_1a5996f6f8b6e69fe374c817899de10190" kind="define"><name>CLASS_DASHBOARD</name></member>
+    <member refid="gui__main_8c_1a9e6a1d80e4fe112bf28f3d2d24604e31" kind="define"><name>CLASS_LOGIN</name></member>
+    <member refid="gui__main_8c_1ab9ba292ff2a498c29eb908f58b8de740" kind="define"><name>CLR_CR_BG</name></member>
+    <member refid="gui__main_8c_1a5770f87dad32d496f3a503e800a7d798" kind="define"><name>CLR_CR_FG</name></member>
+    <member refid="gui__main_8c_1a7606fcfa8b9c4979ed41f60e774d7d6a" kind="define"><name>CLR_DARK_TEXT</name></member>
+    <member refid="gui__main_8c_1aebcecaeb587f0c96fcaf50a5a333c652" kind="define"><name>CLR_LIGHT_GRAY</name></member>
+    <member refid="gui__main_8c_1a891483672b9c0b4c5846e24b41126999" kind="define"><name>CLR_NAVY</name></member>
+    <member refid="gui__main_8c_1a7b3491c361d6c785d75943bbd12f90ab" kind="define"><name>CLR_NEAR_WHITE</name></member>
+    <member refid="gui__main_8c_1a482f4f3831397dc742cf9dd76bf5e440" kind="define"><name>CLR_OK_BG</name></member>
+    <member refid="gui__main_8c_1ad8a21723b79ae9144eb7db9f2f62f05d" kind="define"><name>CLR_OK_FG</name></member>
+    <member refid="gui__main_8c_1a775b63dfa2c2a75cf6de48b7d62a34ac" kind="define"><name>CLR_SLATE</name></member>
+    <member refid="gui__main_8c_1a200fd50f64e8a7777954547ef30798a1" kind="define"><name>CLR_WHITE</name></member>
+    <member refid="gui__main_8c_1a8a09dd951611784f2ec56229efa5fba8" kind="define"><name>CLR_WN_BG</name></member>
+    <member refid="gui__main_8c_1a3140e1d618f94eaa9343afffc4f8dedf" kind="define"><name>CLR_WN_FG</name></member>
+    <member refid="gui__main_8c_1a54f70471ce8095c541d0833772bd6b65" kind="define"><name>CTRL_Y</name></member>
+    <member refid="gui__main_8c_1ac5bc792e372b15e7a1d3efe6daac9aec" kind="define"><name>CY</name></member>
+    <member refid="gui__main_8c_1ae1cb6875aa099f07490f7cb378e4e3db" kind="define"><name>HDR_H</name></member>
+    <member refid="gui__main_8c_1ab2c1fd66a6366e5f431412adf637e17c" kind="define"><name>IDC_BTN_ADD</name></member>
+    <member refid="gui__main_8c_1a8455d8a135d7cf128eb643bbced76bb1" kind="define"><name>IDC_BTN_ADMIT</name></member>
+    <member refid="gui__main_8c_1a2822be6e567791b522e9778e39c2b2bb" kind="define"><name>IDC_BTN_CLEAR</name></member>
+    <member refid="gui__main_8c_1a301bdf2ab51642e932c632d6d81bf0fe" kind="define"><name>IDC_BTN_LOGOUT</name></member>
+    <member refid="gui__main_8c_1ac21bedb6be859c95af37a1a914cb9ab3" kind="define"><name>IDC_BTN_PAUSE</name></member>
+    <member refid="gui__main_8c_1a401dd83089170c853fd0b57f865451a9" kind="define"><name>IDC_BTN_SCEN1</name></member>
+    <member refid="gui__main_8c_1ac49945fbe08366f7739ca258ecda44c9" kind="define"><name>IDC_BTN_SCEN2</name></member>
+    <member refid="gui__main_8c_1a5cdce490f87b5677635d915a07f55b82" kind="define"><name>IDC_LGN_BTN</name></member>
+    <member refid="gui__main_8c_1adf14d200e3e70a87b11130057b3b2832" kind="define"><name>IDC_LGN_ERR</name></member>
+    <member refid="gui__main_8c_1a58163e013247f90e4cdafb21f0a78c1a" kind="define"><name>IDC_LGN_PASS</name></member>
+    <member refid="gui__main_8c_1a13ee521f1a6d99a3510245cc4ae54603" kind="define"><name>IDC_LGN_USER</name></member>
+    <member refid="gui__main_8c_1aca621cda538dfe4bbd567b0f027ac37f" kind="define"><name>IDC_LIST_ALERTS</name></member>
+    <member refid="gui__main_8c_1a2e192879596b74f6c9aa6857963ba022" kind="define"><name>IDC_LIST_HISTORY</name></member>
+    <member refid="gui__main_8c_1a81d7d420ce685709128b3618613e3ccf" kind="define"><name>IDC_PAT_AGE</name></member>
+    <member refid="gui__main_8c_1ac053a72409e50f126de963d2ec6d1431" kind="define"><name>IDC_PAT_HEIGHT</name></member>
+    <member refid="gui__main_8c_1aad26a493054ee1ae11905811b4ed1acd" kind="define"><name>IDC_PAT_ID</name></member>
+    <member refid="gui__main_8c_1abb7b01234a6355187508bbe266dd9d16" kind="define"><name>IDC_PAT_NAME</name></member>
+    <member refid="gui__main_8c_1a611cede28ffe28cc6be91cbfa252c127" kind="define"><name>IDC_PAT_WEIGHT</name></member>
+    <member refid="gui__main_8c_1a0323af2730247e320386734471786dd7" kind="define"><name>IDC_VIT_DIA</name></member>
+    <member refid="gui__main_8c_1a1581bcbe7c54b78ef7f06c5cdd24ab2f" kind="define"><name>IDC_VIT_HR</name></member>
+    <member refid="gui__main_8c_1a80080c2fd4fb8f3d86f08cf3d7baf6a0" kind="define"><name>IDC_VIT_SPO2</name></member>
+    <member refid="gui__main_8c_1a6ac9fc84d7948789cacbfc22a13d6148" kind="define"><name>IDC_VIT_SYS</name></member>
+    <member refid="gui__main_8c_1a2340de55cf825e8772496a86d871cb4a" kind="define"><name>IDC_VIT_TEMP</name></member>
+    <member refid="gui__main_8c_1a1cd5035f361353200d599535005c89d3" kind="define"><name>PBAR_H</name></member>
+    <member refid="gui__main_8c_1afd6a242d8f9f33a9e6b3dd59a37b0a34" kind="define"><name>STAT_H</name></member>
+    <member refid="gui__main_8c_1a4b7458f691f44f3e8e39952730562c7b" kind="define"><name>STAT_Y</name></member>
+    <member refid="gui__main_8c_1ab79af15164d394018b2d98f0297cbf56" kind="define"><name>TILE_H</name></member>
+    <member refid="gui__main_8c_1a4a62524a49a9be02996b8e667b45abc9" kind="define"><name>TILE_Y</name></member>
+    <member refid="gui__main_8c_1adcaea99be45d762dbeaaa888eee2f54a" kind="define"><name>TIMER_SIM</name></member>
+    <member refid="gui__main_8c_1ac7bef5d85e3dcd73eef56ad39ffc84a9" kind="define"><name>WIN32_LEAN_AND_MEAN</name></member>
+    <member refid="gui__main_8c_1a6ca93ebc09cdbf9500d5fc8f5c56eb34" kind="define"><name>WIN_CH</name></member>
+    <member refid="gui__main_8c_1a8a7a1004dbbbbf61bea66e6b8cfbe461" kind="define"><name>WIN_CW</name></member>
+    <member refid="gui__main_8c_1a19062dff9cc13078c5d4848c325b1b89" kind="variable"><name>g_app</name></member>
+    <member refid="gui__main_8c_1a51e990e1b26cc2a1c2e8e602d3b13cf5" kind="function"><name>attempt_login</name></member>
+    <member refid="gui__main_8c_1a6abeadd1e2c5eabbf581278df6fc80dc" kind="function"><name>create_dash_controls</name></member>
+    <member refid="gui__main_8c_1a05facbe4e175f66ff55a4882c983d058" kind="function"><name>create_dashboard</name></member>
+    <member refid="gui__main_8c_1a50c9496063704973573429586a90b27d" kind="function"><name>dash_proc</name></member>
+    <member refid="gui__main_8c_1a9d7273263f3a31bf701590beb4c5b1d1" kind="function"><name>do_add_reading</name></member>
+    <member refid="gui__main_8c_1a6bed6b36812029c7bc2eb263a12e5c98" kind="function"><name>do_admit</name></member>
+    <member refid="gui__main_8c_1a11329148e25059d43a9d848bf4f90d4b" kind="function"><name>do_clear</name></member>
+    <member refid="gui__main_8c_1a9106ea80981b1db52b607a5e58f0ecf3" kind="function"><name>do_scenario</name></member>
+    <member refid="gui__main_8c_1a18faa01dfc1221353f0ca130f5647098" kind="function"><name>draw_text_ex</name></member>
+    <member refid="gui__main_8c_1a44c4ee73fc9a634398e794afaf73d079" kind="function"><name>fill_rect</name></member>
+    <member refid="gui__main_8c_1ae6a2186998a99a63c5e56e56fcb3174d" kind="function"><name>font_all_children</name></member>
+    <member refid="gui__main_8c_1adfa90e96e8fab8b5af641dd49e420791" kind="function"><name>get_txt</name></member>
+    <member refid="gui__main_8c_1ab5a6eab1941232f61da34dc646009e99" kind="function"><name>login_proc</name></member>
+    <member refid="gui__main_8c_1a24031f98b0d723d6ab3ec6b06912fcef" kind="function"><name>make_btn</name></member>
+    <member refid="gui__main_8c_1aba2b03bc9043c42771599f03493ddb81" kind="function"><name>make_edit</name></member>
+    <member refid="gui__main_8c_1abf6d0a77509e094deadd10535041af4c" kind="function"><name>make_font</name></member>
+    <member refid="gui__main_8c_1a68601212c34811f3fdfa6c26760d3b3b" kind="function"><name>make_label</name></member>
+    <member refid="gui__main_8c_1a188d44abc7793a822368986491e74f37" kind="function"><name>paint_header</name></member>
+    <member refid="gui__main_8c_1a3a6ecd59596770bcfc1ecf6fa4fd3219" kind="function"><name>paint_patient_bar</name></member>
+    <member refid="gui__main_8c_1a71c5868a8a8bcd102dfebf5a8cd8e55a" kind="function"><name>paint_status_banner</name></member>
+    <member refid="gui__main_8c_1acd6770839efac2b7a1806be591ea1d80" kind="function"><name>paint_tile</name></member>
+    <member refid="gui__main_8c_1a809c12bdd714ab44c54f45da4d3b2dc7" kind="function"><name>paint_tiles</name></member>
+    <member refid="gui__main_8c_1ac1006f93610e33d2d6f27dd2b1fb95a8" kind="function"><name>parse_flt_field</name></member>
+    <member refid="gui__main_8c_1a4f193d8e3ae8fd0a97d129b3437d8e86" kind="function"><name>parse_int_field</name></member>
+    <member refid="gui__main_8c_1aea86431d3096bc14f4f06eb7906f8278" kind="function"><name>set_txt</name></member>
+    <member refid="gui__main_8c_1a8faad4cd27c161432ac3388959b1a766" kind="function"><name>update_dashboard</name></member>
+    <member refid="gui__main_8c_1aab234127c99873cb463e482155cb679f" kind="function"><name>WinMain</name></member>
+  </compound>
+  <compound refid="main_8c" kind="file"><name>main.c</name>
+    <member refid="main_8c_1a840291bc02cba5474a4cb46a9b9566fe" kind="function"><name>main</name></member>
+    <member refid="main_8c_1a1a904050ef641d46ba74b91e8ff5b7f9" kind="function"><name>monitor_patient</name></member>
+    <member refid="main_8c_1a418db4bf280a08fda4493a816c841643" kind="function"><name>monitor_second_patient</name></member>
+    <member refid="main_8c_1a0082d156ee2712806a55606f6637d160" kind="function"><name>print_reading</name></member>
+  </compound>
+  <compound refid="patient_8c" kind="file"><name>patient.c</name>
+    <member refid="patient_8c_1af08ec37a8c99d747fb60fa15bc28678b" kind="define"><name>_CRT_SECURE_NO_WARNINGS</name></member>
+    <member refid="patient_8c_1a0e22c10046f3778c1f194cc6377d7984" kind="function"><name>patient_add_reading</name></member>
+    <member refid="patient_8c_1a7efb2602c9a2566fee89ff6d6af42bcf" kind="function"><name>patient_current_status</name></member>
+    <member refid="patient_8c_1a8fa76aa96b383df3556d391e64953536" kind="function"><name>patient_init</name></member>
+    <member refid="patient_8c_1a8f247ea51062330ba04c15535d530190" kind="function"><name>patient_is_full</name></member>
+    <member refid="patient_8c_1aaf2d461ddd1efafe4887647d0c8688d7" kind="function"><name>patient_latest_reading</name></member>
+    <member refid="patient_8c_1a19d76f7281d5f5ad5408c1ff4dc2ee11" kind="function"><name>patient_print_summary</name></member>
+  </compound>
+  <compound refid="sim__vitals_8c" kind="file"><name>sim_vitals.c</name>
+    <member refid="sim__vitals_8c_1a63817750df660b5125ca53cad7689339" kind="define"><name>SIM_SEQUENCE_LEN</name></member>
+    <member refid="sim__vitals_8c_1afc77b868eb0e1ef26395ac498e0eedf4" kind="variable"><name>g_sim_index</name></member>
+    <member refid="sim__vitals_8c_1a53df7844b81fc29d058537c3ca28e87f" kind="variable"><name>SIM_SEQUENCE</name></member>
+    <member refid="sim__vitals_8c_1ac277bf28fcc192d8dd7cd5b3466a4fa9" kind="function"><name>hw_get_next_reading</name></member>
+    <member refid="sim__vitals_8c_1ae58df14f30461cb37e8607aca5522846" kind="function"><name>hw_init</name></member>
+  </compound>
+  <compound refid="vitals_8c" kind="file"><name>vitals.c</name>
+    <member refid="vitals_8c_1a20a209843ea1eeff8484a7998d492615" kind="function"><name>alert_level_str</name></member>
+    <member refid="vitals_8c_1a7a7981a0a087b3b98763ed48bc789888" kind="function"><name>bmi_category</name></member>
+    <member refid="vitals_8c_1a10dc695991eacf8ffea85c92b9331aec" kind="function"><name>calculate_bmi</name></member>
+    <member refid="vitals_8c_1a3c853e30a899042babf9fdd2bd2cbfc1" kind="function"><name>check_blood_pressure</name></member>
+    <member refid="vitals_8c_1a7604eb6b23010f139f6f960b184a3b28" kind="function"><name>check_heart_rate</name></member>
+    <member refid="vitals_8c_1ac0bc076e63894a96df90f2eab73c88fe" kind="function"><name>check_spo2</name></member>
+    <member refid="vitals_8c_1aef7f6fa183fbc5412c13ea63bd2b62ce" kind="function"><name>check_temperature</name></member>
+    <member refid="vitals_8c_1af7201b2a5a70f76ab81ade218a863830" kind="function"><name>overall_alert_level</name></member>
+  </compound>
+  <compound refid="dir_d44c64559bbebec7f509842c48db8b23" kind="dir"><name>include</name>
+  </compound>
+  <compound refid="dir_68267d1309a1af8e8297ef4c3efbcdba" kind="dir"><name>src</name>
+  </compound>
+</doxygenindex>

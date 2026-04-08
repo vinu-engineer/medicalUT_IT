@@ -1,0 +1,14 @@
+<map id="src/patient.c" name="src/patient.c">
+<area shape="rect" id="Node000001" title="Implementation of patient record management functions." alt="" coords="84,5,177,32"/>
+<area shape="rect" id="Node000002" href="$patient_8h.html" title="Patient record management — demographic data and vital sign history." alt="" coords="5,80,77,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="113,35,70,72,66,68,116,30"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="100,80,160,107"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="131,30,133,65,128,64,129,35"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="185,80,249,107"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="146,30,193,69,188,71,145,35"/>
+<area shape="rect" id="Node000003" href="$vitals_8h.html" title="Vital signs data types, thresholds, and validation functions." alt="" coords="9,229,73,256"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="39,104,34,155,35,185,38,214,33,214,29,186,29,154,38,110"/>
+<area shape="rect" id="Node000004" href="$alerts_8h.html" title="Alert record generation from a set of vital sign measurements." alt="" coords="44,155,108,181"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="47,105,66,140,60,141,47,110"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="72,180,56,217,51,214,68,184"/>
+</map>

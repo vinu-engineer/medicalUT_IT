@@ -1,0 +1,5 @@
+<map id="include/alerts.h" name="include/alerts.h">
+<area shape="rect" id="Node000001" title="Alert record generation from a set of vital sign measurements." alt="" coords="5,5,115,32"/>
+<area shape="rect" id="Node000002" href="$vitals_8h.html" title="Vital signs data types, thresholds, and validation functions." alt="" coords="28,80,92,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="62,30,63,65,57,64,58,35"/>
+</map>

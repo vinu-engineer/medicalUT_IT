@@ -1,0 +1,139 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="struct_vital_signs" kind="struct" language="C++" prot="public">
+    <compoundname>VitalSigns</compoundname>
+    <includes refid="vitals_8h" local="no">vitals.h</includes>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct_vital_signs_1ab81723ab54ad295a71ba56f0ef52318f" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int VitalSigns::diastolic_bp</definition>
+        <argsstring></argsstring>
+        <name>diastolic_bp</name>
+        <qualifiedname>VitalSigns::diastolic_bp</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Diastolic blood pressure in mmHg. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/vitals.h" line="68" column="11" bodyfile="include/vitals.h" bodystart="68" bodyend="-1"/>
+        <referencedby refid="gui__main_8c_1a9d7273263f3a31bf701590beb4c5b1d1" compoundref="gui__main_8c" startline="642" endline="660">do_add_reading</referencedby>
+        <referencedby refid="alerts_8c_1a98b6140a4d21520d639bc81d1f7c08b7" compoundref="alerts_8c" startline="44" endline="87">generate_alerts</referencedby>
+        <referencedby refid="vitals_8c_1af7201b2a5a70f76ab81ade218a863830" compoundref="vitals_8c" startline="88" endline="103">overall_alert_level</referencedby>
+        <referencedby refid="gui__main_8c_1a809c12bdd714ab44c54f45da4d3b2dc7" compoundref="gui__main_8c" startline="325" endline="369">paint_tiles</referencedby>
+        <referencedby refid="patient_8c_1a19d76f7281d5f5ad5408c1ff4dc2ee11" compoundref="patient_8c" startline="98" endline="145">patient_print_summary</referencedby>
+        <referencedby refid="main_8c_1a0082d156ee2712806a55606f6637d160" compoundref="main_8c" startline="38" endline="65">print_reading</referencedby>
+        <referencedby refid="gui__main_8c_1a8faad4cd27c161432ac3388959b1a766" compoundref="gui__main_8c" startline="508" endline="560">update_dashboard</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="struct_vital_signs_1ac7162369c92da33cc7a3279c37083f84" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int VitalSigns::heart_rate</definition>
+        <argsstring></argsstring>
+        <name>heart_rate</name>
+        <qualifiedname>VitalSigns::heart_rate</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Heart rate in beats per minute (bpm). </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/vitals.h" line="66" column="11" bodyfile="include/vitals.h" bodystart="66" bodyend="-1"/>
+        <referencedby refid="gui__main_8c_1a9d7273263f3a31bf701590beb4c5b1d1" compoundref="gui__main_8c" startline="642" endline="660">do_add_reading</referencedby>
+        <referencedby refid="alerts_8c_1a98b6140a4d21520d639bc81d1f7c08b7" compoundref="alerts_8c" startline="44" endline="87">generate_alerts</referencedby>
+        <referencedby refid="vitals_8c_1af7201b2a5a70f76ab81ade218a863830" compoundref="vitals_8c" startline="88" endline="103">overall_alert_level</referencedby>
+        <referencedby refid="gui__main_8c_1a809c12bdd714ab44c54f45da4d3b2dc7" compoundref="gui__main_8c" startline="325" endline="369">paint_tiles</referencedby>
+        <referencedby refid="patient_8c_1a19d76f7281d5f5ad5408c1ff4dc2ee11" compoundref="patient_8c" startline="98" endline="145">patient_print_summary</referencedby>
+        <referencedby refid="main_8c_1a0082d156ee2712806a55606f6637d160" compoundref="main_8c" startline="38" endline="65">print_reading</referencedby>
+        <referencedby refid="gui__main_8c_1a8faad4cd27c161432ac3388959b1a766" compoundref="gui__main_8c" startline="508" endline="560">update_dashboard</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="struct_vital_signs_1a1b524bb13d6c36ec564c7d94a5e953c1" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int VitalSigns::spo2</definition>
+        <argsstring></argsstring>
+        <name>spo2</name>
+        <qualifiedname>VitalSigns::spo2</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Peripheral oxygen saturation as a percentage. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/vitals.h" line="70" column="11" bodyfile="include/vitals.h" bodystart="70" bodyend="-1"/>
+        <referencedby refid="gui__main_8c_1a9d7273263f3a31bf701590beb4c5b1d1" compoundref="gui__main_8c" startline="642" endline="660">do_add_reading</referencedby>
+        <referencedby refid="alerts_8c_1a98b6140a4d21520d639bc81d1f7c08b7" compoundref="alerts_8c" startline="44" endline="87">generate_alerts</referencedby>
+        <referencedby refid="vitals_8c_1af7201b2a5a70f76ab81ade218a863830" compoundref="vitals_8c" startline="88" endline="103">overall_alert_level</referencedby>
+        <referencedby refid="gui__main_8c_1a809c12bdd714ab44c54f45da4d3b2dc7" compoundref="gui__main_8c" startline="325" endline="369">paint_tiles</referencedby>
+        <referencedby refid="patient_8c_1a19d76f7281d5f5ad5408c1ff4dc2ee11" compoundref="patient_8c" startline="98" endline="145">patient_print_summary</referencedby>
+        <referencedby refid="main_8c_1a0082d156ee2712806a55606f6637d160" compoundref="main_8c" startline="38" endline="65">print_reading</referencedby>
+        <referencedby refid="gui__main_8c_1a8faad4cd27c161432ac3388959b1a766" compoundref="gui__main_8c" startline="508" endline="560">update_dashboard</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="struct_vital_signs_1a110b3f24528e0f5769cb82f3a0c07485" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int VitalSigns::systolic_bp</definition>
+        <argsstring></argsstring>
+        <name>systolic_bp</name>
+        <qualifiedname>VitalSigns::systolic_bp</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Systolic blood pressure in mmHg. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/vitals.h" line="67" column="11" bodyfile="include/vitals.h" bodystart="67" bodyend="-1"/>
+        <referencedby refid="gui__main_8c_1a9d7273263f3a31bf701590beb4c5b1d1" compoundref="gui__main_8c" startline="642" endline="660">do_add_reading</referencedby>
+        <referencedby refid="alerts_8c_1a98b6140a4d21520d639bc81d1f7c08b7" compoundref="alerts_8c" startline="44" endline="87">generate_alerts</referencedby>
+        <referencedby refid="vitals_8c_1af7201b2a5a70f76ab81ade218a863830" compoundref="vitals_8c" startline="88" endline="103">overall_alert_level</referencedby>
+        <referencedby refid="gui__main_8c_1a809c12bdd714ab44c54f45da4d3b2dc7" compoundref="gui__main_8c" startline="325" endline="369">paint_tiles</referencedby>
+        <referencedby refid="patient_8c_1a19d76f7281d5f5ad5408c1ff4dc2ee11" compoundref="patient_8c" startline="98" endline="145">patient_print_summary</referencedby>
+        <referencedby refid="main_8c_1a0082d156ee2712806a55606f6637d160" compoundref="main_8c" startline="38" endline="65">print_reading</referencedby>
+        <referencedby refid="gui__main_8c_1a8faad4cd27c161432ac3388959b1a766" compoundref="gui__main_8c" startline="508" endline="560">update_dashboard</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="struct_vital_signs_1af0a43a24a6e26683adde5612cf626365" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float VitalSigns::temperature</definition>
+        <argsstring></argsstring>
+        <name>temperature</name>
+        <qualifiedname>VitalSigns::temperature</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Core body temperature in degrees Celsius (°C). </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/vitals.h" line="69" column="11" bodyfile="include/vitals.h" bodystart="69" bodyend="-1"/>
+        <referencedby refid="gui__main_8c_1a9d7273263f3a31bf701590beb4c5b1d1" compoundref="gui__main_8c" startline="642" endline="660">do_add_reading</referencedby>
+        <referencedby refid="alerts_8c_1a98b6140a4d21520d639bc81d1f7c08b7" compoundref="alerts_8c" startline="44" endline="87">generate_alerts</referencedby>
+        <referencedby refid="vitals_8c_1af7201b2a5a70f76ab81ade218a863830" compoundref="vitals_8c" startline="88" endline="103">overall_alert_level</referencedby>
+        <referencedby refid="gui__main_8c_1a809c12bdd714ab44c54f45da4d3b2dc7" compoundref="gui__main_8c" startline="325" endline="369">paint_tiles</referencedby>
+        <referencedby refid="patient_8c_1a19d76f7281d5f5ad5408c1ff4dc2ee11" compoundref="patient_8c" startline="98" endline="145">patient_print_summary</referencedby>
+        <referencedby refid="main_8c_1a0082d156ee2712806a55606f6637d160" compoundref="main_8c" startline="38" endline="65">print_reading</referencedby>
+        <referencedby refid="gui__main_8c_1a8faad4cd27c161432ac3388959b1a766" compoundref="gui__main_8c" startline="508" endline="560">update_dashboard</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>A single set of patient vital sign measurements. </para>
+    </briefdescription>
+    <detaileddescription>
+<para>All fields are captured at the same point in time and treated as a single observation. Callers must ensure values are physically plausible before passing them to validation functions. </para>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>VitalSigns</label>
+        <link refid="struct_vital_signs"/>
+      </node>
+    </collaborationgraph>
+    <location file="include/vitals.h" line="65" column="1" bodyfile="include/vitals.h" bodystart="65" bodyend="71"/>
+    <listofallmembers>
+      <member refid="struct_vital_signs_1ab81723ab54ad295a71ba56f0ef52318f" prot="public" virt="non-virtual"><scope>VitalSigns</scope><name>diastolic_bp</name></member>
+      <member refid="struct_vital_signs_1ac7162369c92da33cc7a3279c37083f84" prot="public" virt="non-virtual"><scope>VitalSigns</scope><name>heart_rate</name></member>
+      <member refid="struct_vital_signs_1a1b524bb13d6c36ec564c7d94a5e953c1" prot="public" virt="non-virtual"><scope>VitalSigns</scope><name>spo2</name></member>
+      <member refid="struct_vital_signs_1a110b3f24528e0f5769cb82f3a0c07485" prot="public" virt="non-virtual"><scope>VitalSigns</scope><name>systolic_bp</name></member>
+      <member refid="struct_vital_signs_1af0a43a24a6e26683adde5612cf626365" prot="public" virt="non-virtual"><scope>VitalSigns</scope><name>temperature</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

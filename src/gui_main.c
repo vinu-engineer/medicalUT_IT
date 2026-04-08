@@ -38,7 +38,7 @@
  * App metadata
  * =================================================================== */
 #define APP_TITLE   "Patient Vital Signs Monitor"
-#define APP_VERSION "v2.1.0"
+#define APP_VERSION "v2.2.0"
 #define IDI_APPICON 101
 
 /* ===================================================================
@@ -77,6 +77,7 @@
 #define IDC_VIT_DIA     1103
 #define IDC_VIT_TEMP    1104
 #define IDC_VIT_SPO2    1105
+#define IDC_VIT_RR      1106  /**< Respiration rate field @req SWR-VIT-008 */
 #define IDC_BTN_ADD     1110
 #define IDC_BTN_CLEAR   1111
 
@@ -373,9 +374,11 @@ static void paint_tile(HDC hdc,
 static void paint_tiles(HDC hdc, int cw)
 {
     const VitalSigns *v = NULL;
-    char hr_s[16], bp_s[24], tp_s[16], sp_s[16];
-    AlertLevel lhr=ALERT_NORMAL, lbp=ALERT_NORMAL, ltp=ALERT_NORMAL, lsp=ALERT_NORMAL;
-    int pad=10, tw=(cw-3*pad)/2, th=(TILE_H-3*pad)/2;
+    char hr_s[16], bp_s[24], tp_s[16], sp_s[16], rr_s[16];
+    AlertLevel lhr=ALERT_NORMAL, lbp=ALERT_NORMAL, ltp=ALERT_NORMAL,
+               lsp=ALERT_NORMAL, lrr=ALERT_NORMAL;
+    /* 3-column layout — 5 vital tiles, 6th slot reserved for future use */
+    int pad=10, tw=(cw-4*pad)/3, th=(TILE_H-3*pad)/2;
 
     fill_rect(hdc, 0, TILE_Y, cw, TILE_H+pad, CLR_NEAR_WHITE);
     if (!g_app.sim_enabled) {
@@ -384,6 +387,7 @@ static void paint_tiles(HDC hdc, int cw)
         strncpy(bp_s,"N/A",sizeof(bp_s)-1);  bp_s[sizeof(bp_s)-1]='\0';
         strncpy(tp_s,"N/A",sizeof(tp_s)-1);  tp_s[sizeof(tp_s)-1]='\0';
         strncpy(sp_s,"N/A",sizeof(sp_s)-1);  sp_s[sizeof(sp_s)-1]='\0';
+        strncpy(rr_s,"N/A",sizeof(rr_s)-1);  rr_s[sizeof(rr_s)-1]='\0';
     } else {
         if (g_app.has_patient) v = patient_latest_reading(&g_app.patient);
         if (v) {
@@ -391,21 +395,33 @@ static void paint_tiles(HDC hdc, int cw)
             snprintf(bp_s, sizeof(bp_s), "%d / %d", v->systolic_bp, v->diastolic_bp);
             snprintf(tp_s, sizeof(tp_s), "%.1f",    v->temperature);
             snprintf(sp_s, sizeof(sp_s), "%d",      v->spo2);
+            if (v->respiration_rate != 0)
+                snprintf(rr_s, sizeof(rr_s), "%d", v->respiration_rate);
+            else
+                strncpy(rr_s, "--", sizeof(rr_s)-1), rr_s[sizeof(rr_s)-1]='\0';
             lhr=check_heart_rate(v->heart_rate);
             lbp=check_blood_pressure(v->systolic_bp, v->diastolic_bp);
             ltp=check_temperature(v->temperature);
             lsp=check_spo2(v->spo2);
+            if (v->respiration_rate != 0)
+                lrr=check_respiration_rate(v->respiration_rate);
         } else {
             strncpy(hr_s,"--",   sizeof(hr_s)-1);  hr_s[sizeof(hr_s)-1]='\0';
             strncpy(bp_s,"--/--",sizeof(bp_s)-1);  bp_s[sizeof(bp_s)-1]='\0';
             strncpy(tp_s,"--",   sizeof(tp_s)-1);  tp_s[sizeof(tp_s)-1]='\0';
             strncpy(sp_s,"--",   sizeof(sp_s)-1);  sp_s[sizeof(sp_s)-1]='\0';
+            strncpy(rr_s,"--",   sizeof(rr_s)-1);  rr_s[sizeof(rr_s)-1]='\0';
         }
     }
-    paint_tile(hdc, pad,           TILE_Y+pad,       tw, th, "HEART RATE",     hr_s, "bpm",  lhr);
-    paint_tile(hdc, pad+tw+pad,    TILE_Y+pad,       tw, th, "BLOOD PRESSURE", bp_s, "mmHg", lbp);
-    paint_tile(hdc, pad,           TILE_Y+pad+th+pad,tw, th, "TEMPERATURE",    tp_s, "C",    ltp);
-    paint_tile(hdc, pad+tw+pad,    TILE_Y+pad+th+pad,tw, th, "SpO2",           sp_s, "%",    lsp);
+    /* Row 1 */
+    paint_tile(hdc, pad,             TILE_Y+pad,        tw, th, "HEART RATE",     hr_s, "bpm",    lhr);
+    paint_tile(hdc, pad+tw+pad,      TILE_Y+pad,        tw, th, "BLOOD PRESSURE", bp_s, "mmHg",   lbp);
+    paint_tile(hdc, pad+2*(tw+pad),  TILE_Y+pad,        tw, th, "TEMPERATURE",    tp_s, "C",      ltp);
+    /* Row 2 */
+    paint_tile(hdc, pad,             TILE_Y+pad+th+pad, tw, th, "SpO2",           sp_s, "%",      lsp);
+    paint_tile(hdc, pad+tw+pad,      TILE_Y+pad+th+pad, tw, th, "RESP RATE",      rr_s, "br/min", lrr);
+    /* 6th tile: reserved for future (NEWS2 score - v2.3.0) */
+    (void)0; /* pad+2*(tw+pad), TILE_Y+pad+th+pad */
 }
 
 static void paint_status_banner(HDC hdc, int cw)
@@ -483,17 +499,19 @@ static void create_dash_controls(HWND w)
     make_btn  (w,IDC_BTN_ADMIT,"Admit / Refresh",670,CY+18,130,28);
 
     make_label(w,"HR (bpm)",     20, CY+62,  80, 18);
-    make_edit (w,IDC_VIT_HR,  "78", 20, CY+82, 100, 24);
-    make_label(w,"Systolic",    132,CY+62,  70, 18);
-    make_edit (w,IDC_VIT_SYS,"122",132,CY+82, 100, 24);
-    make_label(w,"Diastolic",   244,CY+62,  70, 18);
-    make_edit (w,IDC_VIT_DIA, "82",244,CY+82, 100, 24);
-    make_label(w,"Temp (C)",    356,CY+62,  70, 18);
-    make_edit (w,IDC_VIT_TEMP,"36.7",356,CY+82,100,24);
-    make_label(w,"SpO2 (%)",    468,CY+62,  70, 18);
-    make_edit (w,IDC_VIT_SPO2,"98", 468,CY+82, 100, 24);
-    make_btn  (w,IDC_BTN_ADD, "Add Reading",  580,CY+80,110,28);
-    make_btn  (w,IDC_BTN_CLEAR,"Clear Session",702,CY+80,110,28);
+    make_edit (w,IDC_VIT_HR,  "78", 20, CY+82, 90, 24);
+    make_label(w,"Systolic",    122,CY+62,  70, 18);
+    make_edit (w,IDC_VIT_SYS,"122",122,CY+82,  90, 24);
+    make_label(w,"Diastolic",   224,CY+62,  70, 18);
+    make_edit (w,IDC_VIT_DIA, "82",224,CY+82,  90, 24);
+    make_label(w,"Temp (C)",    326,CY+62,  70, 18);
+    make_edit (w,IDC_VIT_TEMP,"36.7",326,CY+82, 90,24);
+    make_label(w,"SpO2 (%)",    428,CY+62,  70, 18);
+    make_edit (w,IDC_VIT_SPO2,"98", 428,CY+82,  90, 24);
+    make_label(w,"RR (br/min)", 530,CY+62,  80, 18);
+    make_edit (w,IDC_VIT_RR,  "15", 530,CY+82,  90, 24);
+    make_btn  (w,IDC_BTN_ADD, "Add Reading",  634,CY+80,110,28);
+    make_btn  (w,IDC_BTN_CLEAR,"Clear Session",756,CY+80,110,28);
 
     make_btn(w,IDC_BTN_SCEN1,"Demo: Deterioration",20, CY+124,175,26);
     make_btn(w,IDC_BTN_SCEN2,"Demo: Bradycardia",  205,CY+124,160,26);
@@ -549,11 +567,18 @@ static void update_dashboard(HWND w)
     }
     for (i = 0; i < g_app.patient.reading_count; ++i) {
         const VitalSigns *r = &g_app.patient.readings[i];
-        snprintf(buf, sizeof(buf),
-                 "#%d   HR %d bpm | BP %d/%d mmHg | Temp %.1f C | SpO2 %d%%   [%s]",
-                 i+1, r->heart_rate, r->systolic_bp, r->diastolic_bp,
-                 r->temperature, r->spo2,
-                 alert_level_str(overall_alert_level(r)));
+        if (r->respiration_rate != 0)
+            snprintf(buf, sizeof(buf),
+                     "#%d  HR %d | BP %d/%d | Temp %.1f C | SpO2 %d%% | RR %d br/min  [%s]",
+                     i+1, r->heart_rate, r->systolic_bp, r->diastolic_bp,
+                     r->temperature, r->spo2, r->respiration_rate,
+                     alert_level_str(overall_alert_level(r)));
+        else
+            snprintf(buf, sizeof(buf),
+                     "#%d  HR %d | BP %d/%d | Temp %.1f C | SpO2 %d%%  [%s]",
+                     i+1, r->heart_rate, r->systolic_bp, r->diastolic_bp,
+                     r->temperature, r->spo2,
+                     alert_level_str(overall_alert_level(r)));
         SendMessageA(GetDlgItem(w,IDC_LIST_HISTORY),LB_ADDSTRING,0,(LPARAM)buf);
     }
     latest = patient_latest_reading(&g_app.patient);
@@ -628,11 +653,12 @@ static void do_add_reading(HWND w)
 {
     VitalSigns v;
     if (!g_app.has_patient && !do_admit(w)) return;
-    if (!parse_int_field(w,IDC_VIT_HR,  "Heart Rate",  &v.heart_rate))   return;
-    if (!parse_int_field(w,IDC_VIT_SYS, "Systolic BP", &v.systolic_bp))  return;
-    if (!parse_int_field(w,IDC_VIT_DIA, "Diastolic BP",&v.diastolic_bp)) return;
-    if (!parse_flt_field(w,IDC_VIT_TEMP,"Temperature", &v.temperature))  return;
-    if (!parse_int_field(w,IDC_VIT_SPO2,"SpO2",        &v.spo2))         return;
+    if (!parse_int_field(w,IDC_VIT_HR,  "Heart Rate",   &v.heart_rate))     return;
+    if (!parse_int_field(w,IDC_VIT_SYS, "Systolic BP",  &v.systolic_bp))    return;
+    if (!parse_int_field(w,IDC_VIT_DIA, "Diastolic BP", &v.diastolic_bp))   return;
+    if (!parse_flt_field(w,IDC_VIT_TEMP,"Temperature",  &v.temperature))    return;
+    if (!parse_int_field(w,IDC_VIT_SPO2,"SpO2",         &v.spo2))           return;
+    if (!parse_int_field(w,IDC_VIT_RR,  "Resp Rate",    &v.respiration_rate)) return;
     if (!patient_add_reading(&g_app.patient,&v)) {
         MessageBoxA(w,"Reading buffer full (10 readings). Clear session to continue.",
                     APP_TITLE,MB_OK|MB_ICONWARNING); return;
@@ -648,12 +674,13 @@ static void do_clear(HWND w)
     set_txt(w,IDC_PAT_HEIGHT,"1.66"); set_txt(w,IDC_VIT_HR,"78");
     set_txt(w,IDC_VIT_SYS,  "122");   set_txt(w,IDC_VIT_DIA,"82");
     set_txt(w,IDC_VIT_TEMP, "36.7");  set_txt(w,IDC_VIT_SPO2,"98");
+    set_txt(w,IDC_VIT_RR,   "15");
     update_dashboard(w);
 }
 static void do_scenario(HWND w, int s)
 {
-    static const VitalSigns det[3]={{78,122,82,36.7f,98},{108,148,94,37.9f,93},{135,175,112,39.8f,87}};
-    static const VitalSigns bra[2]={{68,118,76,36.5f,99},{38,110,72,36.6f,97}};
+    static const VitalSigns det[3]={{78,122,82,36.7f,98,15},{108,148,94,37.9f,93,23},{135,175,112,39.8f,87,27}};
+    static const VitalSigns bra[2]={{68,118,76,36.5f,99,14},{38,110,72,36.6f,97,8}};
     const VitalSigns *rd; int n,i;
     if (s==1) {
         set_txt(w,IDC_PAT_ID,"1001"); set_txt(w,IDC_PAT_NAME,"Sarah Johnson");

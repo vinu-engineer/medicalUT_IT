@@ -1,0 +1,7 @@
+<map id="paint_patient_bar" name="paint_patient_bar">
+<area shape="rect" id="Node000001" title="Paint the patient summary bar. @req SWR&#45;GUI&#45;003." alt="" coords="255,5,375,32"/>
+<area shape="rect" id="Node000002" href="$gui__main_8c.html#a50c9496063704973573429586a90b27d" title=" " alt="" coords="126,5,207,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="237,19,207,21,207,16,242,19"/>
+<area shape="rect" id="Node000003" href="$gui__main_8c.html#aab234127c99873cb463e482155cb679f" title=" " alt="" coords="5,5,78,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="108,19,78,21,78,16,113,18"/>
+</map>

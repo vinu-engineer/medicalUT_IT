@@ -1,0 +1,25 @@
+<map id="src/gui_main.c" name="src/gui_main.c">
+<area shape="rect" id="Node000001" title="Win32 GUI entry point — Patient Vital Signs Monitor." alt="" coords="332,5,439,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,80,89,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="331,34,104,82,103,77,333,28"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="113,80,173,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="342,34,189,81,187,76,345,31"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="197,80,260,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="356,34,271,75,268,71,361,31"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="284,80,348,107"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="376,31,341,71,337,66,371,34"/>
+<area shape="rect" id="Node000006" href="$vitals_8h.html" title="Vital signs data types, thresholds, and validation functions." alt="" coords="458,229,521,256"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="386,30,389,99,397,141,413,180,431,202,454,221,449,220,427,205,409,183,392,142,384,99,383,34"/>
+<area shape="rect" id="Node000007" href="$alerts_8h.html" title="Alert record generation from a set of vital sign measurements." alt="" coords="423,155,487,181"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="393,30,445,141,440,140,390,35"/>
+<area shape="rect" id="Node000008" href="$patient_8h.html" title="Patient record management — demographic data and vital sign history." alt="" coords="474,80,545,107"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="408,30,478,72,473,72,407,35"/>
+<area shape="rect" id="Node000009" href="$gui__auth_8h.html" title="GUI authentication interface." alt="" coords="569,80,650,107"/>
+<area shape="poly" id="edge11_Node000001_Node000009" title=" " alt="" coords="425,30,559,74,554,75,425,35"/>
+<area shape="rect" id="Node000010" href="$hw__vitals_8h.html" title="Hardware Abstraction Layer (HAL) for vital signs acquisition." alt="" coords="603,155,691,181"/>
+<area shape="poly" id="edge12_Node000001_Node000010" title=" " alt="" coords="439,21,501,28,568,39,627,55,650,66,665,78,672,93,673,110,663,143,660,139,668,110,667,95,661,82,647,70,626,60,567,44,500,33,439,26"/>
+<area shape="poly" id="edge7_Node000007_Node000006" title=" " alt="" coords="462,180,480,216,475,214,460,184"/>
+<area shape="poly" id="edge9_Node000008_Node000006" title=" " alt="" coords="510,105,502,182,496,216,492,212,496,181,506,109"/>
+<area shape="poly" id="edge10_Node000008_Node000007" title=" " alt="" coords="502,106,475,144,472,140,498,109"/>
+<area shape="poly" id="edge13_Node000010_Node000006" title=" " alt="" coords="622,181,532,225,530,220,617,182"/>
+</map>

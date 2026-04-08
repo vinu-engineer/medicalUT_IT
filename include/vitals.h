@@ -9,20 +9,21 @@
  * one of three alert levels: NORMAL, WARNING, or CRITICAL.
  *
  * ### Threshold Reference Table
- * | Parameter      | Normal          | Warning                  | Critical          |
- * |----------------|-----------------|--------------------------|-------------------|
- * | Heart Rate     | 60–100 bpm      | 41–59 / 101–150 bpm      | ≤40 / ≥151 bpm    |
- * | Systolic BP    | 90–140 mmHg     | 71–89 / 141–180 mmHg     | ≤70 / ≥181 mmHg   |
- * | Diastolic BP   | 60–90 mmHg      | 41–59 / 91–120 mmHg      | ≤40 / ≥121 mmHg   |
- * | Temperature    | 36.1–37.2 °C    | 35.0–36.0 / 37.3–39.5 °C| <35.0 / >39.5 °C  |
- * | SpO2           | 95–100 %        | 90–94 %                  | <90 %             |
+ * | Parameter         | Normal          | Warning                    | Critical            |
+ * |-------------------|-----------------|----------------------------|---------------------|
+ * | Heart Rate        | 60–100 bpm      | 41–59 / 101–150 bpm        | ≤40 / ≥151 bpm      |
+ * | Systolic BP       | 90–140 mmHg     | 71–89 / 141–180 mmHg       | ≤70 / ≥181 mmHg     |
+ * | Diastolic BP      | 60–90 mmHg      | 41–59 / 91–120 mmHg        | ≤40 / ≥121 mmHg     |
+ * | Temperature       | 36.1–37.2 °C    | 35.0–36.0 / 37.3–39.5 °C  | <35.0 / >39.5 °C    |
+ * | SpO2              | 95–100 %        | 90–94 %                    | <90 %               |
+ * | Respiration Rate  | 12–20 br/min    | 9–11 / 21–24 br/min        | ≤8 / ≥25 br/min     |
  *
  * ### IEC 62304 Traceability
  * - Software Unit: UNIT-VIT
- * - Requirements covered: SWR-VIT-001 through SWR-VIT-007
+ * - Requirements covered: SWR-VIT-001 through SWR-VIT-008
  *
- * @version 1.0.0
- * @date    2026-04-06
+ * @version 1.1.0
+ * @date    2026-04-08
  * @author  vinu-engineer
  *
  * @copyright Medical Device Software — IEC 62304 Class B compliant.
@@ -61,13 +62,19 @@ typedef enum {
  * @details All fields are captured at the same point in time and treated
  * as a single observation. Callers must ensure values are physically
  * plausible before passing them to validation functions.
+ *
+ * @note respiration_rate == 0 is treated as "not measured" by
+ *       check_respiration_rate() and overall_alert_level(); the field is
+ *       skipped and contributes ALERT_NORMAL to the aggregate result.
  */
 typedef struct {
-    int   heart_rate;    /**< Heart rate in beats per minute (bpm).           */
-    int   systolic_bp;   /**< Systolic blood pressure in mmHg.                */
-    int   diastolic_bp;  /**< Diastolic blood pressure in mmHg.               */
-    float temperature;   /**< Core body temperature in degrees Celsius (°C).  */
-    int   spo2;          /**< Peripheral oxygen saturation as a percentage.   */
+    int   heart_rate;        /**< Heart rate in beats per minute (bpm).           */
+    int   systolic_bp;       /**< Systolic blood pressure in mmHg.                */
+    int   diastolic_bp;      /**< Diastolic blood pressure in mmHg.               */
+    float temperature;       /**< Core body temperature in degrees Celsius (°C).  */
+    int   spo2;              /**< Peripheral oxygen saturation as a percentage.   */
+    int   respiration_rate;  /**< Respiration rate in breaths per minute (br/min).
+                                  Set to 0 if not measured.                       */
 } VitalSigns;
 
 /* =========================================================================
@@ -143,6 +150,29 @@ AlertLevel check_temperature(float temp_c);
  */
 AlertLevel check_spo2(int spo2);
 
+/**
+ * @brief Classify a respiration rate reading against clinical thresholds.
+ *
+ * @details
+ * - **NORMAL**:   12–20 breaths/min (inclusive)\n
+ * - **WARNING**:  9–11 breaths/min or 21–24 breaths/min\n
+ * - **CRITICAL**: ≤8 breaths/min (severe bradypnoea / apnoea)
+ *                 or ≥25 breaths/min (severe tachypnoea)
+ *
+ * A value of 0 indicates the parameter was not measured; callers that use
+ * the VitalSigns struct should call overall_alert_level() which handles the
+ * "not measured" case automatically.  Passing 0 directly to this function
+ * returns ALERT_CRITICAL (≤8 threshold) — use overall_alert_level() or
+ * guard against 0 at the call site when the sensor is absent.
+ *
+ * @param[in] rr_bpm Respiration rate in breaths per minute.
+ * @return AlertLevel classification for the given respiration rate.
+ *
+ * @par Requirement
+ * SWR-VIT-008
+ */
+AlertLevel check_respiration_rate(int rr_bpm);
+
 /* =========================================================================
  * Aggregate Evaluation
  * ========================================================================= */
@@ -151,12 +181,17 @@ AlertLevel check_spo2(int spo2);
  * @brief Return the highest alert level across all vital sign parameters.
  *
  * @details Internally calls check_heart_rate(), check_blood_pressure(),
- * check_temperature(), and check_spo2(), then returns the maximum value.
- * This ensures that any single critical parameter elevates the overall
- * patient status to CRITICAL regardless of other parameters.
+ * check_temperature(), check_spo2(), and check_respiration_rate(), then
+ * returns the maximum value across all five parameters.  This ensures that
+ * any single critical parameter elevates the overall patient status to
+ * CRITICAL regardless of the other parameters.
+ *
+ * If vitals->respiration_rate == 0 the respiration check is skipped
+ * (treated as ALERT_NORMAL) so that the absence of an RR sensor does not
+ * generate a spurious alarm.
  *
  * @param[in] vitals Pointer to a valid VitalSigns structure. Must not be NULL.
- * @return The highest AlertLevel among all four parameters.
+ * @return The highest AlertLevel among all five parameters.
  *
  * @pre  vitals != NULL
  * @par Requirement

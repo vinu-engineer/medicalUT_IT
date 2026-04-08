@@ -1,0 +1,7 @@
+<map id="src/sim_vitals.c" name="src/sim_vitals.c">
+<area shape="rect" id="Node000001" title="Simulation back&#45;end for the vital signs HAL (hw_vitals.h)." alt="" coords="5,5,119,32"/>
+<area shape="rect" id="Node000002" href="$hw__vitals_8h.html" title="Hardware Abstraction Layer (HAL) for vital signs acquisition." alt="" coords="18,80,106,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="63,30,65,65,59,64,61,35"/>
+<area shape="rect" id="Node000003" href="$vitals_8h.html" title="Vital signs data types, thresholds, and validation functions." alt="" coords="30,155,94,181"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="64,105,65,140,59,138,60,109"/>
+</map>

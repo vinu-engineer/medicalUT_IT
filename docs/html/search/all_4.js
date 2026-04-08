@@ -1,0 +1,27 @@
+var searchData=
+[
+  ['calculate_5fbmi_0',['calculate_bmi',['../vitals_8c.html#a10dc695991eacf8ffea85c92b9331aec',1,'calculate_bmi(float weight_kg, float height_m):&#160;vitals.c'],['../vitals_8h.html#a10dc695991eacf8ffea85c92b9331aec',1,'calculate_bmi(float weight_kg, float height_m):&#160;vitals.c']]],
+  ['check_5fblood_5fpressure_1',['check_blood_pressure',['../vitals_8c.html#a3c853e30a899042babf9fdd2bd2cbfc1',1,'check_blood_pressure(int systolic, int diastolic):&#160;vitals.c'],['../vitals_8h.html#a3c853e30a899042babf9fdd2bd2cbfc1',1,'check_blood_pressure(int systolic, int diastolic):&#160;vitals.c']]],
+  ['check_5fheart_5frate_2',['check_heart_rate',['../vitals_8c.html#a7604eb6b23010f139f6f960b184a3b28',1,'check_heart_rate(int bpm):&#160;vitals.c'],['../vitals_8h.html#a7604eb6b23010f139f6f960b184a3b28',1,'check_heart_rate(int bpm):&#160;vitals.c']]],
+  ['check_5fspo2_3',['check_spo2',['../vitals_8c.html#ac0bc076e63894a96df90f2eab73c88fe',1,'check_spo2(int spo2):&#160;vitals.c'],['../vitals_8h.html#ac0bc076e63894a96df90f2eab73c88fe',1,'check_spo2(int spo2):&#160;vitals.c']]],
+  ['check_5ftemperature_4',['check_temperature',['../vitals_8c.html#aef7f6fa183fbc5412c13ea63bd2b62ce',1,'check_temperature(float temp_c):&#160;vitals.c'],['../vitals_8h.html#aef7f6fa183fbc5412c13ea63bd2b62ce',1,'check_temperature(float temp_c):&#160;vitals.c']]],
+  ['class_5fdashboard_5',['CLASS_DASHBOARD',['../gui__main_8c.html#a5996f6f8b6e69fe374c817899de10190',1,'gui_main.c']]],
+  ['class_5flogin_6',['CLASS_LOGIN',['../gui__main_8c.html#a9e6a1d80e4fe112bf28f3d2d24604e31',1,'gui_main.c']]],
+  ['clr_5fcr_5fbg_7',['CLR_CR_BG',['../gui__main_8c.html#ab9ba292ff2a498c29eb908f58b8de740',1,'gui_main.c']]],
+  ['clr_5fcr_5ffg_8',['CLR_CR_FG',['../gui__main_8c.html#a5770f87dad32d496f3a503e800a7d798',1,'gui_main.c']]],
+  ['clr_5fdark_5ftext_9',['CLR_DARK_TEXT',['../gui__main_8c.html#a7606fcfa8b9c4979ed41f60e774d7d6a',1,'gui_main.c']]],
+  ['clr_5flight_5fgray_10',['CLR_LIGHT_GRAY',['../gui__main_8c.html#aebcecaeb587f0c96fcaf50a5a333c652',1,'gui_main.c']]],
+  ['clr_5fnavy_11',['CLR_NAVY',['../gui__main_8c.html#a891483672b9c0b4c5846e24b41126999',1,'gui_main.c']]],
+  ['clr_5fnear_5fwhite_12',['CLR_NEAR_WHITE',['../gui__main_8c.html#a7b3491c361d6c785d75943bbd12f90ab',1,'gui_main.c']]],
+  ['clr_5fok_5fbg_13',['CLR_OK_BG',['../gui__main_8c.html#a482f4f3831397dc742cf9dd76bf5e440',1,'gui_main.c']]],
+  ['clr_5fok_5ffg_14',['CLR_OK_FG',['../gui__main_8c.html#ad8a21723b79ae9144eb7db9f2f62f05d',1,'gui_main.c']]],
+  ['clr_5fslate_15',['CLR_SLATE',['../gui__main_8c.html#a775b63dfa2c2a75cf6de48b7d62a34ac',1,'gui_main.c']]],
+  ['clr_5fwhite_16',['CLR_WHITE',['../gui__main_8c.html#a200fd50f64e8a7777954547ef30798a1',1,'gui_main.c']]],
+  ['clr_5fwn_5fbg_17',['CLR_WN_BG',['../gui__main_8c.html#a8a09dd951611784f2ec56229efa5fba8',1,'gui_main.c']]],
+  ['clr_5fwn_5ffg_18',['CLR_WN_FG',['../gui__main_8c.html#a3140e1d618f94eaa9343afffc4f8dedf',1,'gui_main.c']]],
+  ['contract_19',['Replacement contract',['../hw__vitals_8h.html#autotoc_md7',1,'']]],
+  ['create_5fdash_5fcontrols_20',['create_dash_controls',['../gui__main_8c.html#a6abeadd1e2c5eabbf581278df6fc80dc',1,'gui_main.c']]],
+  ['create_5fdashboard_21',['create_dashboard',['../gui__main_8c.html#a05facbe4e175f66ff55a4882c983d058',1,'gui_main.c']]],
+  ['ctrl_5fy_22',['CTRL_Y',['../gui__main_8c.html#a54f70471ce8095c541d0833772bd6b65',1,'gui_main.c']]],
+  ['cy_23',['CY',['../gui__main_8c.html#ac5bc792e372b15e7a1d3efe6daac9aec',1,'gui_main.c']]]
+];

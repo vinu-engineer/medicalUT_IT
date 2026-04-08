@@ -1,0 +1,5 @@
+<map id="include/hw_vitals.h" name="include/hw_vitals.h">
+<area shape="rect" id="Node000001" title="Hardware Abstraction Layer (HAL) for vital signs acquisition." alt="" coords="5,5,138,32"/>
+<area shape="rect" id="Node000002" href="$vitals_8h.html" title="Vital signs data types, thresholds, and validation functions." alt="" coords="40,80,103,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,31,74,65,69,64,70,35"/>
+</map>

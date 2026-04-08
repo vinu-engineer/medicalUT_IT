@@ -1,0 +1,250 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="gui__auth_8c" kind="file" language="C++">
+    <compoundname>gui_auth.c</compoundname>
+    <includes refid="gui__auth_8h" local="yes">gui_auth.h</includes>
+    <includes local="no">string.h</includes>
+    <includes local="no">stdio.h</includes>
+    <incdepgraph>
+      <node id="2">
+        <label>gui_auth.h</label>
+        <link refid="gui__auth_8h"/>
+      </node>
+      <node id="1">
+        <label>src/gui_auth.c</label>
+        <link refid="gui__auth_8c"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>stdio.h</label>
+      </node>
+      <node id="3">
+        <label>string.h</label>
+      </node>
+    </incdepgraph>
+    <sectiondef kind="define">
+      <memberdef kind="define" id="gui__auth_8c_1af08ec37a8c99d747fb60fa15bc28678b" prot="public" static="no">
+        <name>_CRT_SECURE_NO_WARNINGS</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/gui_auth.c" line="16" column="9" bodyfile="src/gui_auth.c" bodystart="16" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="gui__auth_8c_1a019680be59a6d8d8467a5220efc73c98" prot="public" static="no">
+        <name>BUILT_IN_PASSWORD</name>
+        <initializer>&quot;Monitor@2026&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/gui_auth.c" line="27" column="9" bodyfile="src/gui_auth.c" bodystart="27" bodyend="-1"/>
+        <referencedby refid="gui__auth_8c_1a89879c6685a6b662a08bd4e868130363" compoundref="gui__auth_8c" startline="33" endline="40">auth_validate</referencedby>
+      </memberdef>
+      <memberdef kind="define" id="gui__auth_8c_1a6e7a9d966f71a493c6ebcb151d5165ab" prot="public" static="no">
+        <name>BUILT_IN_USERNAME</name>
+        <initializer>&quot;admin&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/gui_auth.c" line="26" column="9" bodyfile="src/gui_auth.c" bodystart="26" bodyend="-1"/>
+        <referencedby refid="gui__auth_8c_1a92304d324761670e4b4267b7a3c0693a" compoundref="gui__auth_8c" startline="45" endline="55">auth_display_name</referencedby>
+        <referencedby refid="gui__auth_8c_1a89879c6685a6b662a08bd4e868130363" compoundref="gui__auth_8c" startline="33" endline="40">auth_validate</referencedby>
+      </memberdef>
+      <memberdef kind="define" id="gui__auth_8c_1af25d94d0eb021a4a043fc49f68256bc0" prot="public" static="no">
+        <name>DISPLAY_NAME</name>
+        <initializer>&quot;Dr. Admin&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/gui_auth.c" line="28" column="9" bodyfile="src/gui_auth.c" bodystart="28" bodyend="-1"/>
+        <referencedby refid="gui__auth_8c_1a92304d324761670e4b4267b7a3c0693a" compoundref="gui__auth_8c" startline="45" endline="55">auth_display_name</referencedby>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="gui__auth_8c_1a92304d324761670e4b4267b7a3c0693a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void auth_display_name</definition>
+        <argsstring>(const char *username, char *out, int out_len)</argsstring>
+        <name>auth_display_name</name>
+        <param>
+          <type>const char *</type>
+          <declname>username</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>out</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>out_len</declname>
+        </param>
+        <briefdescription>
+<para>Return a human-readable display name for a validated username. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Copies a display-friendly name into <computeroutput>out</computeroutput>. If <computeroutput>username</computeroutput> is unrecognised or <computeroutput>out</computeroutput> is NULL, the function writes an empty string (or does nothing, respectively).</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>username</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>NUL-terminated validated username. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>out</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Destination buffer. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>out_len</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Size of <computeroutput>out</computeroutput> in bytes. @req SWR-GUI-002 </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/gui_auth.c" line="45" column="6" bodyfile="src/gui_auth.c" bodystart="45" bodyend="55"/>
+        <references refid="gui__auth_8c_1a6e7a9d966f71a493c6ebcb151d5165ab" compoundref="gui__auth_8c" startline="26">BUILT_IN_USERNAME</references>
+        <references refid="gui__auth_8c_1af25d94d0eb021a4a043fc49f68256bc0" compoundref="gui__auth_8c" startline="28">DISPLAY_NAME</references>
+        <referencedby refid="gui__main_8c_1a51e990e1b26cc2a1c2e8e602d3b13cf5" compoundref="gui__main_8c" startline="862" endline="885">attempt_login</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="gui__auth_8c_1a89879c6685a6b662a08bd4e868130363" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int auth_validate</definition>
+        <argsstring>(const char *username, const char *password)</argsstring>
+        <name>auth_validate</name>
+        <param>
+          <type>const char *</type>
+          <declname>username</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>password</declname>
+        </param>
+        <briefdescription>
+<para>Validate a username/password pair against the built-in credential. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Performs a constant-time-safe comparison against the compiled-in administrator credential. Both pointers must be non-NULL and NUL-terminated; NULL inputs return 0 immediately.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>username</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>NUL-terminated username string. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>password</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>NUL-terminated password string. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>1 if credentials are valid, 0 otherwise. @req SWR-GUI-001 </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/gui_auth.c" line="33" column="5" bodyfile="src/gui_auth.c" bodystart="33" bodyend="40"/>
+        <references refid="gui__auth_8c_1a019680be59a6d8d8467a5220efc73c98" compoundref="gui__auth_8c" startline="27">BUILT_IN_PASSWORD</references>
+        <references refid="gui__auth_8c_1a6e7a9d966f71a493c6ebcb151d5165ab" compoundref="gui__auth_8c" startline="26">BUILT_IN_USERNAME</references>
+        <referencedby refid="gui__main_8c_1a51e990e1b26cc2a1c2e8e602d3b13cf5" compoundref="gui__main_8c" startline="862" endline="885">attempt_login</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>GUI authentication implementation. </para>
+    </briefdescription>
+    <detaileddescription>
+<para>Fixed built-in credential for the clinical workstation login screen. The credential is compiled in; no external credential store or network call is made, satisfying the static-memory requirement (SYS-012).</para>
+<para>Default login: username = admin password = Monitor@2026</para>
+<para>@req SWR-GUI-001 @req SWR-GUI-002 </para>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/**</highlight></codeline>
+<codeline lineno="2"><highlight class="comment"><sp/>*<sp/>@file<sp/>gui_auth.c</highlight></codeline>
+<codeline lineno="3"><highlight class="comment"><sp/>*<sp/>@brief<sp/>GUI<sp/>authentication<sp/>implementation.</highlight></codeline>
+<codeline lineno="4"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/>*<sp/>Fixed<sp/>built-in<sp/>credential<sp/>for<sp/>the<sp/>clinical<sp/>workstation<sp/>login<sp/>screen.</highlight></codeline>
+<codeline lineno="6"><highlight class="comment"><sp/>*<sp/>The<sp/>credential<sp/>is<sp/>compiled<sp/>in;<sp/>no<sp/>external<sp/>credential<sp/>store<sp/>or<sp/>network</highlight></codeline>
+<codeline lineno="7"><highlight class="comment"><sp/>*<sp/>call<sp/>is<sp/>made,<sp/>satisfying<sp/>the<sp/>static-memory<sp/>requirement<sp/>(SYS-012).</highlight></codeline>
+<codeline lineno="8"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="9"><highlight class="comment"><sp/>*<sp/>Default<sp/>login:<sp/><sp/>username<sp/>=<sp/>admin<sp/><sp/><sp/>password<sp/>=<sp/>Monitor@2026</highlight></codeline>
+<codeline lineno="10"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="11"><highlight class="comment"><sp/>*<sp/>@req<sp/>SWR-GUI-001</highlight></codeline>
+<codeline lineno="12"><highlight class="comment"><sp/>*<sp/>@req<sp/>SWR-GUI-002</highlight></codeline>
+<codeline lineno="13"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>_MSC_VER</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16" refid="gui__auth_8c_1af08ec37a8c99d747fb60fa15bc28678b" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>_CRT_SECURE_NO_WARNINGS</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="gui__auth_8h" kindref="compound">gui_auth.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdio.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>-----------------------------------------------------------------------</highlight></codeline>
+<codeline lineno="24"><highlight class="comment"><sp/>*<sp/>Built-in<sp/>credential<sp/><sp/>(change<sp/>here<sp/>only<sp/>—<sp/>never<sp/>store<sp/>in<sp/>external<sp/>files)</highlight></codeline>
+<codeline lineno="25"><highlight class="comment"><sp/>*<sp/>-----------------------------------------------------------------------<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26" refid="gui__auth_8c_1a6e7a9d966f71a493c6ebcb151d5165ab" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BUILT_IN_USERNAME<sp/>&quot;admin&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27" refid="gui__auth_8c_1a019680be59a6d8d8467a5220efc73c98" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BUILT_IN_PASSWORD<sp/>&quot;Monitor@2026&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28" refid="gui__auth_8c_1af25d94d0eb021a4a043fc49f68256bc0" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>DISPLAY_NAME<sp/><sp/><sp/><sp/><sp/><sp/>&quot;Dr.<sp/>Admin&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>-----------------------------------------------------------------------</highlight></codeline>
+<codeline lineno="31"><highlight class="comment"><sp/>*<sp/>auth_validate</highlight></codeline>
+<codeline lineno="32"><highlight class="comment"><sp/>*<sp/>-----------------------------------------------------------------------<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="33" refid="gui__auth_8c_1a89879c6685a6b662a08bd4e868130363" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="gui__auth_8c_1a89879c6685a6b662a08bd4e868130363" kindref="member">auth_validate</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*username,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*password)</highlight></codeline>
+<codeline lineno="34"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(username<sp/>==<sp/>NULL<sp/>||<sp/>password<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(strcmp(username,<sp/><ref refid="gui__auth_8c_1a6e7a9d966f71a493c6ebcb151d5165ab" kindref="member">BUILT_IN_USERNAME</ref>)<sp/>==<sp/>0<sp/>&amp;&amp;</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>strcmp(password,<sp/><ref refid="gui__auth_8c_1a019680be59a6d8d8467a5220efc73c98" kindref="member">BUILT_IN_PASSWORD</ref>)<sp/>==<sp/>0)<sp/>?<sp/>1<sp/>:<sp/>0;</highlight></codeline>
+<codeline lineno="40"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>-----------------------------------------------------------------------</highlight></codeline>
+<codeline lineno="43"><highlight class="comment"><sp/>*<sp/>auth_display_name</highlight></codeline>
+<codeline lineno="44"><highlight class="comment"><sp/>*<sp/>-----------------------------------------------------------------------<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="45" refid="gui__auth_8c_1a92304d324761670e4b4267b7a3c0693a" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="gui__auth_8c_1a92304d324761670e4b4267b7a3c0693a" kindref="member">auth_display_name</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*username,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*out,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>out_len)</highlight></codeline>
+<codeline lineno="46"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(out<sp/>==<sp/>NULL<sp/>||<sp/>out_len<sp/>&lt;=<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(username<sp/>!=<sp/>NULL<sp/>&amp;&amp;<sp/>strcmp(username,<sp/><ref refid="gui__auth_8c_1a6e7a9d966f71a493c6ebcb151d5165ab" kindref="member">BUILT_IN_USERNAME</ref>)<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>snprintf(out,<sp/>(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal">)out_len,<sp/></highlight><highlight class="stringliteral">&quot;%s&quot;</highlight><highlight class="normal">,<sp/><ref refid="gui__auth_8c_1af25d94d0eb021a4a043fc49f68256bc0" kindref="member">DISPLAY_NAME</ref>);</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>out[0]<sp/>=<sp/></highlight><highlight class="charliteral">&apos;\0&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="55"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="src/gui_auth.c"/>
+  </compounddef>
+</doxygen>

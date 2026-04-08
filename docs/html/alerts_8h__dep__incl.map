@@ -1,0 +1,14 @@
+<map id="include/alerts.h" name="include/alerts.h">
+<area shape="rect" id="Node000001" title="Alert record generation from a set of vital sign measurements." alt="" coords="116,5,225,32"/>
+<area shape="rect" id="Node000002" href="$patient_8h.html" title="Patient record management — demographic data and vital sign history." alt="" coords="112,80,229,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="172,46,173,81,168,79,169,50"/>
+<area shape="rect" id="Node000003" href="$gui__main_8c.html" title="Win32 GUI entry point — Patient Vital Signs Monitor." alt="" coords="5,155,112,181"/>
+<area shape="poly" id="edge6_Node000001_Node000003" title=" " alt="" coords="138,43,121,61,102,82,79,121,65,156,60,153,74,118,98,78,117,57,142,40"/>
+<area shape="rect" id="Node000006" href="$alerts_8c.html" title="Implementation of alert record generation from vital sign readings." alt="" coords="253,80,339,107"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="206,37,276,79,271,80,205,43"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="141,116,80,156,77,152,136,115"/>
+<area shape="rect" id="Node000004" href="$main_8c.html" title="Application entry point — simulated patient monitoring session." alt="" coords="136,155,218,181"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="175,121,178,156,174,153,171,124"/>
+<area shape="rect" id="Node000005" href="$patient_8c.html" title="Implementation of patient record management functions." alt="" coords="242,155,336,181"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="205,112,271,154,266,154,203,117"/>
+</map>

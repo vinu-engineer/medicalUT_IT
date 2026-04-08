@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="struct_alert" kind="struct" language="C++" prot="public">
+    <compoundname>Alert</compoundname>
+    <includes refid="alerts_8h" local="no">alerts.h</includes>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct_alert_1af56c1ce36b2939c0bb172344e1340346" prot="public" static="no" mutable="no">
+        <type><ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324" kindref="member">AlertLevel</ref></type>
+        <definition>AlertLevel Alert::level</definition>
+        <argsstring></argsstring>
+        <name>level</name>
+        <qualifiedname>Alert::level</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Severity: ALERT_WARNING or ALERT_CRITICAL. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/alerts.h" line="57" column="16" bodyfile="include/alerts.h" bodystart="57" bodyend="-1"/>
+        <referencedby refid="patient_8c_1a19d76f7281d5f5ad5408c1ff4dc2ee11" compoundref="patient_8c" startline="98" endline="145">patient_print_summary</referencedby>
+        <referencedby refid="main_8c_1a0082d156ee2712806a55606f6637d160" compoundref="main_8c" startline="38" endline="65">print_reading</referencedby>
+        <referencedby refid="gui__main_8c_1a8faad4cd27c161432ac3388959b1a766" compoundref="gui__main_8c" startline="508" endline="560">update_dashboard</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="struct_alert_1a6008a21e423d540d643a21ae45ebd36e" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char Alert::message[96]</definition>
+        <argsstring>[96]</argsstring>
+        <name>message</name>
+        <qualifiedname>Alert::message</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Human-readable description including the measured value and normal range. Null-terminated. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/alerts.h" line="60" column="10" bodyfile="include/alerts.h" bodystart="60" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_alert_1a0e0b585cee2b4029fe0585688d030614" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char Alert::parameter[32]</definition>
+        <argsstring>[32]</argsstring>
+        <name>parameter</name>
+        <qualifiedname>Alert::parameter</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Name of the affected parameter, e.g. &quot;Heart Rate&quot;, &quot;SpO2&quot;. Null-terminated. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/alerts.h" line="58" column="10" bodyfile="include/alerts.h" bodystart="58" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>A single alert record describing one out-of-range vital sign. </para>
+    </briefdescription>
+    <detaileddescription>
+<para>Each <ref refid="struct_alert" kindref="compound">Alert</ref> corresponds to exactly one parameter that deviated from its normal range. Fields are populated by <ref refid="alerts_8c_1a98b6140a4d21520d639bc81d1f7c08b7" kindref="member">generate_alerts()</ref>. </para>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>Alert</label>
+        <link refid="struct_alert"/>
+      </node>
+    </collaborationgraph>
+    <location file="include/alerts.h" line="56" column="1" bodyfile="include/alerts.h" bodystart="56" bodyend="63"/>
+    <listofallmembers>
+      <member refid="struct_alert_1af56c1ce36b2939c0bb172344e1340346" prot="public" virt="non-virtual"><scope>Alert</scope><name>level</name></member>
+      <member refid="struct_alert_1a6008a21e423d540d643a21ae45ebd36e" prot="public" virt="non-virtual"><scope>Alert</scope><name>message</name></member>
+      <member refid="struct_alert_1a0e0b585cee2b4029fe0585688d030614" prot="public" virt="non-virtual"><scope>Alert</scope><name>parameter</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

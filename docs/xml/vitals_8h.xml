@@ -1,0 +1,820 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="vitals_8h" kind="file" language="C++">
+    <compoundname>vitals.h</compoundname>
+    <includedby refid="alerts_8h" local="yes">include/alerts.h</includedby>
+    <includedby refid="hw__vitals_8h" local="yes">include/hw_vitals.h</includedby>
+    <includedby refid="patient_8h" local="yes">include/patient.h</includedby>
+    <includedby refid="gui__main_8c" local="yes">src/gui_main.c</includedby>
+    <includedby refid="vitals_8c" local="yes">src/vitals.c</includedby>
+    <invincdepgraph>
+      <node id="2">
+        <label>include/alerts.h</label>
+        <link refid="alerts_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="8">
+        <label>include/hw_vitals.h</label>
+        <link refid="hw__vitals_8h"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>include/patient.h</label>
+        <link refid="patient_8h"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>include/vitals.h</label>
+        <link refid="vitals_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="7">
+        <label>src/alerts.c</label>
+        <link refid="alerts_8c"/>
+      </node>
+      <node id="4">
+        <label>src/gui_main.c</label>
+        <link refid="gui__main_8c"/>
+      </node>
+      <node id="5">
+        <label>src/main.c</label>
+        <link refid="main_8c"/>
+      </node>
+      <node id="6">
+        <label>src/patient.c</label>
+        <link refid="patient_8c"/>
+      </node>
+      <node id="9">
+        <label>src/sim_vitals.c</label>
+        <link refid="sim__vitals_8c"/>
+      </node>
+      <node id="10">
+        <label>src/vitals.c</label>
+        <link refid="vitals_8c"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="struct_vital_signs" prot="public">VitalSigns</innerclass>
+    <sectiondef kind="enum">
+      <memberdef kind="enum" id="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324" prot="public" static="no" strong="no">
+        <type></type>
+        <name>AlertLevel</name>
+        <enumvalue id="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324a719a508e583ddd6e5cc6d863fab2c6c8" prot="public">
+          <name>ALERT_NORMAL</name>
+          <initializer>= 0</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+<para>Reading within normal clinical range. </para>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324ad2cdba508664e4d051ebc9ed5ded8185" prot="public">
+          <name>ALERT_WARNING</name>
+          <initializer>= 1</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+<para>Reading outside normal range; clinician review recommended. </para>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324a4a380f84419fb8940cfc9bde871a26e7" prot="public">
+          <name>ALERT_CRITICAL</name>
+          <initializer>= 2</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+<para>Reading at potentially life-threatening level; immediate intervention required. </para>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+<para>Classification of a vital sign reading relative to clinical norms. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>The numeric ordering is intentional: ALERT_NORMAL &lt; ALERT_WARNING &lt; ALERT_CRITICAL, allowing comparisons such as <computeroutput>if (level &gt; <ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324a719a508e583ddd6e5cc6d863fab2c6c8" kindref="member">ALERT_NORMAL</ref>)</computeroutput>. This ordering is relied upon by <ref refid="vitals_8h_1af7201b2a5a70f76ab81ade218a863830" kindref="member">overall_alert_level()</ref>. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/vitals.h" line="46" column="1" bodyfile="include/vitals.h" bodystart="46" bodyend="52"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="vitals_8h_1a20a209843ea1eeff8484a7998d492615" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>const char *</type>
+        <definition>const char * alert_level_str</definition>
+        <argsstring>(AlertLevel level)</argsstring>
+        <name>alert_level_str</name>
+        <param>
+          <type><ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324" kindref="member">AlertLevel</ref></type>
+          <declname>level</declname>
+        </param>
+        <briefdescription>
+<para>Convert an <ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324" kindref="member">AlertLevel</ref> value to a human-readable string. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">level</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The <ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324" kindref="member">AlertLevel</ref> to convert. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>One of: &quot;NORMAL&quot;, &quot;WARNING&quot;, &quot;CRITICAL&quot;, or &quot;UNKNOWN&quot;. Returned pointer is a string literal — caller must not free.</para>
+</simplesect>
+<simplesect kind="par"><title>Requirement</title><para>SWR-VIT-007</para>
+</simplesect>
+Convert an <ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324" kindref="member">AlertLevel</ref> value to a human-readable string.</para>
+<para>Returns &quot;UNKNOWN&quot; for any value not in the enum to defend against undefined enum casts — important for IEC 62304 defensive coding. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/vitals.h" line="219" column="12" bodyfile="src/vitals.c" bodystart="135" bodyend="143" declfile="include/vitals.h" declline="219" declcolumn="12"/>
+        <references refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324a4a380f84419fb8940cfc9bde871a26e7" compoundref="vitals_8h" startline="50">ALERT_CRITICAL</references>
+        <references refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324a719a508e583ddd6e5cc6d863fab2c6c8" compoundref="vitals_8h" startline="47">ALERT_NORMAL</references>
+        <references refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324ad2cdba508664e4d051ebc9ed5ded8185" compoundref="vitals_8h" startline="48">ALERT_WARNING</references>
+        <referencedby refid="patient_8c_1a19d76f7281d5f5ad5408c1ff4dc2ee11" compoundref="patient_8c" startline="98" endline="145">patient_print_summary</referencedby>
+        <referencedby refid="main_8c_1a0082d156ee2712806a55606f6637d160" compoundref="main_8c" startline="38" endline="65">print_reading</referencedby>
+        <referencedby refid="gui__main_8c_1a8faad4cd27c161432ac3388959b1a766" compoundref="gui__main_8c" startline="508" endline="560">update_dashboard</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="vitals_8h_1a7a7981a0a087b3b98763ed48bc789888" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>const char *</type>
+        <definition>const char * bmi_category</definition>
+        <argsstring>(float bmi)</argsstring>
+        <name>bmi_category</name>
+        <param>
+          <type>float</type>
+          <declname>bmi</declname>
+        </param>
+        <briefdescription>
+<para>Return the WHO BMI category string for a given BMI value. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><table rows="6" cols="2"><row>
+<entry thead="yes"><para>BMI Range  </para>
+</entry><entry thead="yes"><para>Category  </para>
+</entry></row>
+<row>
+<entry thead="no"><para>&lt; 18.5  </para>
+</entry><entry thead="no"><para>Underweight  </para>
+</entry></row>
+<row>
+<entry thead="no"><para>18.5 – 24.9  </para>
+</entry><entry thead="no"><para>Normal weight  </para>
+</entry></row>
+<row>
+<entry thead="no"><para>25.0 – 29.9  </para>
+</entry><entry thead="no"><para>Overweight  </para>
+</entry></row>
+<row>
+<entry thead="no"><para>≥ 30.0  </para>
+</entry><entry thead="no"><para>Obese  </para>
+</entry></row>
+<row>
+<entry thead="no"><para>&lt; 0  </para>
+</entry><entry thead="no"><para>Invalid  </para>
+</entry></row>
+</table>
+</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">bmi</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>BMI value as returned by <ref refid="vitals_8h_1a10dc695991eacf8ffea85c92b9331aec" kindref="member">calculate_bmi()</ref>. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Null-terminated string literal (never NULL). Caller must not free.</para>
+</simplesect>
+<simplesect kind="par"><title>Requirement</title><para>SWR-VIT-006</para>
+</simplesect>
+Return the WHO BMI category string for a given BMI value.</para>
+<para>Uses half-open intervals consistent with WHO classification 2004. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/vitals.h" line="203" column="12" bodyfile="src/vitals.c" bodystart="121" bodyend="128" declfile="include/vitals.h" declline="203" declcolumn="12"/>
+        <referencedby refid="main_8c_1a1a904050ef641d46ba74b91e8ff5b7f9" compoundref="main_8c" startline="73" endline="105">monitor_patient</referencedby>
+        <referencedby refid="main_8c_1a418db4bf280a08fda4493a816c841643" compoundref="main_8c" startline="114" endline="141">monitor_second_patient</referencedby>
+        <referencedby refid="gui__main_8c_1a3a6ecd59596770bcfc1ecf6fa4fd3219" compoundref="gui__main_8c" startline="232" endline="256">paint_patient_bar</referencedby>
+        <referencedby refid="patient_8c_1a19d76f7281d5f5ad5408c1ff4dc2ee11" compoundref="patient_8c" startline="98" endline="145">patient_print_summary</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="vitals_8h_1a10dc695991eacf8ffea85c92b9331aec" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>float</type>
+        <definition>float calculate_bmi</definition>
+        <argsstring>(float weight_kg, float height_m)</argsstring>
+        <name>calculate_bmi</name>
+        <param>
+          <type>float</type>
+          <declname>weight_kg</declname>
+        </param>
+        <param>
+          <type>float</type>
+          <declname>height_m</declname>
+        </param>
+        <briefdescription>
+<para>Calculate Body Mass Index (BMI) from weight and height. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Uses the standard formula: BMI = weight_kg / (height_m * height_m).</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">weight_kg</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Body weight in kilograms. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">height_m</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Height in metres. Must be &gt; 0. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>BMI value, or -1.0 if height_m is zero or negative.</para>
+</simplesect>
+<simplesect kind="par"><title>Requirement</title><para>SWR-VIT-006</para>
+</simplesect>
+Calculate Body Mass Index (BMI) from weight and height.</para>
+<para>BMI = weight_kg / (height_m^2). Returns -1.0 for invalid (zero or negative) height to allow callers to distinguish an error from a legitimate very-low BMI. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/vitals.h" line="183" column="7" bodyfile="src/vitals.c" bodystart="111" bodyend="115" declfile="include/vitals.h" declline="183" declcolumn="7"/>
+        <referencedby refid="main_8c_1a1a904050ef641d46ba74b91e8ff5b7f9" compoundref="main_8c" startline="73" endline="105">monitor_patient</referencedby>
+        <referencedby refid="main_8c_1a418db4bf280a08fda4493a816c841643" compoundref="main_8c" startline="114" endline="141">monitor_second_patient</referencedby>
+        <referencedby refid="gui__main_8c_1a3a6ecd59596770bcfc1ecf6fa4fd3219" compoundref="gui__main_8c" startline="232" endline="256">paint_patient_bar</referencedby>
+        <referencedby refid="patient_8c_1a19d76f7281d5f5ad5408c1ff4dc2ee11" compoundref="patient_8c" startline="98" endline="145">patient_print_summary</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="vitals_8h_1a3c853e30a899042babf9fdd2bd2cbfc1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324" kindref="member">AlertLevel</ref></type>
+        <definition>AlertLevel check_blood_pressure</definition>
+        <argsstring>(int systolic, int diastolic)</argsstring>
+        <name>check_blood_pressure</name>
+        <param>
+          <type>int</type>
+          <declname>systolic</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>diastolic</declname>
+        </param>
+        <briefdescription>
+<para>Classify a blood pressure reading against clinical thresholds. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Both systolic and diastolic values are evaluated independently. The more severe of the two classifications is returned.</para>
+<para><itemizedlist>
+<listitem><para><bold>NORMAL</bold>: Systolic 90–140 mmHg AND diastolic 60–90 mmHg<linebreak/>
+</para>
+</listitem><listitem><para><bold>WARNING</bold>: Systolic 71–89 / 141–180 mmHg OR diastolic 41–59 / 91–120 mmHg<linebreak/>
+</para>
+</listitem><listitem><para><bold>CRITICAL</bold>: Systolic ≤70 / ≥181 mmHg OR diastolic ≤40 / ≥121 mmHg</para>
+</listitem></itemizedlist>
+</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">systolic</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Systolic pressure in mmHg. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">diastolic</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Diastolic pressure in mmHg. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para><ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324" kindref="member">AlertLevel</ref> classification for the combined blood pressure reading.</para>
+</simplesect>
+<simplesect kind="par"><title>Requirement</title><para>SWR-VIT-002</para>
+</simplesect>
+Classify a blood pressure reading against clinical thresholds.</para>
+<para>Implements SWR-VIT-002 threshold logic. Critical thresholds are evaluated first (fail-safe ordering). If either systolic or diastolic is critical, CRITICAL is returned. If either is outside the normal range, WARNING is returned. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/vitals.h" line="111" column="12" bodyfile="src/vitals.c" bodystart="45" bodyend="52" declfile="include/vitals.h" declline="111" declcolumn="12"/>
+        <references refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324a4a380f84419fb8940cfc9bde871a26e7" compoundref="vitals_8h" startline="50">ALERT_CRITICAL</references>
+        <references refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324a719a508e583ddd6e5cc6d863fab2c6c8" compoundref="vitals_8h" startline="47">ALERT_NORMAL</references>
+        <references refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324ad2cdba508664e4d051ebc9ed5ded8185" compoundref="vitals_8h" startline="48">ALERT_WARNING</references>
+        <referencedby refid="alerts_8c_1a98b6140a4d21520d639bc81d1f7c08b7" compoundref="alerts_8c" startline="44" endline="87">generate_alerts</referencedby>
+        <referencedby refid="vitals_8c_1af7201b2a5a70f76ab81ade218a863830" compoundref="vitals_8c" startline="88" endline="103">overall_alert_level</referencedby>
+        <referencedby refid="gui__main_8c_1a809c12bdd714ab44c54f45da4d3b2dc7" compoundref="gui__main_8c" startline="325" endline="369">paint_tiles</referencedby>
+        <referencedby refid="patient_8c_1a19d76f7281d5f5ad5408c1ff4dc2ee11" compoundref="patient_8c" startline="98" endline="145">patient_print_summary</referencedby>
+        <referencedby refid="main_8c_1a0082d156ee2712806a55606f6637d160" compoundref="main_8c" startline="38" endline="65">print_reading</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="vitals_8h_1a7604eb6b23010f139f6f960b184a3b28" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324" kindref="member">AlertLevel</ref></type>
+        <definition>AlertLevel check_heart_rate</definition>
+        <argsstring>(int bpm)</argsstring>
+        <name>check_heart_rate</name>
+        <param>
+          <type>int</type>
+          <declname>bpm</declname>
+        </param>
+        <briefdescription>
+<para>Classify a heart rate reading against clinical thresholds. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><itemizedlist>
+<listitem><para><bold>NORMAL</bold>: 60–100 bpm (inclusive)<linebreak/>
+</para>
+</listitem><listitem><para><bold>WARNING</bold>: 41–59 bpm or 101–150 bpm<linebreak/>
+</para>
+</listitem><listitem><para><bold>CRITICAL</bold>: ≤40 bpm or ≥151 bpm</para>
+</listitem></itemizedlist>
+</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">bpm</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Heart rate in beats per minute. Negative values are treated as CRITICAL. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para><ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324" kindref="member">AlertLevel</ref> classification for the given heart rate.</para>
+</simplesect>
+<simplesect kind="par"><title>Requirement</title><para>SWR-VIT-001</para>
+</simplesect>
+Classify a heart rate reading against clinical thresholds.</para>
+<para>Implements SWR-VIT-001 threshold logic. Critical: bpm &lt; 40 (severe bradycardia) or bpm &gt; 150 (severe tachycardia). Warning: bpm &lt; 60 or bpm &gt; 100. Normal: 60 &lt;= bpm &lt;= 100. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/vitals.h" line="92" column="12" bodyfile="src/vitals.c" bodystart="31" bodyend="36" declfile="include/vitals.h" declline="92" declcolumn="12"/>
+        <references refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324a4a380f84419fb8940cfc9bde871a26e7" compoundref="vitals_8h" startline="50">ALERT_CRITICAL</references>
+        <references refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324a719a508e583ddd6e5cc6d863fab2c6c8" compoundref="vitals_8h" startline="47">ALERT_NORMAL</references>
+        <references refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324ad2cdba508664e4d051ebc9ed5ded8185" compoundref="vitals_8h" startline="48">ALERT_WARNING</references>
+        <referencedby refid="alerts_8c_1a98b6140a4d21520d639bc81d1f7c08b7" compoundref="alerts_8c" startline="44" endline="87">generate_alerts</referencedby>
+        <referencedby refid="vitals_8c_1af7201b2a5a70f76ab81ade218a863830" compoundref="vitals_8c" startline="88" endline="103">overall_alert_level</referencedby>
+        <referencedby refid="gui__main_8c_1a809c12bdd714ab44c54f45da4d3b2dc7" compoundref="gui__main_8c" startline="325" endline="369">paint_tiles</referencedby>
+        <referencedby refid="patient_8c_1a19d76f7281d5f5ad5408c1ff4dc2ee11" compoundref="patient_8c" startline="98" endline="145">patient_print_summary</referencedby>
+        <referencedby refid="main_8c_1a0082d156ee2712806a55606f6637d160" compoundref="main_8c" startline="38" endline="65">print_reading</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="vitals_8h_1ac0bc076e63894a96df90f2eab73c88fe" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324" kindref="member">AlertLevel</ref></type>
+        <definition>AlertLevel check_spo2</definition>
+        <argsstring>(int spo2)</argsstring>
+        <name>check_spo2</name>
+        <param>
+          <type>int</type>
+          <declname>spo2</declname>
+        </param>
+        <briefdescription>
+<para>Classify a peripheral oxygen saturation reading. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><itemizedlist>
+<listitem><para><bold>NORMAL</bold>: 95–100 % (inclusive)<linebreak/>
+</para>
+</listitem><listitem><para><bold>WARNING</bold>: 90–94 %<linebreak/>
+</para>
+</listitem><listitem><para><bold>CRITICAL</bold>: &lt;90 % (hypoxaemia)</para>
+</listitem></itemizedlist>
+</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">spo2</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>SpO2 as a percentage (0–100). Values outside this range are treated as CRITICAL. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para><ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324" kindref="member">AlertLevel</ref> classification for the given SpO2 reading.</para>
+</simplesect>
+<simplesect kind="par"><title>Requirement</title><para>SWR-VIT-004</para>
+</simplesect>
+Classify a peripheral oxygen saturation reading.</para>
+<para>Implements SWR-VIT-004 threshold logic. &lt;90% = hypoxaemia (CRITICAL). 90–94% = mild hypoxaemia (WARNING). 95–100% = normal saturation. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/vitals.h" line="144" column="12" bodyfile="src/vitals.c" bodystart="75" bodyend="80" declfile="include/vitals.h" declline="144" declcolumn="12"/>
+        <references refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324a4a380f84419fb8940cfc9bde871a26e7" compoundref="vitals_8h" startline="50">ALERT_CRITICAL</references>
+        <references refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324a719a508e583ddd6e5cc6d863fab2c6c8" compoundref="vitals_8h" startline="47">ALERT_NORMAL</references>
+        <references refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324ad2cdba508664e4d051ebc9ed5ded8185" compoundref="vitals_8h" startline="48">ALERT_WARNING</references>
+        <referencedby refid="alerts_8c_1a98b6140a4d21520d639bc81d1f7c08b7" compoundref="alerts_8c" startline="44" endline="87">generate_alerts</referencedby>
+        <referencedby refid="vitals_8c_1af7201b2a5a70f76ab81ade218a863830" compoundref="vitals_8c" startline="88" endline="103">overall_alert_level</referencedby>
+        <referencedby refid="gui__main_8c_1a809c12bdd714ab44c54f45da4d3b2dc7" compoundref="gui__main_8c" startline="325" endline="369">paint_tiles</referencedby>
+        <referencedby refid="patient_8c_1a19d76f7281d5f5ad5408c1ff4dc2ee11" compoundref="patient_8c" startline="98" endline="145">patient_print_summary</referencedby>
+        <referencedby refid="main_8c_1a0082d156ee2712806a55606f6637d160" compoundref="main_8c" startline="38" endline="65">print_reading</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="vitals_8h_1aef7f6fa183fbc5412c13ea63bd2b62ce" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324" kindref="member">AlertLevel</ref></type>
+        <definition>AlertLevel check_temperature</definition>
+        <argsstring>(float temp_c)</argsstring>
+        <name>check_temperature</name>
+        <param>
+          <type>float</type>
+          <declname>temp_c</declname>
+        </param>
+        <briefdescription>
+<para>Classify a body temperature reading against clinical thresholds. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><itemizedlist>
+<listitem><para><bold>NORMAL</bold>: 36.1–37.2 °C (inclusive)<linebreak/>
+</para>
+</listitem><listitem><para><bold>WARNING</bold>: 35.0–36.0 °C or 37.3–39.5 °C<linebreak/>
+</para>
+</listitem><listitem><para><bold>CRITICAL</bold>: &lt;35.0 °C (hypothermia) or &gt;39.5 °C (hyperpyrexia)</para>
+</listitem></itemizedlist>
+</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">temp_c</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Body temperature in degrees Celsius. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para><ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324" kindref="member">AlertLevel</ref> classification for the given temperature.</para>
+</simplesect>
+<simplesect kind="par"><title>Requirement</title><para>SWR-VIT-003</para>
+</simplesect>
+Classify a body temperature reading against clinical thresholds.</para>
+<para>Implements SWR-VIT-003 threshold logic. &lt;35.0 °C = hypothermia (CRITICAL). &gt;39.5 °C = hyperpyrexia (CRITICAL). Values outside 36.1–37.2 but within critical bounds = WARNING. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/vitals.h" line="127" column="12" bodyfile="src/vitals.c" bodystart="61" bodyend="66" declfile="include/vitals.h" declline="127" declcolumn="12"/>
+        <references refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324a4a380f84419fb8940cfc9bde871a26e7" compoundref="vitals_8h" startline="50">ALERT_CRITICAL</references>
+        <references refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324a719a508e583ddd6e5cc6d863fab2c6c8" compoundref="vitals_8h" startline="47">ALERT_NORMAL</references>
+        <references refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324ad2cdba508664e4d051ebc9ed5ded8185" compoundref="vitals_8h" startline="48">ALERT_WARNING</references>
+        <referencedby refid="alerts_8c_1a98b6140a4d21520d639bc81d1f7c08b7" compoundref="alerts_8c" startline="44" endline="87">generate_alerts</referencedby>
+        <referencedby refid="vitals_8c_1af7201b2a5a70f76ab81ade218a863830" compoundref="vitals_8c" startline="88" endline="103">overall_alert_level</referencedby>
+        <referencedby refid="gui__main_8c_1a809c12bdd714ab44c54f45da4d3b2dc7" compoundref="gui__main_8c" startline="325" endline="369">paint_tiles</referencedby>
+        <referencedby refid="patient_8c_1a19d76f7281d5f5ad5408c1ff4dc2ee11" compoundref="patient_8c" startline="98" endline="145">patient_print_summary</referencedby>
+        <referencedby refid="main_8c_1a0082d156ee2712806a55606f6637d160" compoundref="main_8c" startline="38" endline="65">print_reading</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="vitals_8h_1af7201b2a5a70f76ab81ade218a863830" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324" kindref="member">AlertLevel</ref></type>
+        <definition>AlertLevel overall_alert_level</definition>
+        <argsstring>(const VitalSigns *vitals)</argsstring>
+        <name>overall_alert_level</name>
+        <param>
+          <type>const <ref refid="struct_vital_signs" kindref="compound">VitalSigns</ref> *</type>
+          <declname>vitals</declname>
+        </param>
+        <briefdescription>
+<para>Return the highest alert level across all vital sign parameters. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Internally calls <ref refid="vitals_8h_1a7604eb6b23010f139f6f960b184a3b28" kindref="member">check_heart_rate()</ref>, <ref refid="vitals_8h_1a3c853e30a899042babf9fdd2bd2cbfc1" kindref="member">check_blood_pressure()</ref>, <ref refid="vitals_8h_1aef7f6fa183fbc5412c13ea63bd2b62ce" kindref="member">check_temperature()</ref>, and <ref refid="vitals_8h_1ac0bc076e63894a96df90f2eab73c88fe" kindref="member">check_spo2()</ref>, then returns the maximum value. This ensures that any single critical parameter elevates the overall patient status to CRITICAL regardless of other parameters.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">vitals</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to a valid <ref refid="struct_vital_signs" kindref="compound">VitalSigns</ref> structure. Must not be NULL. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The highest <ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324" kindref="member">AlertLevel</ref> among all four parameters.</para>
+</simplesect>
+<simplesect kind="pre"><para>vitals != NULL </para>
+</simplesect>
+<simplesect kind="par"><title>Requirement</title><para>SWR-VIT-005</para>
+</simplesect>
+Return the highest alert level across all vital sign parameters.</para>
+<para>Implements SWR-VIT-005. Iterates all four checks and tracks the maximum. Uses a fixed-size array to avoid branch explosion and keep cyclomatic complexity low for IEC 62304 review. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/vitals.h" line="165" column="12" bodyfile="src/vitals.c" bodystart="88" bodyend="103" declfile="include/vitals.h" declline="165" declcolumn="12"/>
+        <references refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324a719a508e583ddd6e5cc6d863fab2c6c8" compoundref="vitals_8h" startline="47">ALERT_NORMAL</references>
+        <references refid="vitals_8c_1a3c853e30a899042babf9fdd2bd2cbfc1" compoundref="vitals_8c" startline="45" endline="52">check_blood_pressure</references>
+        <references refid="vitals_8c_1a7604eb6b23010f139f6f960b184a3b28" compoundref="vitals_8c" startline="31" endline="36">check_heart_rate</references>
+        <references refid="vitals_8c_1ac0bc076e63894a96df90f2eab73c88fe" compoundref="vitals_8c" startline="75" endline="80">check_spo2</references>
+        <references refid="vitals_8c_1aef7f6fa183fbc5412c13ea63bd2b62ce" compoundref="vitals_8c" startline="61" endline="66">check_temperature</references>
+        <references refid="struct_vital_signs_1ab81723ab54ad295a71ba56f0ef52318f" compoundref="vitals_8h" startline="68">VitalSigns::diastolic_bp</references>
+        <references refid="struct_vital_signs_1ac7162369c92da33cc7a3279c37083f84" compoundref="vitals_8h" startline="66">VitalSigns::heart_rate</references>
+        <references refid="struct_vital_signs_1a1b524bb13d6c36ec564c7d94a5e953c1" compoundref="vitals_8h" startline="70">VitalSigns::spo2</references>
+        <references refid="struct_vital_signs_1a110b3f24528e0f5769cb82f3a0c07485" compoundref="vitals_8h" startline="67">VitalSigns::systolic_bp</references>
+        <references refid="struct_vital_signs_1af0a43a24a6e26683adde5612cf626365" compoundref="vitals_8h" startline="69">VitalSigns::temperature</references>
+        <referencedby refid="patient_8c_1a7efb2602c9a2566fee89ff6d6af42bcf" compoundref="patient_8c" startline="78" endline="83">patient_current_status</referencedby>
+        <referencedby refid="main_8c_1a0082d156ee2712806a55606f6637d160" compoundref="main_8c" startline="38" endline="65">print_reading</referencedby>
+        <referencedby refid="gui__main_8c_1a8faad4cd27c161432ac3388959b1a766" compoundref="gui__main_8c" startline="508" endline="560">update_dashboard</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Vital signs data types, thresholds, and validation functions. </para>
+    </briefdescription>
+    <detaileddescription>
+<para>This module defines the core data structures and validation logic for patient vital signs. Each parameter is evaluated against clinically defined thresholds derived from AHA/ACC guidelines and classified into one of three alert levels: NORMAL, WARNING, or CRITICAL.</para>
+<sect1 id="vitals_8h_1autotoc_md12_1s1"><sect2 id="vitals_8h_1autotoc_md12_1s2"><sect3 id="vitals_8h_1autotoc_md12">
+<title>Threshold Reference Table</title><para><table rows="6" cols="4"><row>
+<entry thead="yes"><para>Parameter  </para>
+</entry><entry thead="yes"><para>Normal  </para>
+</entry><entry thead="yes"><para>Warning  </para>
+</entry><entry thead="yes"><para>Critical  </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Heart Rate  </para>
+</entry><entry thead="no"><para>60–100 bpm  </para>
+</entry><entry thead="no"><para>41–59 / 101–150 bpm  </para>
+</entry><entry thead="no"><para>≤40 / ≥151 bpm  </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Systolic BP  </para>
+</entry><entry thead="no"><para>90–140 mmHg  </para>
+</entry><entry thead="no"><para>71–89 / 141–180 mmHg  </para>
+</entry><entry thead="no"><para>≤70 / ≥181 mmHg  </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Diastolic BP  </para>
+</entry><entry thead="no"><para>60–90 mmHg  </para>
+</entry><entry thead="no"><para>41–59 / 91–120 mmHg  </para>
+</entry><entry thead="no"><para>≤40 / ≥121 mmHg  </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Temperature  </para>
+</entry><entry thead="no"><para>36.1–37.2 °C  </para>
+</entry><entry thead="no"><para>35.0–36.0 / 37.3–39.5 °C  </para>
+</entry><entry thead="no"><para>&lt;35.0 / &gt;39.5 °C  </para>
+</entry></row>
+<row>
+<entry thead="no"><para>SpO2  </para>
+</entry><entry thead="no"><para>95–100 %  </para>
+</entry><entry thead="no"><para>90–94 %  </para>
+</entry><entry thead="no"><para>&lt;90 %  </para>
+</entry></row>
+</table>
+</para>
+</sect3></sect2></sect1>
+<sect1 id="vitals_8h_1autotoc_md13_1s1"><sect2 id="vitals_8h_1autotoc_md13_1s2"><sect3 id="vitals_8h_1autotoc_md13">
+<title>IEC 62304 Traceability</title><para><itemizedlist>
+<listitem><para>Software Unit: UNIT-VIT</para>
+</listitem><listitem><para>Requirements covered: SWR-VIT-001 through SWR-VIT-007</para>
+</listitem></itemizedlist>
+</para>
+<para><simplesect kind="version"><para>1.0.0 </para>
+</simplesect>
+<simplesect kind="date"><para>2026-04-06 </para>
+</simplesect>
+<simplesect kind="author"><para>vinu-engineer</para>
+</simplesect>
+<simplesect kind="copyright"><para>Medical Device Software — IEC 62304 Class B compliant. All rights reserved. </para>
+</simplesect>
+</para>
+</sect3></sect2></sect1>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/**</highlight></codeline>
+<codeline lineno="2"><highlight class="comment"><sp/>*<sp/>@file<sp/>vitals.h</highlight></codeline>
+<codeline lineno="3"><highlight class="comment"><sp/>*<sp/>@brief<sp/>Vital<sp/>signs<sp/>data<sp/>types,<sp/>thresholds,<sp/>and<sp/>validation<sp/>functions.</highlight></codeline>
+<codeline lineno="4"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/>*<sp/>@details</highlight></codeline>
+<codeline lineno="6"><highlight class="comment"><sp/>*<sp/>This<sp/>module<sp/>defines<sp/>the<sp/>core<sp/>data<sp/>structures<sp/>and<sp/>validation<sp/>logic<sp/>for</highlight></codeline>
+<codeline lineno="7"><highlight class="comment"><sp/>*<sp/>patient<sp/>vital<sp/>signs.<sp/>Each<sp/>parameter<sp/>is<sp/>evaluated<sp/>against<sp/>clinically</highlight></codeline>
+<codeline lineno="8"><highlight class="comment"><sp/>*<sp/>defined<sp/>thresholds<sp/>derived<sp/>from<sp/>AHA/ACC<sp/>guidelines<sp/>and<sp/>classified<sp/>into</highlight></codeline>
+<codeline lineno="9"><highlight class="comment"><sp/>*<sp/>one<sp/>of<sp/>three<sp/>alert<sp/>levels:<sp/>NORMAL,<sp/>WARNING,<sp/>or<sp/>CRITICAL.</highlight></codeline>
+<codeline lineno="10"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="11"><highlight class="comment"><sp/>*<sp/>###<sp/>Threshold<sp/>Reference<sp/>Table</highlight></codeline>
+<codeline lineno="12"><highlight class="comment"><sp/>*<sp/>|<sp/>Parameter<sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Normal<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Warning<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Critical<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|</highlight></codeline>
+<codeline lineno="13"><highlight class="comment"><sp/>*<sp/>|----------------|-----------------|--------------------------|-------------------|</highlight></codeline>
+<codeline lineno="14"><highlight class="comment"><sp/>*<sp/>|<sp/>Heart<sp/>Rate<sp/><sp/><sp/><sp/><sp/>|<sp/>60–100<sp/>bpm<sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>41–59<sp/>/<sp/>101–150<sp/>bpm<sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>≤40<sp/>/<sp/>≥151<sp/>bpm<sp/><sp/><sp/><sp/>|</highlight></codeline>
+<codeline lineno="15"><highlight class="comment"><sp/>*<sp/>|<sp/>Systolic<sp/>BP<sp/><sp/><sp/><sp/>|<sp/>90–140<sp/>mmHg<sp/><sp/><sp/><sp/><sp/>|<sp/>71–89<sp/>/<sp/>141–180<sp/>mmHg<sp/><sp/><sp/><sp/><sp/>|<sp/>≤70<sp/>/<sp/>≥181<sp/>mmHg<sp/><sp/><sp/>|</highlight></codeline>
+<codeline lineno="16"><highlight class="comment"><sp/>*<sp/>|<sp/>Diastolic<sp/>BP<sp/><sp/><sp/>|<sp/>60–90<sp/>mmHg<sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>41–59<sp/>/<sp/>91–120<sp/>mmHg<sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>≤40<sp/>/<sp/>≥121<sp/>mmHg<sp/><sp/><sp/>|</highlight></codeline>
+<codeline lineno="17"><highlight class="comment"><sp/>*<sp/>|<sp/>Temperature<sp/><sp/><sp/><sp/>|<sp/>36.1–37.2<sp/>°C<sp/><sp/><sp/><sp/>|<sp/>35.0–36.0<sp/>/<sp/>37.3–39.5<sp/>°C|<sp/>&lt;35.0<sp/>/<sp/>&gt;39.5<sp/>°C<sp/><sp/>|</highlight></codeline>
+<codeline lineno="18"><highlight class="comment"><sp/>*<sp/>|<sp/>SpO2<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>95–100<sp/>%<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>90–94<sp/>%<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>&lt;90<sp/>%<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|</highlight></codeline>
+<codeline lineno="19"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="20"><highlight class="comment"><sp/>*<sp/>###<sp/>IEC<sp/>62304<sp/>Traceability</highlight></codeline>
+<codeline lineno="21"><highlight class="comment"><sp/>*<sp/>-<sp/>Software<sp/>Unit:<sp/>UNIT-VIT</highlight></codeline>
+<codeline lineno="22"><highlight class="comment"><sp/>*<sp/>-<sp/>Requirements<sp/>covered:<sp/>SWR-VIT-001<sp/>through<sp/>SWR-VIT-007</highlight></codeline>
+<codeline lineno="23"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="24"><highlight class="comment"><sp/>*<sp/>@version<sp/>1.0.0</highlight></codeline>
+<codeline lineno="25"><highlight class="comment"><sp/>*<sp/>@date<sp/><sp/><sp/><sp/>2026-04-06</highlight></codeline>
+<codeline lineno="26"><highlight class="comment"><sp/>*<sp/>@author<sp/><sp/>vinu-engineer</highlight></codeline>
+<codeline lineno="27"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="28"><highlight class="comment"><sp/>*<sp/>@copyright<sp/>Medical<sp/>Device<sp/>Software<sp/>—<sp/>IEC<sp/>62304<sp/>Class<sp/>B<sp/>compliant.</highlight></codeline>
+<codeline lineno="29"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>All<sp/>rights<sp/>reserved.</highlight></codeline>
+<codeline lineno="30"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>VITALS_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VITALS_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>=========================================================================</highlight></codeline>
+<codeline lineno="36"><highlight class="comment"><sp/>*<sp/>Alert<sp/>Level<sp/>Enumeration</highlight></codeline>
+<codeline lineno="37"><highlight class="comment"><sp/>*<sp/>=========================================================================<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="39"><highlight class="comment">/**</highlight></codeline>
+<codeline lineno="40"><highlight class="comment"><sp/>*<sp/>@brief<sp/>Classification<sp/>of<sp/>a<sp/>vital<sp/>sign<sp/>reading<sp/>relative<sp/>to<sp/>clinical<sp/>norms.</highlight></codeline>
+<codeline lineno="41"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="42"><highlight class="comment"><sp/>*<sp/>@details<sp/>The<sp/>numeric<sp/>ordering<sp/>is<sp/>intentional:<sp/>ALERT_NORMAL<sp/>&lt;<sp/>ALERT_WARNING</highlight></codeline>
+<codeline lineno="43"><highlight class="comment"><sp/>*<sp/>&lt;<sp/>ALERT_CRITICAL,<sp/>allowing<sp/>comparisons<sp/>such<sp/>as<sp/>`if<sp/>(level<sp/>&gt;<sp/>ALERT_NORMAL)`.</highlight></codeline>
+<codeline lineno="44"><highlight class="comment"><sp/>*<sp/>This<sp/>ordering<sp/>is<sp/>relied<sp/>upon<sp/>by<sp/>overall_alert_level().</highlight></codeline>
+<codeline lineno="45"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="46" refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="47" refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324a719a508e583ddd6e5cc6d863fab2c6c8" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324a719a508e583ddd6e5cc6d863fab2c6c8" kindref="member">ALERT_NORMAL</ref><sp/><sp/><sp/>=<sp/>0,<sp/></highlight><highlight class="comment">/**&lt;<sp/>Reading<sp/>within<sp/>normal<sp/>clinical<sp/>range.<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="48" refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324ad2cdba508664e4d051ebc9ed5ded8185" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324ad2cdba508664e4d051ebc9ed5ded8185" kindref="member">ALERT_WARNING</ref><sp/><sp/>=<sp/>1,<sp/></highlight><highlight class="comment">/**&lt;<sp/>Reading<sp/>outside<sp/>normal<sp/>range;<sp/>clinician<sp/>review</highlight></codeline>
+<codeline lineno="49"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>recommended.<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="50" refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324a4a380f84419fb8940cfc9bde871a26e7" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324a4a380f84419fb8940cfc9bde871a26e7" kindref="member">ALERT_CRITICAL</ref><sp/>=<sp/>2<sp/><sp/></highlight><highlight class="comment">/**&lt;<sp/>Reading<sp/>at<sp/>potentially<sp/>life-threatening<sp/>level;</highlight></codeline>
+<codeline lineno="51"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>immediate<sp/>intervention<sp/>required.<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal">}<sp/><ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324" kindref="member">AlertLevel</ref>;</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>=========================================================================</highlight></codeline>
+<codeline lineno="55"><highlight class="comment"><sp/>*<sp/>Vital<sp/>Signs<sp/>Structure</highlight></codeline>
+<codeline lineno="56"><highlight class="comment"><sp/>*<sp/>=========================================================================<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="58"><highlight class="comment">/**</highlight></codeline>
+<codeline lineno="59"><highlight class="comment"><sp/>*<sp/>@brief<sp/>A<sp/>single<sp/>set<sp/>of<sp/>patient<sp/>vital<sp/>sign<sp/>measurements.</highlight></codeline>
+<codeline lineno="60"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="61"><highlight class="comment"><sp/>*<sp/>@details<sp/>All<sp/>fields<sp/>are<sp/>captured<sp/>at<sp/>the<sp/>same<sp/>point<sp/>in<sp/>time<sp/>and<sp/>treated</highlight></codeline>
+<codeline lineno="62"><highlight class="comment"><sp/>*<sp/>as<sp/>a<sp/>single<sp/>observation.<sp/>Callers<sp/>must<sp/>ensure<sp/>values<sp/>are<sp/>physically</highlight></codeline>
+<codeline lineno="63"><highlight class="comment"><sp/>*<sp/>plausible<sp/>before<sp/>passing<sp/>them<sp/>to<sp/>validation<sp/>functions.</highlight></codeline>
+<codeline lineno="64"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="65" refid="struct_vital_signs" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="66" refid="struct_vital_signs_1ac7162369c92da33cc7a3279c37083f84" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><sp/><sp/><ref refid="struct_vital_signs_1ac7162369c92da33cc7a3279c37083f84" kindref="member">heart_rate</ref>;<sp/><sp/><sp/><sp/></highlight><highlight class="comment">/**&lt;<sp/>Heart<sp/>rate<sp/>in<sp/>beats<sp/>per<sp/>minute<sp/>(bpm).<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="67" refid="struct_vital_signs_1a110b3f24528e0f5769cb82f3a0c07485" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><sp/><sp/><ref refid="struct_vital_signs_1a110b3f24528e0f5769cb82f3a0c07485" kindref="member">systolic_bp</ref>;<sp/><sp/><sp/></highlight><highlight class="comment">/**&lt;<sp/>Systolic<sp/>blood<sp/>pressure<sp/>in<sp/>mmHg.<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="68" refid="struct_vital_signs_1ab81723ab54ad295a71ba56f0ef52318f" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><sp/><sp/><ref refid="struct_vital_signs_1ab81723ab54ad295a71ba56f0ef52318f" kindref="member">diastolic_bp</ref>;<sp/><sp/></highlight><highlight class="comment">/**&lt;<sp/>Diastolic<sp/>blood<sp/>pressure<sp/>in<sp/>mmHg.<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="69" refid="struct_vital_signs_1af0a43a24a6e26683adde5612cf626365" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/><ref refid="struct_vital_signs_1af0a43a24a6e26683adde5612cf626365" kindref="member">temperature</ref>;<sp/><sp/><sp/></highlight><highlight class="comment">/**&lt;<sp/>Core<sp/>body<sp/>temperature<sp/>in<sp/>degrees<sp/>Celsius<sp/>(°C).<sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="70" refid="struct_vital_signs_1a1b524bb13d6c36ec564c7d94a5e953c1" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><sp/><sp/><ref refid="struct_vital_signs_1a1b524bb13d6c36ec564c7d94a5e953c1" kindref="member">spo2</ref>;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/**&lt;<sp/>Peripheral<sp/>oxygen<sp/>saturation<sp/>as<sp/>a<sp/>percentage.<sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="71"><highlight class="normal">}<sp/><ref refid="struct_vital_signs" kindref="compound">VitalSigns</ref>;</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"></highlight></codeline>
+<codeline lineno="73"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>=========================================================================</highlight></codeline>
+<codeline lineno="74"><highlight class="comment"><sp/>*<sp/>Individual<sp/>Parameter<sp/>Checks</highlight></codeline>
+<codeline lineno="75"><highlight class="comment"><sp/>*<sp/>=========================================================================<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="76"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="77"><highlight class="comment">/**</highlight></codeline>
+<codeline lineno="78"><highlight class="comment"><sp/>*<sp/>@brief<sp/>Classify<sp/>a<sp/>heart<sp/>rate<sp/>reading<sp/>against<sp/>clinical<sp/>thresholds.</highlight></codeline>
+<codeline lineno="79"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="80"><highlight class="comment"><sp/>*<sp/>@details</highlight></codeline>
+<codeline lineno="81"><highlight class="comment"><sp/>*<sp/>-<sp/>**NORMAL**:<sp/><sp/><sp/>60–100<sp/>bpm<sp/>(inclusive)\n</highlight></codeline>
+<codeline lineno="82"><highlight class="comment"><sp/>*<sp/>-<sp/>**WARNING**:<sp/><sp/>41–59<sp/>bpm<sp/>or<sp/>101–150<sp/>bpm\n</highlight></codeline>
+<codeline lineno="83"><highlight class="comment"><sp/>*<sp/>-<sp/>**CRITICAL**:<sp/>≤40<sp/>bpm<sp/>or<sp/>≥151<sp/>bpm</highlight></codeline>
+<codeline lineno="84"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="85"><highlight class="comment"><sp/>*<sp/>@param[in]<sp/>bpm<sp/>Heart<sp/>rate<sp/>in<sp/>beats<sp/>per<sp/>minute.<sp/>Negative<sp/>values<sp/>are</highlight></codeline>
+<codeline lineno="86"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>treated<sp/>as<sp/>CRITICAL.</highlight></codeline>
+<codeline lineno="87"><highlight class="comment"><sp/>*<sp/>@return<sp/>AlertLevel<sp/>classification<sp/>for<sp/>the<sp/>given<sp/>heart<sp/>rate.</highlight></codeline>
+<codeline lineno="88"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="89"><highlight class="comment"><sp/>*<sp/>@par<sp/>Requirement</highlight></codeline>
+<codeline lineno="90"><highlight class="comment"><sp/>*<sp/>SWR-VIT-001</highlight></codeline>
+<codeline lineno="91"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324" kindref="member">AlertLevel</ref><sp/><ref refid="vitals_8h_1a7604eb6b23010f139f6f960b184a3b28" kindref="member">check_heart_rate</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>bpm);</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="94"><highlight class="comment">/**</highlight></codeline>
+<codeline lineno="95"><highlight class="comment"><sp/>*<sp/>@brief<sp/>Classify<sp/>a<sp/>blood<sp/>pressure<sp/>reading<sp/>against<sp/>clinical<sp/>thresholds.</highlight></codeline>
+<codeline lineno="96"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="97"><highlight class="comment"><sp/>*<sp/>@details<sp/>Both<sp/>systolic<sp/>and<sp/>diastolic<sp/>values<sp/>are<sp/>evaluated<sp/>independently.</highlight></codeline>
+<codeline lineno="98"><highlight class="comment"><sp/>*<sp/>The<sp/>more<sp/>severe<sp/>of<sp/>the<sp/>two<sp/>classifications<sp/>is<sp/>returned.</highlight></codeline>
+<codeline lineno="99"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="100"><highlight class="comment"><sp/>*<sp/>-<sp/>**NORMAL**:<sp/><sp/><sp/>Systolic<sp/>90–140<sp/>mmHg<sp/>AND<sp/>diastolic<sp/>60–90<sp/>mmHg\n</highlight></codeline>
+<codeline lineno="101"><highlight class="comment"><sp/>*<sp/>-<sp/>**WARNING**:<sp/><sp/>Systolic<sp/>71–89<sp/>/<sp/>141–180<sp/>mmHg<sp/>OR<sp/>diastolic<sp/>41–59<sp/>/<sp/>91–120<sp/>mmHg\n</highlight></codeline>
+<codeline lineno="102"><highlight class="comment"><sp/>*<sp/>-<sp/>**CRITICAL**:<sp/>Systolic<sp/>≤70<sp/>/<sp/>≥181<sp/>mmHg<sp/>OR<sp/>diastolic<sp/>≤40<sp/>/<sp/>≥121<sp/>mmHg</highlight></codeline>
+<codeline lineno="103"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="104"><highlight class="comment"><sp/>*<sp/>@param[in]<sp/>systolic<sp/><sp/>Systolic<sp/>pressure<sp/>in<sp/>mmHg.</highlight></codeline>
+<codeline lineno="105"><highlight class="comment"><sp/>*<sp/>@param[in]<sp/>diastolic<sp/>Diastolic<sp/>pressure<sp/>in<sp/>mmHg.</highlight></codeline>
+<codeline lineno="106"><highlight class="comment"><sp/>*<sp/>@return<sp/>AlertLevel<sp/>classification<sp/>for<sp/>the<sp/>combined<sp/>blood<sp/>pressure<sp/>reading.</highlight></codeline>
+<codeline lineno="107"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="108"><highlight class="comment"><sp/>*<sp/>@par<sp/>Requirement</highlight></codeline>
+<codeline lineno="109"><highlight class="comment"><sp/>*<sp/>SWR-VIT-002</highlight></codeline>
+<codeline lineno="110"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324" kindref="member">AlertLevel</ref><sp/><ref refid="vitals_8h_1a3c853e30a899042babf9fdd2bd2cbfc1" kindref="member">check_blood_pressure</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>systolic,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>diastolic);</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="113"><highlight class="comment">/**</highlight></codeline>
+<codeline lineno="114"><highlight class="comment"><sp/>*<sp/>@brief<sp/>Classify<sp/>a<sp/>body<sp/>temperature<sp/>reading<sp/>against<sp/>clinical<sp/>thresholds.</highlight></codeline>
+<codeline lineno="115"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="116"><highlight class="comment"><sp/>*<sp/>@details</highlight></codeline>
+<codeline lineno="117"><highlight class="comment"><sp/>*<sp/>-<sp/>**NORMAL**:<sp/><sp/><sp/>36.1–37.2<sp/>°C<sp/>(inclusive)\n</highlight></codeline>
+<codeline lineno="118"><highlight class="comment"><sp/>*<sp/>-<sp/>**WARNING**:<sp/><sp/>35.0–36.0<sp/>°C<sp/>or<sp/>37.3–39.5<sp/>°C\n</highlight></codeline>
+<codeline lineno="119"><highlight class="comment"><sp/>*<sp/>-<sp/>**CRITICAL**:<sp/>&lt;35.0<sp/>°C<sp/>(hypothermia)<sp/>or<sp/>&gt;39.5<sp/>°C<sp/>(hyperpyrexia)</highlight></codeline>
+<codeline lineno="120"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="121"><highlight class="comment"><sp/>*<sp/>@param[in]<sp/>temp_c<sp/>Body<sp/>temperature<sp/>in<sp/>degrees<sp/>Celsius.</highlight></codeline>
+<codeline lineno="122"><highlight class="comment"><sp/>*<sp/>@return<sp/>AlertLevel<sp/>classification<sp/>for<sp/>the<sp/>given<sp/>temperature.</highlight></codeline>
+<codeline lineno="123"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="124"><highlight class="comment"><sp/>*<sp/>@par<sp/>Requirement</highlight></codeline>
+<codeline lineno="125"><highlight class="comment"><sp/>*<sp/>SWR-VIT-003</highlight></codeline>
+<codeline lineno="126"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324" kindref="member">AlertLevel</ref><sp/><ref refid="vitals_8h_1aef7f6fa183fbc5412c13ea63bd2b62ce" kindref="member">check_temperature</ref>(</highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>temp_c);</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="129"><highlight class="comment">/**</highlight></codeline>
+<codeline lineno="130"><highlight class="comment"><sp/>*<sp/>@brief<sp/>Classify<sp/>a<sp/>peripheral<sp/>oxygen<sp/>saturation<sp/>reading.</highlight></codeline>
+<codeline lineno="131"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="132"><highlight class="comment"><sp/>*<sp/>@details</highlight></codeline>
+<codeline lineno="133"><highlight class="comment"><sp/>*<sp/>-<sp/>**NORMAL**:<sp/><sp/><sp/>95–100<sp/>%<sp/>(inclusive)\n</highlight></codeline>
+<codeline lineno="134"><highlight class="comment"><sp/>*<sp/>-<sp/>**WARNING**:<sp/><sp/>90–94<sp/>%\n</highlight></codeline>
+<codeline lineno="135"><highlight class="comment"><sp/>*<sp/>-<sp/>**CRITICAL**:<sp/>&lt;90<sp/>%<sp/>(hypoxaemia)</highlight></codeline>
+<codeline lineno="136"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="137"><highlight class="comment"><sp/>*<sp/>@param[in]<sp/>spo2<sp/>SpO2<sp/>as<sp/>a<sp/>percentage<sp/>(0–100).<sp/>Values<sp/>outside<sp/>this<sp/>range</highlight></codeline>
+<codeline lineno="138"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>are<sp/>treated<sp/>as<sp/>CRITICAL.</highlight></codeline>
+<codeline lineno="139"><highlight class="comment"><sp/>*<sp/>@return<sp/>AlertLevel<sp/>classification<sp/>for<sp/>the<sp/>given<sp/>SpO2<sp/>reading.</highlight></codeline>
+<codeline lineno="140"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="141"><highlight class="comment"><sp/>*<sp/>@par<sp/>Requirement</highlight></codeline>
+<codeline lineno="142"><highlight class="comment"><sp/>*<sp/>SWR-VIT-004</highlight></codeline>
+<codeline lineno="143"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="144"><highlight class="normal"><ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324" kindref="member">AlertLevel</ref><sp/><ref refid="vitals_8h_1ac0bc076e63894a96df90f2eab73c88fe" kindref="member">check_spo2</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>spo2);</highlight></codeline>
+<codeline lineno="145"><highlight class="normal"></highlight></codeline>
+<codeline lineno="146"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>=========================================================================</highlight></codeline>
+<codeline lineno="147"><highlight class="comment"><sp/>*<sp/>Aggregate<sp/>Evaluation</highlight></codeline>
+<codeline lineno="148"><highlight class="comment"><sp/>*<sp/>=========================================================================<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="149"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="150"><highlight class="comment">/**</highlight></codeline>
+<codeline lineno="151"><highlight class="comment"><sp/>*<sp/>@brief<sp/>Return<sp/>the<sp/>highest<sp/>alert<sp/>level<sp/>across<sp/>all<sp/>vital<sp/>sign<sp/>parameters.</highlight></codeline>
+<codeline lineno="152"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="153"><highlight class="comment"><sp/>*<sp/>@details<sp/>Internally<sp/>calls<sp/>check_heart_rate(),<sp/>check_blood_pressure(),</highlight></codeline>
+<codeline lineno="154"><highlight class="comment"><sp/>*<sp/>check_temperature(),<sp/>and<sp/>check_spo2(),<sp/>then<sp/>returns<sp/>the<sp/>maximum<sp/>value.</highlight></codeline>
+<codeline lineno="155"><highlight class="comment"><sp/>*<sp/>This<sp/>ensures<sp/>that<sp/>any<sp/>single<sp/>critical<sp/>parameter<sp/>elevates<sp/>the<sp/>overall</highlight></codeline>
+<codeline lineno="156"><highlight class="comment"><sp/>*<sp/>patient<sp/>status<sp/>to<sp/>CRITICAL<sp/>regardless<sp/>of<sp/>other<sp/>parameters.</highlight></codeline>
+<codeline lineno="157"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="158"><highlight class="comment"><sp/>*<sp/>@param[in]<sp/>vitals<sp/>Pointer<sp/>to<sp/>a<sp/>valid<sp/>VitalSigns<sp/>structure.<sp/>Must<sp/>not<sp/>be<sp/>NULL.</highlight></codeline>
+<codeline lineno="159"><highlight class="comment"><sp/>*<sp/>@return<sp/>The<sp/>highest<sp/>AlertLevel<sp/>among<sp/>all<sp/>four<sp/>parameters.</highlight></codeline>
+<codeline lineno="160"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="161"><highlight class="comment"><sp/>*<sp/>@pre<sp/><sp/>vitals<sp/>!=<sp/>NULL</highlight></codeline>
+<codeline lineno="162"><highlight class="comment"><sp/>*<sp/>@par<sp/>Requirement</highlight></codeline>
+<codeline lineno="163"><highlight class="comment"><sp/>*<sp/>SWR-VIT-005</highlight></codeline>
+<codeline lineno="164"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324" kindref="member">AlertLevel</ref><sp/><ref refid="vitals_8h_1af7201b2a5a70f76ab81ade218a863830" kindref="member">overall_alert_level</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="struct_vital_signs" kindref="compound">VitalSigns</ref><sp/>*vitals);</highlight></codeline>
+<codeline lineno="166"><highlight class="normal"></highlight></codeline>
+<codeline lineno="167"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>=========================================================================</highlight></codeline>
+<codeline lineno="168"><highlight class="comment"><sp/>*<sp/>BMI<sp/>Calculation</highlight></codeline>
+<codeline lineno="169"><highlight class="comment"><sp/>*<sp/>=========================================================================<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="170"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="171"><highlight class="comment">/**</highlight></codeline>
+<codeline lineno="172"><highlight class="comment"><sp/>*<sp/>@brief<sp/>Calculate<sp/>Body<sp/>Mass<sp/>Index<sp/>(BMI)<sp/>from<sp/>weight<sp/>and<sp/>height.</highlight></codeline>
+<codeline lineno="173"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="174"><highlight class="comment"><sp/>*<sp/>@details<sp/>Uses<sp/>the<sp/>standard<sp/>formula:<sp/>BMI<sp/>=<sp/>weight_kg<sp/>/<sp/>(height_m<sp/>*<sp/>height_m).</highlight></codeline>
+<codeline lineno="175"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="176"><highlight class="comment"><sp/>*<sp/>@param[in]<sp/>weight_kg<sp/>Body<sp/>weight<sp/>in<sp/>kilograms.</highlight></codeline>
+<codeline lineno="177"><highlight class="comment"><sp/>*<sp/>@param[in]<sp/>height_m<sp/><sp/>Height<sp/>in<sp/>metres.<sp/>Must<sp/>be<sp/>&gt;<sp/>0.</highlight></codeline>
+<codeline lineno="178"><highlight class="comment"><sp/>*<sp/>@return<sp/>BMI<sp/>value,<sp/>or<sp/>-1.0<sp/>if<sp/>height_m<sp/>is<sp/>zero<sp/>or<sp/>negative.</highlight></codeline>
+<codeline lineno="179"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="180"><highlight class="comment"><sp/>*<sp/>@par<sp/>Requirement</highlight></codeline>
+<codeline lineno="181"><highlight class="comment"><sp/>*<sp/>SWR-VIT-006</highlight></codeline>
+<codeline lineno="182"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="183"><highlight class="normal"></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/><ref refid="vitals_8h_1a10dc695991eacf8ffea85c92b9331aec" kindref="member">calculate_bmi</ref>(</highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>weight_kg,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>height_m);</highlight></codeline>
+<codeline lineno="184"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="185"><highlight class="comment">/**</highlight></codeline>
+<codeline lineno="186"><highlight class="comment"><sp/>*<sp/>@brief<sp/>Return<sp/>the<sp/>WHO<sp/>BMI<sp/>category<sp/>string<sp/>for<sp/>a<sp/>given<sp/>BMI<sp/>value.</highlight></codeline>
+<codeline lineno="187"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="188"><highlight class="comment"><sp/>*<sp/>@details</highlight></codeline>
+<codeline lineno="189"><highlight class="comment"><sp/>*<sp/>|<sp/>BMI<sp/>Range<sp/><sp/><sp/><sp/>|<sp/>Category<sp/><sp/><sp/><sp/><sp/><sp/><sp/>|</highlight></codeline>
+<codeline lineno="190"><highlight class="comment"><sp/>*<sp/>|--------------|----------------|</highlight></codeline>
+<codeline lineno="191"><highlight class="comment"><sp/>*<sp/>|<sp/>&lt;<sp/>18.5<sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Underweight<sp/><sp/><sp/><sp/>|</highlight></codeline>
+<codeline lineno="192"><highlight class="comment"><sp/>*<sp/>|<sp/>18.5<sp/>–<sp/>24.9<sp/><sp/>|<sp/>Normal<sp/>weight<sp/><sp/>|</highlight></codeline>
+<codeline lineno="193"><highlight class="comment"><sp/>*<sp/>|<sp/>25.0<sp/>–<sp/>29.9<sp/><sp/>|<sp/>Overweight<sp/><sp/><sp/><sp/><sp/>|</highlight></codeline>
+<codeline lineno="194"><highlight class="comment"><sp/>*<sp/>|<sp/>≥<sp/>30.0<sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Obese<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|</highlight></codeline>
+<codeline lineno="195"><highlight class="comment"><sp/>*<sp/>|<sp/>&lt;<sp/>0<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Invalid<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|</highlight></codeline>
+<codeline lineno="196"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="197"><highlight class="comment"><sp/>*<sp/>@param[in]<sp/>bmi<sp/>BMI<sp/>value<sp/>as<sp/>returned<sp/>by<sp/>calculate_bmi().</highlight></codeline>
+<codeline lineno="198"><highlight class="comment"><sp/>*<sp/>@return<sp/>Null-terminated<sp/>string<sp/>literal<sp/>(never<sp/>NULL).<sp/>Caller<sp/>must<sp/>not<sp/>free.</highlight></codeline>
+<codeline lineno="199"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="200"><highlight class="comment"><sp/>*<sp/>@par<sp/>Requirement</highlight></codeline>
+<codeline lineno="201"><highlight class="comment"><sp/>*<sp/>SWR-VIT-006</highlight></codeline>
+<codeline lineno="202"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="203"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*<ref refid="vitals_8h_1a7a7981a0a087b3b98763ed48bc789888" kindref="member">bmi_category</ref>(</highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>bmi);</highlight></codeline>
+<codeline lineno="204"><highlight class="normal"></highlight></codeline>
+<codeline lineno="205"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>=========================================================================</highlight></codeline>
+<codeline lineno="206"><highlight class="comment"><sp/>*<sp/>String<sp/>Helpers</highlight></codeline>
+<codeline lineno="207"><highlight class="comment"><sp/>*<sp/>=========================================================================<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="208"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="209"><highlight class="comment">/**</highlight></codeline>
+<codeline lineno="210"><highlight class="comment"><sp/>*<sp/>@brief<sp/>Convert<sp/>an<sp/>AlertLevel<sp/>value<sp/>to<sp/>a<sp/>human-readable<sp/>string.</highlight></codeline>
+<codeline lineno="211"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="212"><highlight class="comment"><sp/>*<sp/>@param[in]<sp/>level<sp/>The<sp/>AlertLevel<sp/>to<sp/>convert.</highlight></codeline>
+<codeline lineno="213"><highlight class="comment"><sp/>*<sp/>@return<sp/>One<sp/>of:<sp/>&quot;NORMAL&quot;,<sp/>&quot;WARNING&quot;,<sp/>&quot;CRITICAL&quot;,<sp/>or<sp/>&quot;UNKNOWN&quot;.</highlight></codeline>
+<codeline lineno="214"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Returned<sp/>pointer<sp/>is<sp/>a<sp/>string<sp/>literal<sp/>—<sp/>caller<sp/>must<sp/>not<sp/>free.</highlight></codeline>
+<codeline lineno="215"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="216"><highlight class="comment"><sp/>*<sp/>@par<sp/>Requirement</highlight></codeline>
+<codeline lineno="217"><highlight class="comment"><sp/>*<sp/>SWR-VIT-007</highlight></codeline>
+<codeline lineno="218"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="219"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*<ref refid="vitals_8h_1a20a209843ea1eeff8484a7998d492615" kindref="member">alert_level_str</ref>(<ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324" kindref="member">AlertLevel</ref><sp/>level);</highlight></codeline>
+<codeline lineno="220"><highlight class="normal"></highlight></codeline>
+<codeline lineno="221"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight><highlight class="comment">/*<sp/>VITALS_H<sp/>*/</highlight><highlight class="preprocessor"></highlight></codeline>
+    </programlisting>
+    <location file="include/vitals.h"/>
+  </compounddef>
+</doxygen>

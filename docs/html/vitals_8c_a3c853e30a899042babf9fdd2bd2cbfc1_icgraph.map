@@ -1,0 +1,53 @@
+<map id="check_blood_pressure" name="check_blood_pressure">
+<area shape="rect" id="Node000001" title="Classify a blood pressure reading." alt="" coords="1035,87,1187,114"/>
+<area shape="rect" id="Node000002" href="$alerts_8c.html#a98b6140a4d21520d639bc81d1f7c08b7" title="Generate structured alert records for out&#45;of&#45;range vital signs." alt="" coords="870,37,980,63"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1042,83,977,67,976,61,1047,82"/>
+<area shape="rect" id="Node000003" href="$patient_8c.html#a19d76f7281d5f5ad5408c1ff4dc2ee11" title="Print a formatted patient summary including vitals and active alerts." alt="" coords="462,37,616,63"/>
+<area shape="poly" id="edge32_Node000001_Node000003" title=" " alt="" coords="1080,77,1038,50,986,27,934,16,879,10,824,8,770,11,671,23,594,38,592,33,670,18,770,5,824,3,880,4,935,10,988,22,1041,46,1085,78"/>
+<area shape="rect" id="Node000007" href="$main_8c.html#a0082d156ee2712806a55606f6637d160" title="Print a single vital sign reading with per&#45;parameter status and alerts." alt="" coords="691,87,786,114"/>
+<area shape="poly" id="edge33_Node000001_Node000007" title=" " alt="" coords="1017,101,787,103,786,98,1022,100"/>
+<area shape="rect" id="Node000015" href="$vitals_8c.html#af7201b2a5a70f76ab81ade218a863830" title="Return the highest alert level across all four vital parameters." alt="" coords="862,138,987,165"/>
+<area shape="poly" id="edge23_Node000001_Node000015" title=" " alt="" coords="1042,119,977,140,976,135,1047,118"/>
+<area shape="rect" id="Node000018" href="$gui__main_8c.html#a809c12bdd714ab44c54f45da4d3b2dc7" title="Paint the 2×2 vital sign tile grid. @req SWR&#45;GUI&#45;003." alt="" coords="884,189,965,215"/>
+<area shape="poly" id="edge30_Node000001_Node000018" title=" " alt="" coords="1079,122,989,179,963,191,961,186,986,174,1074,124"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="851,51,617,53,616,47,856,49"/>
+<area shape="poly" id="edge7_Node000002_Node000007" title=" " alt="" coords="856,69,788,90,786,85,861,67"/>
+<area shape="rect" id="Node000008" href="$gui__main_8c.html#a8faad4cd27c161432ac3388959b1a766" title="Refresh all dynamic dashboard content after any data change. @req SWR&#45;GUI&#45;003 @req SWR&#45;GUI&#45;004." alt="" coords="675,290,802,317"/>
+<area shape="poly" id="edge10_Node000002_Node000008" title=" " alt="" coords="904,74,864,128,798,220,751,292,747,288,794,217,860,124,900,77"/>
+<area shape="rect" id="Node000004" href="$main_8c.html#a1a904050ef641d46ba74b91e8ff5b7f9" title="Run the monitoring session for Patient 1 (deterioration scenario)." alt="" coords="280,62,390,89"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="445,63,391,71,389,66,450,60"/>
+<area shape="rect" id="Node000006" href="$main_8c.html#a418db4bf280a08fda4493a816c841643" title="Run the monitoring session for Patient 2 (bradycardia scenario)." alt="" coords="255,11,414,38"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="444,39,416,37,414,32,449,38"/>
+<area shape="rect" id="Node000005" href="$main_8c.html#a840291bc02cba5474a4cb46a9b9566fe" title="Application entry point." alt="" coords="142,37,191,63"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="262,66,192,56,191,51,266,63"/>
+<area shape="poly" id="edge6_Node000006_Node000005" title=" " alt="" coords="237,41,193,48,190,44,241,37"/>
+<area shape="poly" id="edge8_Node000007_Node000004" title=" " alt="" coords="674,98,391,81,390,76,678,95"/>
+<area shape="poly" id="edge9_Node000007_Node000006" title=" " alt="" coords="708,77,666,50,615,27,564,17,512,12,416,16,414,11,512,7,565,11,616,22,669,46,713,77"/>
+<area shape="rect" id="Node000009" href="$gui__main_8c.html#a50c9496063704973573429586a90b27d" title=" " alt="" coords="126,290,207,317"/>
+<area shape="poly" id="edge11_Node000008_Node000009" title=" " alt="" coords="657,290,615,287,435,270,356,270,255,281,208,292,206,287,255,275,356,265,435,265,616,282,663,290"/>
+<area shape="rect" id="Node000011" href="$gui__main_8c.html#a9d7273263f3a31bf701590beb4c5b1d1" title="Record a new vital signs reading from the vitals entry fields. @req SWR&#45;GUI&#45;004." alt="" coords="278,290,391,317"/>
+<area shape="poly" id="edge13_Node000008_Node000011" title=" " alt="" coords="657,304,391,306,391,301,662,302"/>
+<area shape="rect" id="Node000012" href="$gui__main_8c.html#a6bed6b36812029c7bc2eb263a12e5c98" title="Admit a patient from the identity fields. @req SWR&#45;GUI&#45;004." alt="" coords="502,341,576,367"/>
+<area shape="poly" id="edge15_Node000008_Node000012" title=" " alt="" coords="671,320,577,347,576,342,666,322"/>
+<area shape="rect" id="Node000013" href="$gui__main_8c.html#a9106ea80981b1db52b607a5e58f0ecf3" title=" " alt="" coords="289,391,380,418"/>
+<area shape="poly" id="edge22_Node000008_Node000013" title=" " alt="" coords="712,325,668,357,617,382,554,398,490,406,381,409,381,404,489,401,553,392,615,377,665,353,707,327"/>
+<area shape="rect" id="Node000014" href="$gui__main_8c.html#a11329148e25059d43a9d848bf4f90d4b" title=" " alt="" coords="504,442,574,469"/>
+<area shape="poly" id="edge20_Node000008_Node000014" title=" " alt="" coords="719,328,675,378,617,425,575,446,574,441,614,421,671,374,714,330"/>
+<area shape="rect" id="Node000010" href="$gui__main_8c.html#aab234127c99873cb463e482155cb679f" title=" " alt="" coords="5,290,78,317"/>
+<area shape="poly" id="edge12_Node000009_Node000010" title=" " alt="" coords="108,305,79,306,77,301,112,302"/>
+<area shape="poly" id="edge14_Node000011_Node000009" title=" " alt="" coords="261,304,208,306,207,301,266,302"/>
+<area shape="poly" id="edge16_Node000012_Node000009" title=" " alt="" coords="484,353,379,348,254,331,207,319,207,314,256,326,379,342,489,352"/>
+<area shape="poly" id="edge17_Node000012_Node000011" title=" " alt="" coords="484,342,391,320,391,314,490,341"/>
+<area shape="poly" id="edge18_Node000012_Node000013" title=" " alt="" coords="490,366,382,396,380,391,484,367"/>
+<area shape="poly" id="edge19_Node000013_Node000009" title=" " alt="" coords="277,385,254,375,213,346,182,320,183,314,216,342,256,370,282,385"/>
+<area shape="poly" id="edge21_Node000014_Node000009" title=" " alt="" coords="491,463,437,469,376,467,313,456,282,446,254,432,223,407,199,375,171,319,174,315,203,372,227,403,256,428,284,441,314,451,377,462,437,464,486,463"/>
+<area shape="poly" id="edge28_Node000015_Node000007" title=" " alt="" coords="855,133,787,116,787,111,861,133"/>
+<area shape="poly" id="edge29_Node000015_Node000008" title=" " alt="" coords="872,171,864,179,829,207,797,238,752,292,749,287,793,234,825,203,860,174,867,173"/>
+<area shape="rect" id="Node000016" href="$patient_8c.html#a7efb2602c9a2566fee89ff6d6af42bcf" title="Return the overall status from the latest reading." alt="" coords="664,138,814,165"/>
+<area shape="poly" id="edge24_Node000015_Node000016" title=" " alt="" coords="844,152,815,154,814,149,849,151"/>
+<area shape="poly" id="edge27_Node000016_Node000003" title=" " alt="" coords="675,132,662,128,605,96,560,66,560,61,607,92,665,124,680,132"/>
+<area shape="rect" id="Node000017" href="$gui__main_8c.html#a71c5868a8a8bcd102dfebf5a8cd8e55a" title="Paint the aggregate status banner. @req SWR&#45;GUI&#45;003." alt="" coords="470,138,608,165"/>
+<area shape="poly" id="edge25_Node000016_Node000017" title=" " alt="" coords="646,152,609,154,608,149,651,151"/>
+<area shape="poly" id="edge26_Node000017_Node000009" title=" " alt="" coords="452,145,407,147,356,152,304,165,256,186,228,209,204,238,175,291,171,288,200,235,224,205,254,181,302,160,355,147,407,142,457,143"/>
+<area shape="poly" id="edge31_Node000018_Node000009" title=" " alt="" coords="866,199,755,198,601,201,516,208,428,219,340,235,256,256,219,272,188,291,185,287,216,268,254,251,339,229,427,213,515,203,601,196,755,192,872,198"/>
+</map>

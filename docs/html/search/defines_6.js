@@ -1,0 +1,26 @@
+var searchData=
+[
+  ['idc_5fbtn_5fadd_0',['IDC_BTN_ADD',['../gui__main_8c.html#ab2c1fd66a6366e5f431412adf637e17c',1,'gui_main.c']]],
+  ['idc_5fbtn_5fadmit_1',['IDC_BTN_ADMIT',['../gui__main_8c.html#a8455d8a135d7cf128eb643bbced76bb1',1,'gui_main.c']]],
+  ['idc_5fbtn_5fclear_2',['IDC_BTN_CLEAR',['../gui__main_8c.html#a2822be6e567791b522e9778e39c2b2bb',1,'gui_main.c']]],
+  ['idc_5fbtn_5flogout_3',['IDC_BTN_LOGOUT',['../gui__main_8c.html#a301bdf2ab51642e932c632d6d81bf0fe',1,'gui_main.c']]],
+  ['idc_5fbtn_5fpause_4',['IDC_BTN_PAUSE',['../gui__main_8c.html#ac21bedb6be859c95af37a1a914cb9ab3',1,'gui_main.c']]],
+  ['idc_5fbtn_5fscen1_5',['IDC_BTN_SCEN1',['../gui__main_8c.html#a401dd83089170c853fd0b57f865451a9',1,'gui_main.c']]],
+  ['idc_5fbtn_5fscen2_6',['IDC_BTN_SCEN2',['../gui__main_8c.html#ac49945fbe08366f7739ca258ecda44c9',1,'gui_main.c']]],
+  ['idc_5flgn_5fbtn_7',['IDC_LGN_BTN',['../gui__main_8c.html#a5cdce490f87b5677635d915a07f55b82',1,'gui_main.c']]],
+  ['idc_5flgn_5ferr_8',['IDC_LGN_ERR',['../gui__main_8c.html#adf14d200e3e70a87b11130057b3b2832',1,'gui_main.c']]],
+  ['idc_5flgn_5fpass_9',['IDC_LGN_PASS',['../gui__main_8c.html#a58163e013247f90e4cdafb21f0a78c1a',1,'gui_main.c']]],
+  ['idc_5flgn_5fuser_10',['IDC_LGN_USER',['../gui__main_8c.html#a13ee521f1a6d99a3510245cc4ae54603',1,'gui_main.c']]],
+  ['idc_5flist_5falerts_11',['IDC_LIST_ALERTS',['../gui__main_8c.html#aca621cda538dfe4bbd567b0f027ac37f',1,'gui_main.c']]],
+  ['idc_5flist_5fhistory_12',['IDC_LIST_HISTORY',['../gui__main_8c.html#a2e192879596b74f6c9aa6857963ba022',1,'gui_main.c']]],
+  ['idc_5fpat_5fage_13',['IDC_PAT_AGE',['../gui__main_8c.html#a81d7d420ce685709128b3618613e3ccf',1,'gui_main.c']]],
+  ['idc_5fpat_5fheight_14',['IDC_PAT_HEIGHT',['../gui__main_8c.html#ac053a72409e50f126de963d2ec6d1431',1,'gui_main.c']]],
+  ['idc_5fpat_5fid_15',['IDC_PAT_ID',['../gui__main_8c.html#aad26a493054ee1ae11905811b4ed1acd',1,'gui_main.c']]],
+  ['idc_5fpat_5fname_16',['IDC_PAT_NAME',['../gui__main_8c.html#abb7b01234a6355187508bbe266dd9d16',1,'gui_main.c']]],
+  ['idc_5fpat_5fweight_17',['IDC_PAT_WEIGHT',['../gui__main_8c.html#a611cede28ffe28cc6be91cbfa252c127',1,'gui_main.c']]],
+  ['idc_5fvit_5fdia_18',['IDC_VIT_DIA',['../gui__main_8c.html#a0323af2730247e320386734471786dd7',1,'gui_main.c']]],
+  ['idc_5fvit_5fhr_19',['IDC_VIT_HR',['../gui__main_8c.html#a1581bcbe7c54b78ef7f06c5cdd24ab2f',1,'gui_main.c']]],
+  ['idc_5fvit_5fspo2_20',['IDC_VIT_SPO2',['../gui__main_8c.html#a80080c2fd4fb8f3d86f08cf3d7baf6a0',1,'gui_main.c']]],
+  ['idc_5fvit_5fsys_21',['IDC_VIT_SYS',['../gui__main_8c.html#a6ac9fc84d7948789cacbfc22a13d6148',1,'gui_main.c']]],
+  ['idc_5fvit_5ftemp_22',['IDC_VIT_TEMP',['../gui__main_8c.html#a2340de55cf825e8772496a86d871cb4a',1,'gui_main.c']]]
+];

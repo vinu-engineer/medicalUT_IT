@@ -82,6 +82,14 @@ int generate_alerts(const VitalSigns *vitals, Alert *out, int max_out)
                    "SpO2 %d%% [normal 95-100%%]",
                    vitals->spo2);
 
+    if (vitals->respiration_rate != 0) {
+        lvl = check_respiration_rate(vitals->respiration_rate);
+        if (lvl != ALERT_NORMAL)
+            PUSH_ALERT(lvl, "Resp Rate",
+                       "RR %d br/min [normal 12-20]",
+                       vitals->respiration_rate);
+    }
+
 #undef PUSH_ALERT
     return count;
 }

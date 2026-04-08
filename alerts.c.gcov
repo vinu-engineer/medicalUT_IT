@@ -1,0 +1,113 @@
+        -:    0:Source:C:/Users/vinun/claude AI/src/alerts.c
+        -:    0:Graph:build_cov\CMakeFiles\monitor_lib.dir\src\alerts.c.gcno
+        -:    0:Data:build_cov\CMakeFiles\monitor_lib.dir\src\alerts.c.gcda
+        -:    0:Runs:2
+        -:    0:Programs:2
+        -:    1:/**
+        -:    2: * @file alerts.c
+        -:    3: * @brief Implementation of alert record generation from vital sign readings.
+        -:    4: *
+        -:    5: * @details
+        -:    6: * Implements generate_alerts() declared in alerts.h. Each abnormal
+        -:    7: * parameter produces exactly one Alert record written into the caller's
+        -:    8: * buffer. The internal PUSH_ALERT macro encapsulates the bounds check and
+        -:    9: * string formatting to keep the function body concise and auditable.
+        -:   10: *
+        -:   11: * ### Implementation Notes
+        -:   12: * - `_CRT_SECURE_NO_WARNINGS` suppresses MSVC deprecation warnings for
+        -:   13: *   `strncpy` and `snprintf`. These functions are used with explicit
+        -:   14: *   length limits and guaranteed null-termination, so the usage is safe.
+        -:   15: * - The macro parameter is named `_al` (not `level`) to avoid shadowing
+        -:   16: *   the struct field `Alert.level` inside the macro expansion body.
+        -:   17: *
+        -:   18: * @version 1.0.0
+        -:   19: * @date    2026-04-06
+        -:   20: * @author  vinu-engineer
+        -:   21: */
+        -:   22:
+        -:   23:#ifdef _MSC_VER
+        -:   24:#define _CRT_SECURE_NO_WARNINGS
+        -:   25:#endif
+        -:   26:
+        -:   27:#include "alerts.h"
+        -:   28:#include <stdio.h>
+        -:   29:#include <string.h>
+        -:   30:
+        -:   31:/**
+        -:   32: * @brief Generate structured alert records for out-of-range vital signs.
+        -:   33: *
+        -:   34: * @details
+        -:   35: * Internal flow for each parameter:
+        -:   36: * -# Call the corresponding check_*() function.
+        -:   37: * -# If the result is not ALERT_NORMAL, write an Alert record via PUSH_ALERT.
+        -:   38: * -# PUSH_ALERT enforces the max_out cap before writing.
+        -:   39: *
+        -:   40: * The PUSH_ALERT macro copies the parameter name with strncpy (max 31 chars
+        -:   41: * + null) and formats the message with snprintf (max ALERT_MSG_LEN - 1 chars
+        -:   42: * + null), guaranteeing null-termination in both fields.
+        -:   43: */
+function generate_alerts called 17 returned 100% blocks executed 100%
+       17:   44:int generate_alerts(const VitalSigns *vitals, Alert *out, int max_out)
+        -:   45:{
+       17:   46:    int count = 0;
+        -:   47:    AlertLevel lvl;
+        -:   48:
+        -:   49:    /* Write one Alert record if count < max_out. */
+        -:   50:#define PUSH_ALERT(_al, param, fmt, ...)                                    \
+        -:   51:    do {                                                                     \
+        -:   52:        if (count < max_out) {                                               \
+        -:   53:            out[count].level = (_al);                                        \
+        -:   54:            strncpy(out[count].parameter, (param), 31);                      \
+        -:   55:            out[count].parameter[31] = '\0';                                 \
+        -:   56:            snprintf(out[count].message, ALERT_MSG_LEN, fmt, __VA_ARGS__);   \
+        -:   57:            count++;                                                          \
+        -:   58:        }                                                                     \
+        -:   59:    } while (0)
+        -:   60:
+       17:   61:    lvl = check_heart_rate(vitals->heart_rate);
+call    0 returned 100%
+       17:   62:    if (lvl != ALERT_NORMAL)
+branch  0 taken 59% (fallthrough)
+branch  1 taken 41%
+       10:   63:        PUSH_ALERT(lvl, "Heart Rate",
+branch  0 taken 90% (fallthrough)
+branch  1 taken 10%
+        -:   64:                   "Heart rate %d bpm [normal 60-100]",
+        -:   65:                   vitals->heart_rate);
+        -:   66:
+       17:   67:    lvl = check_blood_pressure(vitals->systolic_bp, vitals->diastolic_bp);
+call    0 returned 100%
+       17:   68:    if (lvl != ALERT_NORMAL)
+branch  0 taken 41% (fallthrough)
+branch  1 taken 59%
+        7:   69:        PUSH_ALERT(lvl, "Blood Pressure",
+branch  0 taken 86% (fallthrough)
+branch  1 taken 14%
+        -:   70:                   "BP %d/%d mmHg [normal 90-140 / 60-90]",
+        -:   71:                   vitals->systolic_bp, vitals->diastolic_bp);
+        -:   72:
+       17:   73:    lvl = check_temperature(vitals->temperature);
+call    0 returned 100%
+       17:   74:    if (lvl != ALERT_NORMAL)
+branch  0 taken 41% (fallthrough)
+branch  1 taken 59%
+        7:   75:        PUSH_ALERT(lvl, "Temperature",
+branch  0 taken 71% (fallthrough)
+branch  1 taken 29%
+        -:   76:                   "Temp %.1f C [normal 36.1-37.2]",
+        -:   77:                   (double)vitals->temperature);
+        -:   78:
+       17:   79:    lvl = check_spo2(vitals->spo2);
+call    0 returned 100%
+       17:   80:    if (lvl != ALERT_NORMAL)
+branch  0 taken 53% (fallthrough)
+branch  1 taken 47%
+        9:   81:        PUSH_ALERT(lvl, "SpO2",
+branch  0 taken 78% (fallthrough)
+branch  1 taken 22%
+        -:   82:                   "SpO2 %d%% [normal 95-100%%]",
+        -:   83:                   vitals->spo2);
+        -:   84:
+        -:   85:#undef PUSH_ALERT
+       17:   86:    return count;
+        -:   87:}

@@ -59,7 +59,7 @@ def bold(t):   return _colour(t, ANSI_BOLD)
 # ---------------------------------------------------------------------------
 # Format: "SWR-ID": ("test_executable_stem", "SuiteName[.CaseName]", "description")
 REQUIREMENT_MAP = {
-    # Vital signs validation — GTest suites: HeartRate, BloodPressure, Temperature, SpO2, BMI, AlertStr
+    # Vital signs validation — GTest suites: HeartRate, BloodPressure, Temperature, SpO2, BMI, AlertStr, RespRate
     "SWR-VIT-001": ("test_unit", "HeartRate",      "HR check — NORMAL/WARNING/CRITICAL boundaries"),
     "SWR-VIT-002": ("test_unit", "BloodPressure",  "BP check — systolic/diastolic classification"),
     "SWR-VIT-003": ("test_unit", "Temperature",    "Temperature check — fever/hypothermia limits"),
@@ -67,6 +67,7 @@ REQUIREMENT_MAP = {
     "SWR-VIT-005": ("test_unit", "BMI",            "BMI calculation from weight/height"),
     "SWR-VIT-006": ("test_unit", "BMI",            "BMI category string (Underweight..Obese)"),
     "SWR-VIT-007": ("test_unit", "AlertStr",       "alert_level_str() all levels incl. default"),
+    "SWR-VIT-008": ("test_unit", "RespRate",       "RR check — bradypnoea/tachypnoea thresholds (NEWS2)"),
     # Alert generation — GTest suites: GenerateAlerts, OverallAlert
     "SWR-ALT-001": ("test_unit", "GenerateAlerts", "generate_alerts() produces correct alerts"),
     "SWR-ALT-002": ("test_unit", "OverallAlert",   "overall_alert_level() aggregation"),

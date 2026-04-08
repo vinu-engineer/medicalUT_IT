@@ -1,0 +1,9 @@
+<map id="create_dash_controls" name="create_dash_controls">
+<area shape="rect" id="Node000001" title="Create all dashboard child controls. @req SWR&#45;GUI&#45;004." alt="" coords="5,56,151,83"/>
+<area shape="rect" id="Node000002" href="$gui__main_8c.html#a24031f98b0d723d6ab3ec6b06912fcef" title=" " alt="" coords="203,5,282,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="123,53,190,34,186,37,125,58"/>
+<area shape="rect" id="Node000003" href="$gui__main_8c.html#aba2b03bc9043c42771599f03493ddb81" title=" " alt="" coords="202,56,283,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="151,67,189,69,183,70,152,72"/>
+<area shape="rect" id="Node000004" href="$gui__main_8c.html#a68601212c34811f3fdfa6c26760d3b3b" title=" " alt="" coords="199,107,286,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="124,81,186,101,181,103,124,86"/>
+</map>

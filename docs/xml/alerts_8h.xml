@@ -1,0 +1,327 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="alerts_8h" kind="file" language="C++">
+    <compoundname>alerts.h</compoundname>
+    <includes refid="vitals_8h" local="yes">vitals.h</includes>
+    <includedby refid="patient_8h" local="yes">include/patient.h</includedby>
+    <includedby refid="alerts_8c" local="yes">src/alerts.c</includedby>
+    <includedby refid="gui__main_8c" local="yes">src/gui_main.c</includedby>
+    <incdepgraph>
+      <node id="1">
+        <label>include/alerts.h</label>
+        <link refid="alerts_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>vitals.h</label>
+        <link refid="vitals_8h"/>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="1">
+        <label>include/alerts.h</label>
+        <link refid="alerts_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>include/patient.h</label>
+        <link refid="patient_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>src/alerts.c</label>
+        <link refid="alerts_8c"/>
+      </node>
+      <node id="3">
+        <label>src/gui_main.c</label>
+        <link refid="gui__main_8c"/>
+      </node>
+      <node id="4">
+        <label>src/main.c</label>
+        <link refid="main_8c"/>
+      </node>
+      <node id="5">
+        <label>src/patient.c</label>
+        <link refid="patient_8c"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="struct_alert" prot="public">Alert</innerclass>
+    <sectiondef kind="define">
+      <memberdef kind="define" id="alerts_8h_1af4487b371ca7c67a8e7dd34f209fa870" prot="public" static="no">
+        <name>ALERT_MSG_LEN</name>
+        <initializer>96</initializer>
+        <briefdescription>
+<para>Maximum length (including null terminator) of an alert message. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/alerts.h" line="44" column="9" bodyfile="include/alerts.h" bodystart="44" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="alerts_8h_1a40c583285d17e2d0ab75aca5669f53d0" prot="public" static="no">
+        <name>MAX_ALERTS</name>
+        <initializer>5</initializer>
+        <briefdescription>
+<para>Maximum number of alerts that can be generated from one <ref refid="struct_vital_signs" kindref="compound">VitalSigns</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/alerts.h" line="41" column="9" bodyfile="include/alerts.h" bodystart="41" bodyend="-1"/>
+        <referencedby refid="patient_8c_1a19d76f7281d5f5ad5408c1ff4dc2ee11" compoundref="patient_8c" startline="98" endline="145">patient_print_summary</referencedby>
+        <referencedby refid="main_8c_1a0082d156ee2712806a55606f6637d160" compoundref="main_8c" startline="38" endline="65">print_reading</referencedby>
+        <referencedby refid="gui__main_8c_1a8faad4cd27c161432ac3388959b1a766" compoundref="gui__main_8c" startline="508" endline="560">update_dashboard</referencedby>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="alerts_8h_1a98b6140a4d21520d639bc81d1f7c08b7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int generate_alerts</definition>
+        <argsstring>(const VitalSigns *vitals, Alert *out, int max_out)</argsstring>
+        <name>generate_alerts</name>
+        <param>
+          <type>const <ref refid="struct_vital_signs" kindref="compound">VitalSigns</ref> *</type>
+          <declname>vitals</declname>
+        </param>
+        <param>
+          <type><ref refid="struct_alert" kindref="compound">Alert</ref> *</type>
+          <declname>out</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>max_out</declname>
+        </param>
+        <briefdescription>
+<para>Generate alert records for every vital sign parameter outside its normal clinical range. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Iterates over all four vital sign parameters in this fixed order:<orderedlist>
+<listitem><para>Heart rate</para>
+</listitem><listitem><para>Blood pressure (systolic / diastolic)</para>
+</listitem><listitem><para>Temperature</para>
+</listitem><listitem><para>SpO2</para>
+</listitem></orderedlist>
+</para>
+<para>For each parameter that is not ALERT_NORMAL, one <ref refid="struct_alert" kindref="compound">Alert</ref> entry is written to <computeroutput>out</computeroutput>. Writing stops when either all parameters have been checked or <computeroutput>max_out</computeroutput> entries have been filled — whichever comes first.</para>
+<para><bold>Memory safety:</bold> the function never writes beyond <computeroutput>out[max_out - 1]</computeroutput>. Passing <computeroutput>max_out = 0</computeroutput> is valid and writes nothing.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">vitals</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to a fully populated <ref refid="struct_vital_signs" kindref="compound">VitalSigns</ref> structure. Must not be NULL. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="out">out</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Caller-allocated array to receive <ref refid="struct_alert" kindref="compound">Alert</ref> records. Must hold at least <computeroutput>max_out</computeroutput> elements. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">max_out</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Maximum number of <ref refid="struct_alert" kindref="compound">Alert</ref> entries to write.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Number of <ref refid="struct_alert" kindref="compound">Alert</ref> records written to <computeroutput>out</computeroutput> (0 if all parameters are normal, or if max_out == 0).</para>
+</simplesect>
+<simplesect kind="pre"><para>vitals != NULL </para>
+</simplesect>
+<simplesect kind="pre"><para>out != NULL || max_out == 0 </para>
+</simplesect>
+<simplesect kind="post"><para>Return value &lt;= max_out</para>
+</simplesect>
+<simplesect kind="par"><title>Requirements</title><para>SWR-ALT-001, SWR-ALT-002, SWR-ALT-003, SWR-ALT-004</para>
+</simplesect>
+Generate alert records for every vital sign parameter outside its normal clinical range.</para>
+<para>Internal flow for each parameter:<orderedlist>
+<listitem><para>Call the corresponding check_*() function.</para>
+</listitem><listitem><para>If the result is not ALERT_NORMAL, write an <ref refid="struct_alert" kindref="compound">Alert</ref> record via PUSH_ALERT.</para>
+</listitem><listitem><para>PUSH_ALERT enforces the max_out cap before writing.</para>
+</listitem></orderedlist>
+</para>
+<para>The PUSH_ALERT macro copies the parameter name with strncpy (max 31 chars<itemizedlist>
+<listitem><para>null) and formats the message with snprintf (max ALERT_MSG_LEN - 1 chars</para>
+</listitem><listitem><para>null), guaranteeing null-termination in both fields. </para>
+</listitem></itemizedlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/alerts.h" line="103" column="5" bodyfile="src/alerts.c" bodystart="44" bodyend="87" declfile="include/alerts.h" declline="103" declcolumn="5"/>
+        <references refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324a719a508e583ddd6e5cc6d863fab2c6c8" compoundref="vitals_8h" startline="47">ALERT_NORMAL</references>
+        <references refid="vitals_8c_1a3c853e30a899042babf9fdd2bd2cbfc1" compoundref="vitals_8c" startline="45" endline="52">check_blood_pressure</references>
+        <references refid="vitals_8c_1a7604eb6b23010f139f6f960b184a3b28" compoundref="vitals_8c" startline="31" endline="36">check_heart_rate</references>
+        <references refid="vitals_8c_1ac0bc076e63894a96df90f2eab73c88fe" compoundref="vitals_8c" startline="75" endline="80">check_spo2</references>
+        <references refid="vitals_8c_1aef7f6fa183fbc5412c13ea63bd2b62ce" compoundref="vitals_8c" startline="61" endline="66">check_temperature</references>
+        <references refid="struct_vital_signs_1ab81723ab54ad295a71ba56f0ef52318f" compoundref="vitals_8h" startline="68">VitalSigns::diastolic_bp</references>
+        <references refid="struct_vital_signs_1ac7162369c92da33cc7a3279c37083f84" compoundref="vitals_8h" startline="66">VitalSigns::heart_rate</references>
+        <references refid="alerts_8c_1a7aa21ff5b5fcc955fb408e288a62b125">PUSH_ALERT</references>
+        <references refid="struct_vital_signs_1a1b524bb13d6c36ec564c7d94a5e953c1" compoundref="vitals_8h" startline="70">VitalSigns::spo2</references>
+        <references refid="struct_vital_signs_1a110b3f24528e0f5769cb82f3a0c07485" compoundref="vitals_8h" startline="67">VitalSigns::systolic_bp</references>
+        <references refid="struct_vital_signs_1af0a43a24a6e26683adde5612cf626365" compoundref="vitals_8h" startline="69">VitalSigns::temperature</references>
+        <referencedby refid="patient_8c_1a19d76f7281d5f5ad5408c1ff4dc2ee11" compoundref="patient_8c" startline="98" endline="145">patient_print_summary</referencedby>
+        <referencedby refid="main_8c_1a0082d156ee2712806a55606f6637d160" compoundref="main_8c" startline="38" endline="65">print_reading</referencedby>
+        <referencedby refid="gui__main_8c_1a8faad4cd27c161432ac3388959b1a766" compoundref="gui__main_8c" startline="508" endline="560">update_dashboard</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para><ref refid="struct_alert" kindref="compound">Alert</ref> record generation from a set of vital sign measurements. </para>
+    </briefdescription>
+    <detaileddescription>
+<para>This module is responsible for translating a <ref refid="struct_vital_signs" kindref="compound">VitalSigns</ref> observation into a structured list of <ref refid="struct_alert" kindref="compound">Alert</ref> records — one per abnormal parameter. It acts as the bridge between raw clinical data (<ref refid="vitals_8h" kindref="compound">vitals.h</ref>) and the patient management layer (<ref refid="patient_8h" kindref="compound">patient.h</ref>).</para>
+<sect1 id="alerts_8h_1autotoc_md5_1s1"><sect2 id="alerts_8h_1autotoc_md5_1s2"><sect3 id="alerts_8h_1autotoc_md5">
+<title>Design Decisions</title><para><itemizedlist>
+<listitem><para>Each abnormal parameter produces exactly one <ref refid="struct_alert" kindref="compound">Alert</ref> record.</para>
+</listitem><listitem><para>The output buffer size is controlled by the caller via <computeroutput>max_out</computeroutput>, making the function safe for use in memory-constrained embedded targets.</para>
+</listitem><listitem><para>All-normal vitals produce zero alerts (return value 0).</para>
+</listitem><listitem><para><ref refid="struct_alert" kindref="compound">Alert</ref> messages are human-readable and suitable for display on a clinical workstation or serial console.</para>
+</listitem></itemizedlist>
+</para>
+</sect3></sect2></sect1>
+<sect1 id="alerts_8h_1autotoc_md6_1s1"><sect2 id="alerts_8h_1autotoc_md6_1s2"><sect3 id="alerts_8h_1autotoc_md6">
+<title>IEC 62304 Traceability</title><para><itemizedlist>
+<listitem><para>Software Unit: UNIT-ALT</para>
+</listitem><listitem><para>Requirements covered: SWR-ALT-001 through SWR-ALT-004</para>
+</listitem></itemizedlist>
+</para>
+<para><simplesect kind="version"><para>1.0.0 </para>
+</simplesect>
+<simplesect kind="date"><para>2026-04-06 </para>
+</simplesect>
+<simplesect kind="author"><para>vinu-engineer</para>
+</simplesect>
+<simplesect kind="copyright"><para>Medical Device Software — IEC 62304 Class B compliant. All rights reserved. </para>
+</simplesect>
+</para>
+</sect3></sect2></sect1>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/**</highlight></codeline>
+<codeline lineno="2"><highlight class="comment"><sp/>*<sp/>@file<sp/>alerts.h</highlight></codeline>
+<codeline lineno="3"><highlight class="comment"><sp/>*<sp/>@brief<sp/>Alert<sp/>record<sp/>generation<sp/>from<sp/>a<sp/>set<sp/>of<sp/>vital<sp/>sign<sp/>measurements.</highlight></codeline>
+<codeline lineno="4"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/>*<sp/>@details</highlight></codeline>
+<codeline lineno="6"><highlight class="comment"><sp/>*<sp/>This<sp/>module<sp/>is<sp/>responsible<sp/>for<sp/>translating<sp/>a<sp/>VitalSigns<sp/>observation<sp/>into</highlight></codeline>
+<codeline lineno="7"><highlight class="comment"><sp/>*<sp/>a<sp/>structured<sp/>list<sp/>of<sp/>Alert<sp/>records<sp/>—<sp/>one<sp/>per<sp/>abnormal<sp/>parameter.<sp/>It<sp/>acts</highlight></codeline>
+<codeline lineno="8"><highlight class="comment"><sp/>*<sp/>as<sp/>the<sp/>bridge<sp/>between<sp/>raw<sp/>clinical<sp/>data<sp/>(vitals.h)<sp/>and<sp/>the<sp/>patient</highlight></codeline>
+<codeline lineno="9"><highlight class="comment"><sp/>*<sp/>management<sp/>layer<sp/>(patient.h).</highlight></codeline>
+<codeline lineno="10"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="11"><highlight class="comment"><sp/>*<sp/>###<sp/>Design<sp/>Decisions</highlight></codeline>
+<codeline lineno="12"><highlight class="comment"><sp/>*<sp/>-<sp/>Each<sp/>abnormal<sp/>parameter<sp/>produces<sp/>exactly<sp/>one<sp/>Alert<sp/>record.</highlight></codeline>
+<codeline lineno="13"><highlight class="comment"><sp/>*<sp/>-<sp/>The<sp/>output<sp/>buffer<sp/>size<sp/>is<sp/>controlled<sp/>by<sp/>the<sp/>caller<sp/>via<sp/>`max_out`,<sp/>making</highlight></codeline>
+<codeline lineno="14"><highlight class="comment"><sp/>*<sp/><sp/><sp/>the<sp/>function<sp/>safe<sp/>for<sp/>use<sp/>in<sp/>memory-constrained<sp/>embedded<sp/>targets.</highlight></codeline>
+<codeline lineno="15"><highlight class="comment"><sp/>*<sp/>-<sp/>All-normal<sp/>vitals<sp/>produce<sp/>zero<sp/>alerts<sp/>(return<sp/>value<sp/>0).</highlight></codeline>
+<codeline lineno="16"><highlight class="comment"><sp/>*<sp/>-<sp/>Alert<sp/>messages<sp/>are<sp/>human-readable<sp/>and<sp/>suitable<sp/>for<sp/>display<sp/>on<sp/>a<sp/>clinical</highlight></codeline>
+<codeline lineno="17"><highlight class="comment"><sp/>*<sp/><sp/><sp/>workstation<sp/>or<sp/>serial<sp/>console.</highlight></codeline>
+<codeline lineno="18"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="19"><highlight class="comment"><sp/>*<sp/>###<sp/>IEC<sp/>62304<sp/>Traceability</highlight></codeline>
+<codeline lineno="20"><highlight class="comment"><sp/>*<sp/>-<sp/>Software<sp/>Unit:<sp/>UNIT-ALT</highlight></codeline>
+<codeline lineno="21"><highlight class="comment"><sp/>*<sp/>-<sp/>Requirements<sp/>covered:<sp/>SWR-ALT-001<sp/>through<sp/>SWR-ALT-004</highlight></codeline>
+<codeline lineno="22"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="23"><highlight class="comment"><sp/>*<sp/>@version<sp/>1.0.0</highlight></codeline>
+<codeline lineno="24"><highlight class="comment"><sp/>*<sp/>@date<sp/><sp/><sp/><sp/>2026-04-06</highlight></codeline>
+<codeline lineno="25"><highlight class="comment"><sp/>*<sp/>@author<sp/><sp/>vinu-engineer</highlight></codeline>
+<codeline lineno="26"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="27"><highlight class="comment"><sp/>*<sp/>@copyright<sp/>Medical<sp/>Device<sp/>Software<sp/>—<sp/>IEC<sp/>62304<sp/>Class<sp/>B<sp/>compliant.</highlight></codeline>
+<codeline lineno="28"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>All<sp/>rights<sp/>reserved.</highlight></codeline>
+<codeline lineno="29"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>ALERTS_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ALERTS_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="vitals_8h" kindref="compound">vitals.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>=========================================================================</highlight></codeline>
+<codeline lineno="37"><highlight class="comment"><sp/>*<sp/>Constants</highlight></codeline>
+<codeline lineno="38"><highlight class="comment"><sp/>*<sp/>=========================================================================<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="40"><highlight class="comment">/**<sp/>@brief<sp/>Maximum<sp/>number<sp/>of<sp/>alerts<sp/>that<sp/>can<sp/>be<sp/>generated<sp/>from<sp/>one<sp/>VitalSigns.<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="41" refid="alerts_8h_1a40c583285d17e2d0ab75aca5669f53d0" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>MAX_ALERTS<sp/><sp/><sp/><sp/>5</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="43"><highlight class="comment">/**<sp/>@brief<sp/>Maximum<sp/>length<sp/>(including<sp/>null<sp/>terminator)<sp/>of<sp/>an<sp/>alert<sp/>message.<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="44" refid="alerts_8h_1af4487b371ca7c67a8e7dd34f209fa870" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ALERT_MSG_LEN<sp/>96</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>=========================================================================</highlight></codeline>
+<codeline lineno="47"><highlight class="comment"><sp/>*<sp/>Alert<sp/>Record<sp/>Structure</highlight></codeline>
+<codeline lineno="48"><highlight class="comment"><sp/>*<sp/>=========================================================================<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="50"><highlight class="comment">/**</highlight></codeline>
+<codeline lineno="51"><highlight class="comment"><sp/>*<sp/>@brief<sp/>A<sp/>single<sp/>alert<sp/>record<sp/>describing<sp/>one<sp/>out-of-range<sp/>vital<sp/>sign.</highlight></codeline>
+<codeline lineno="52"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="53"><highlight class="comment"><sp/>*<sp/>@details<sp/>Each<sp/>Alert<sp/>corresponds<sp/>to<sp/>exactly<sp/>one<sp/>parameter<sp/>that<sp/>deviated</highlight></codeline>
+<codeline lineno="54"><highlight class="comment"><sp/>*<sp/>from<sp/>its<sp/>normal<sp/>range.<sp/>Fields<sp/>are<sp/>populated<sp/>by<sp/>generate_alerts().</highlight></codeline>
+<codeline lineno="55"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="56" refid="struct_alert" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="57" refid="struct_alert_1af56c1ce36b2939c0bb172344e1340346" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324" kindref="member">AlertLevel</ref><sp/><ref refid="struct_alert_1af56c1ce36b2939c0bb172344e1340346" kindref="member">level</ref>;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/**&lt;<sp/>Severity:<sp/>ALERT_WARNING<sp/>or<sp/>ALERT_CRITICAL.<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="58" refid="struct_alert_1a0e0b585cee2b4029fe0585688d030614" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="struct_alert_1a0e0b585cee2b4029fe0585688d030614" kindref="member">parameter</ref>[32];<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/**&lt;<sp/>Name<sp/>of<sp/>the<sp/>affected<sp/>parameter,<sp/>e.g.</highlight></codeline>
+<codeline lineno="59"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;Heart<sp/>Rate&quot;,<sp/>&quot;SpO2&quot;.<sp/>Null-terminated.<sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="60" refid="struct_alert_1a6008a21e423d540d643a21ae45ebd36e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="struct_alert_1a6008a21e423d540d643a21ae45ebd36e" kindref="member">message</ref>[<ref refid="alerts_8h_1af4487b371ca7c67a8e7dd34f209fa870" kindref="member">ALERT_MSG_LEN</ref>];</highlight><highlight class="comment">/**&lt;<sp/>Human-readable<sp/>description<sp/>including<sp/>the</highlight></codeline>
+<codeline lineno="61"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>measured<sp/>value<sp/>and<sp/>normal<sp/>range.</highlight></codeline>
+<codeline lineno="62"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Null-terminated.<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="63"><highlight class="normal">}<sp/><ref refid="struct_alert" kindref="compound">Alert</ref>;</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"></highlight></codeline>
+<codeline lineno="65"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>=========================================================================</highlight></codeline>
+<codeline lineno="66"><highlight class="comment"><sp/>*<sp/>Alert<sp/>Generation</highlight></codeline>
+<codeline lineno="67"><highlight class="comment"><sp/>*<sp/>=========================================================================<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="68"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="69"><highlight class="comment">/**</highlight></codeline>
+<codeline lineno="70"><highlight class="comment"><sp/>*<sp/>@brief<sp/>Generate<sp/>alert<sp/>records<sp/>for<sp/>every<sp/>vital<sp/>sign<sp/>parameter<sp/>outside</highlight></codeline>
+<codeline lineno="71"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>its<sp/>normal<sp/>clinical<sp/>range.</highlight></codeline>
+<codeline lineno="72"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="73"><highlight class="comment"><sp/>*<sp/>@details</highlight></codeline>
+<codeline lineno="74"><highlight class="comment"><sp/>*<sp/>Iterates<sp/>over<sp/>all<sp/>four<sp/>vital<sp/>sign<sp/>parameters<sp/>in<sp/>this<sp/>fixed<sp/>order:</highlight></codeline>
+<codeline lineno="75"><highlight class="comment"><sp/>*<sp/>-#<sp/>Heart<sp/>rate</highlight></codeline>
+<codeline lineno="76"><highlight class="comment"><sp/>*<sp/>-#<sp/>Blood<sp/>pressure<sp/>(systolic<sp/>/<sp/>diastolic)</highlight></codeline>
+<codeline lineno="77"><highlight class="comment"><sp/>*<sp/>-#<sp/>Temperature</highlight></codeline>
+<codeline lineno="78"><highlight class="comment"><sp/>*<sp/>-#<sp/>SpO2</highlight></codeline>
+<codeline lineno="79"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="80"><highlight class="comment"><sp/>*<sp/>For<sp/>each<sp/>parameter<sp/>that<sp/>is<sp/>not<sp/>ALERT_NORMAL,<sp/>one<sp/>Alert<sp/>entry<sp/>is<sp/>written</highlight></codeline>
+<codeline lineno="81"><highlight class="comment"><sp/>*<sp/>to<sp/>@p<sp/>out.<sp/>Writing<sp/>stops<sp/>when<sp/>either<sp/>all<sp/>parameters<sp/>have<sp/>been<sp/>checked<sp/>or</highlight></codeline>
+<codeline lineno="82"><highlight class="comment"><sp/>*<sp/>@p<sp/>max_out<sp/>entries<sp/>have<sp/>been<sp/>filled<sp/>—<sp/>whichever<sp/>comes<sp/>first.</highlight></codeline>
+<codeline lineno="83"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="84"><highlight class="comment"><sp/>*<sp/>**Memory<sp/>safety:**<sp/>the<sp/>function<sp/>never<sp/>writes<sp/>beyond<sp/>`out[max_out<sp/>-<sp/>1]`.</highlight></codeline>
+<codeline lineno="85"><highlight class="comment"><sp/>*<sp/>Passing<sp/>`max_out<sp/>=<sp/>0`<sp/>is<sp/>valid<sp/>and<sp/>writes<sp/>nothing.</highlight></codeline>
+<codeline lineno="86"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="87"><highlight class="comment"><sp/>*<sp/>@param[in]<sp/><sp/>vitals<sp/><sp/><sp/>Pointer<sp/>to<sp/>a<sp/>fully<sp/>populated<sp/>VitalSigns<sp/>structure.</highlight></codeline>
+<codeline lineno="88"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Must<sp/>not<sp/>be<sp/>NULL.</highlight></codeline>
+<codeline lineno="89"><highlight class="comment"><sp/>*<sp/>@param[out]<sp/>out<sp/><sp/><sp/><sp/><sp/><sp/>Caller-allocated<sp/>array<sp/>to<sp/>receive<sp/>Alert<sp/>records.</highlight></codeline>
+<codeline lineno="90"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Must<sp/>hold<sp/>at<sp/>least<sp/>@p<sp/>max_out<sp/>elements.</highlight></codeline>
+<codeline lineno="91"><highlight class="comment"><sp/>*<sp/>@param[in]<sp/><sp/>max_out<sp/><sp/>Maximum<sp/>number<sp/>of<sp/>Alert<sp/>entries<sp/>to<sp/>write.</highlight></codeline>
+<codeline lineno="92"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="93"><highlight class="comment"><sp/>*<sp/>@return<sp/>Number<sp/>of<sp/>Alert<sp/>records<sp/>written<sp/>to<sp/>@p<sp/>out<sp/>(0<sp/>if<sp/>all<sp/>parameters</highlight></codeline>
+<codeline lineno="94"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>are<sp/>normal,<sp/>or<sp/>if<sp/>max_out<sp/>==<sp/>0).</highlight></codeline>
+<codeline lineno="95"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="96"><highlight class="comment"><sp/>*<sp/>@pre<sp/><sp/>vitals<sp/>!=<sp/>NULL</highlight></codeline>
+<codeline lineno="97"><highlight class="comment"><sp/>*<sp/>@pre<sp/><sp/>out<sp/>!=<sp/>NULL<sp/>||<sp/>max_out<sp/>==<sp/>0</highlight></codeline>
+<codeline lineno="98"><highlight class="comment"><sp/>*<sp/>@post<sp/>Return<sp/>value<sp/>&lt;=<sp/>max_out</highlight></codeline>
+<codeline lineno="99"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="100"><highlight class="comment"><sp/>*<sp/>@par<sp/>Requirements</highlight></codeline>
+<codeline lineno="101"><highlight class="comment"><sp/>*<sp/>SWR-ALT-001,<sp/>SWR-ALT-002,<sp/>SWR-ALT-003,<sp/>SWR-ALT-004</highlight></codeline>
+<codeline lineno="102"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="103"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="alerts_8h_1a98b6140a4d21520d639bc81d1f7c08b7" kindref="member">generate_alerts</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="struct_vital_signs" kindref="compound">VitalSigns</ref><sp/>*vitals,<sp/><ref refid="struct_alert" kindref="compound">Alert</ref><sp/>*out,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>max_out);</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"></highlight></codeline>
+<codeline lineno="105"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight><highlight class="comment">/*<sp/>ALERTS_H<sp/>*/</highlight><highlight class="preprocessor"></highlight></codeline>
+    </programlisting>
+    <location file="include/alerts.h"/>
+  </compounddef>
+</doxygen>

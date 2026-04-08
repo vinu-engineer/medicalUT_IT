@@ -1,0 +1,15 @@
+<map id="patient_current_status" name="patient_current_status">
+<area shape="rect" id="Node000001" title="Return the overall alert status derived from the latest reading." alt="" coords="5,107,156,133"/>
+<area shape="rect" id="Node000002" href="$vitals_8c.html#af7201b2a5a70f76ab81ade218a863830" title="Return the highest alert level across all four vital parameters." alt="" coords="215,81,340,108"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="155,108,202,104,197,106,157,113"/>
+<area shape="rect" id="Node000007" href="$patient_8c.html#aaf2d461ddd1efafe4887647d0c8688d7" title="Return a pointer to the most recent reading, or NULL if none exist." alt="" coords="204,132,352,159"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="156,127,191,133,186,134,156,132"/>
+<area shape="rect" id="Node000003" href="$vitals_8c.html#a3c853e30a899042babf9fdd2bd2cbfc1" title="Classify a blood pressure reading." alt="" coords="400,5,551,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="310,78,399,42,415,39,420,37,401,46,312,83"/>
+<area shape="rect" id="Node000004" href="$vitals_8c.html#a7604eb6b23010f139f6f960b184a3b28" title="Classify a heart rate reading." alt="" coords="415,56,536,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="340,84,403,78,398,80,341,89"/>
+<area shape="rect" id="Node000005" href="$vitals_8c.html#ac0bc076e63894a96df90f2eab73c88fe" title="Classify an SpO2 reading." alt="" coords="430,107,521,133"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="341,100,417,112,412,113,341,105"/>
+<area shape="rect" id="Node000006" href="$vitals_8c.html#aef7f6fa183fbc5412c13ea63bd2b62ce" title="Classify a temperature reading." alt="" coords="410,157,542,184"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="323,106,353,118,401,143,418,152,413,151,399,148,351,122,322,111"/>
+</map>

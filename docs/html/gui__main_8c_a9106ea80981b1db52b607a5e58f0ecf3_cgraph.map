@@ -1,0 +1,42 @@
+<map id="do_scenario" name="do_scenario">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,220,97,247"/>
+<area shape="rect" id="Node000002" href="$gui__main_8c.html#a6bed6b36812029c7bc2eb263a12e5c98" title="Admit a patient from the identity fields. @req SWR&#45;GUI&#45;004." alt="" coords="176,132,250,159"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="76,217,174,164,173,169,79,222"/>
+<area shape="rect" id="Node000007" href="$gui__main_8c.html#a8faad4cd27c161432ac3388959b1a766" title="Refresh all dynamic dashboard content after any data change. @req SWR&#45;GUI&#45;003 @req SWR&#45;GUI&#45;004." alt="" coords="330,208,457,235"/>
+<area shape="poly" id="edge23_Node000001_Node000007" title=" " alt="" coords="97,229,315,222,314,227,97,234"/>
+<area shape="rect" id="Node000016" href="$patient_8c.html#a0e22c10046f3778c1f194cc6377d7984" title="Append a vital signs reading, enforcing the MAX_READINGS cap." alt="" coords="145,245,282,272"/>
+<area shape="poly" id="edge21_Node000001_Node000016" title=" " alt="" coords="97,238,132,244,127,247,98,243"/>
+<area shape="rect" id="Node000017" href="$gui__main_8c.html#aea86431d3096bc14f4f06eb7906f8278" title=" " alt="" coords="183,296,244,323"/>
+<area shape="poly" id="edge22_Node000001_Node000017" title=" " alt="" coords="76,245,146,282,171,294,166,294,144,286,75,250"/>
+<area shape="rect" id="Node000003" href="$gui__main_8c.html#adfa90e96e8fab8b5af641dd49e420791" title=" " alt="" coords="549,56,610,83"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="251,149,346,156,402,153,456,143,497,122,544,93,549,91,500,127,458,148,402,159,346,161,251,154"/>
+<area shape="rect" id="Node000004" href="$gui__main_8c.html#ac1006f93610e33d2d6f27dd2b1fb95a8" title=" " alt="" coords="342,5,445,32"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="226,130,269,87,329,42,341,37,337,41,331,46,272,91,229,134"/>
+<area shape="rect" id="Node000005" href="$gui__main_8c.html#a4f193d8e3ae8fd0a97d129b3437d8e86" title=" " alt="" coords="341,56,446,83"/>
+<area shape="poly" id="edge5_Node000002_Node000005" title=" " alt="" coords="245,129,329,92,346,88,342,90,331,97,247,134"/>
+<area shape="rect" id="Node000006" href="$patient_8c.html#a8fa76aa96b383df3556d391e64953536" title="Initialise a PatientRecord, zeroing all fields before populating." alt="" coords="352,107,436,133"/>
+<area shape="poly" id="edge7_Node000002_Node000006" title=" " alt="" coords="250,138,339,127,334,129,252,143"/>
+<area shape="poly" id="edge8_Node000002_Node000007" title=" " alt="" coords="248,157,349,201,343,202,247,162"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="445,30,536,56,531,58,445,35"/>
+<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="446,67,536,69,531,70,448,72"/>
+<area shape="rect" id="Node000008" href="$vitals_8c.html#a20a209843ea1eeff8484a7998d492615" title="Convert an AlertLevel enum to a display string." alt="" coords="528,284,631,311"/>
+<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="424,233,506,270,524,279,519,278,504,274,423,238"/>
+<area shape="rect" id="Node000009" href="$alerts_8c.html#a98b6140a4d21520d639bc81d1f7c08b7" title="Generate structured alert records for out&#45;of&#45;range vital signs." alt="" coords="524,183,635,209"/>
+<area shape="poly" id="edge10_Node000007_Node000009" title=" " alt="" coords="457,210,511,205,506,206,458,215"/>
+<area shape="rect" id="Node000014" href="$vitals_8c.html#af7201b2a5a70f76ab81ade218a863830" title="Return the highest alert level across all four vital parameters." alt="" coords="517,132,642,159"/>
+<area shape="poly" id="edge15_Node000007_Node000014" title=" " alt="" coords="422,205,504,168,519,165,524,164,506,173,424,210"/>
+<area shape="rect" id="Node000015" href="$patient_8c.html#aaf2d461ddd1efafe4887647d0c8688d7" title="Return a pointer to the most recent reading, or NULL if none exist." alt="" coords="505,233,654,260"/>
+<area shape="poly" id="edge20_Node000007_Node000015" title=" " alt="" coords="457,227,493,234,488,235,458,233"/>
+<area shape="rect" id="Node000010" href="$vitals_8c.html#a3c853e30a899042babf9fdd2bd2cbfc1" title="Classify a blood pressure reading." alt="" coords="702,183,853,209"/>
+<area shape="poly" id="edge11_Node000009_Node000010" title=" " alt="" coords="635,193,689,196,683,196,635,199"/>
+<area shape="rect" id="Node000011" href="$vitals_8c.html#a7604eb6b23010f139f6f960b184a3b28" title="Classify a heart rate reading." alt="" coords="717,233,838,260"/>
+<area shape="poly" id="edge12_Node000009_Node000011" title=" " alt="" coords="635,207,710,229,705,229,634,213"/>
+<area shape="rect" id="Node000012" href="$vitals_8c.html#ac0bc076e63894a96df90f2eab73c88fe" title="Classify an SpO2 reading." alt="" coords="732,81,823,108"/>
+<area shape="poly" id="edge13_Node000009_Node000012" title=" " alt="" coords="630,180,652,168,667,156,675,144,685,131,700,118,715,113,720,111,703,122,689,134,680,147,670,160,655,173,632,185"/>
+<area shape="rect" id="Node000013" href="$vitals_8c.html#aef7f6fa183fbc5412c13ea63bd2b62ce" title="Classify a temperature reading." alt="" coords="711,132,844,159"/>
+<area shape="poly" id="edge14_Node000009_Node000013" title=" " alt="" coords="634,179,705,164,710,162,635,185"/>
+<area shape="poly" id="edge16_Node000014_Node000010" title=" " alt="" coords="635,157,710,178,705,178,635,162"/>
+<area shape="poly" id="edge17_Node000014_Node000011" title=" " alt="" coords="632,157,655,168,670,182,680,194,689,207,703,219,713,227,708,226,700,224,685,211,675,198,667,185,652,173,631,162"/>
+<area shape="poly" id="edge18_Node000014_Node000012" title=" " alt="" coords="634,129,719,109,714,111,635,134"/>
+<area shape="poly" id="edge19_Node000014_Node000013" title=" " alt="" coords="642,143,698,145,693,146,643,148"/>
+</map>

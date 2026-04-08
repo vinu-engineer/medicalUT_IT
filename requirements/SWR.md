@@ -112,6 +112,34 @@ unrecognised value, it shall return `"UNKNOWN"`.
 
 ---
 
+### SWR-VIT-008 — Respiration Rate Check
+**Requirement:** `check_respiration_rate(int rr_bpm)` shall return:
+- `ALERT_CRITICAL` if `rr_bpm ≤ 8` (apnoea/severe bradypnoea) or `rr_bpm ≥ 25` (severe tachypnoea)
+- `ALERT_WARNING`  if `9 ≤ rr_bpm ≤ 11` (bradypnoea) or `21 ≤ rr_bpm ≤ 24` (tachypnoea)
+- `ALERT_NORMAL`   if `12 ≤ rr_bpm ≤ 20` (normal adult respiratory rate)
+
+The `VitalSigns.respiration_rate` field shall be the sixth member of the struct.
+A value of `0` shall be treated as "not measured" by `overall_alert_level()`:
+the RR check shall be skipped and `ALERT_NORMAL` assumed, so that absence of an
+RR sensor does not generate spurious alarms.
+
+The dashboard shall display a dedicated **RESP RATE** tile (6th tile, second row,
+middle column in the 3×2 grid). The manual entry panel shall include an
+**RR (br/min)** input field. The simulation sequence shall include clinically
+realistic RR values (12–20 in the normal phase, 21–24 in deterioration, 26–28
+in the critical phase, recovering to 14–19).
+
+**Threshold source:** Royal College of Physicians NEWS2 / NICE guidelines.
+**Traces to:** SYS-003 (IEC 80601-2-49 multifunction patient monitor requirements)
+**Implemented in:** `src/vitals.c` — `check_respiration_rate()`, `overall_alert_level()`;
+`src/sim_vitals.c` — respiration_rate in all 20 SIM_SEQUENCE entries;
+`src/gui_main.c` — RESP RATE tile, IDC_VIT_RR field;
+`src/alerts.c` — RR alert generation
+**Verified by:** `tests/unit/test_vitals.cpp` — `RespRate.*` (12 tests),
+`OverallAlert.SWR_VIT_008_*` (3 tests)
+
+---
+
 ## Module UNIT-ALT — Alert Generation (`alerts.c`)
 
 ### SWR-ALT-001 — One Alert Per Abnormal Parameter

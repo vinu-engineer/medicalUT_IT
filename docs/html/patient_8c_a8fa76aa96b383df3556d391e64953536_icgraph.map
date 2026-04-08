@@ -1,0 +1,23 @@
+<map id="patient_init" name="patient_init">
+<area shape="rect" id="Node000001" title="Initialise a PatientRecord, zeroing all fields before populating." alt="" coords="623,76,707,102"/>
+<area shape="rect" id="Node000002" href="$gui__main_8c.html#a50c9496063704973573429586a90b27d" title=" " alt="" coords="126,25,207,52"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="630,66,604,53,574,41,487,17,417,9,346,11,255,21,208,30,206,25,255,16,345,6,417,3,488,12,576,36,606,49,635,67"/>
+<area shape="rect" id="Node000004" href="$gui__main_8c.html#a6bed6b36812029c7bc2eb263a12e5c98" title="Admit a patient from the identity fields. @req SWR&#45;GUI&#45;004." alt="" coords="458,50,532,77"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="604,81,533,72,533,66,610,80"/>
+<area shape="rect" id="Node000007" href="$main_8c.html#a1a904050ef641d46ba74b91e8ff5b7f9" title="Run the monitoring session for Patient 1 (deterioration scenario)." alt="" coords="440,101,550,128"/>
+<area shape="poly" id="edge9_Node000001_Node000007" title=" " alt="" coords="610,97,551,109,550,103,605,98"/>
+<area shape="rect" id="Node000009" href="$main_8c.html#a418db4bf280a08fda4493a816c841643" title="Run the monitoring session for Patient 2 (bradycardia scenario)." alt="" coords="415,152,575,178"/>
+<area shape="poly" id="edge11_Node000001_Node000009" title=" " alt="" coords="632,110,576,142,545,154,544,148,574,137,627,111"/>
+<area shape="rect" id="Node000003" href="$gui__main_8c.html#aab234127c99873cb463e482155cb679f" title=" " alt="" coords="5,25,78,52"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="108,40,79,41,77,36,112,37"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="440,52,367,41,282,37,208,39,207,33,282,32,368,36,446,51"/>
+<area shape="rect" id="Node000005" href="$gui__main_8c.html#a9d7273263f3a31bf701590beb4c5b1d1" title="Record a new vital signs reading from the vitals entry fields. @req SWR&#45;GUI&#45;004." alt="" coords="255,50,367,77"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="440,64,368,66,368,61,445,63"/>
+<area shape="rect" id="Node000006" href="$gui__main_8c.html#a9106ea80981b1db52b607a5e58f0ecf3" title=" " alt="" coords="266,101,357,128"/>
+<area shape="poly" id="edge7_Node000004_Node000006" title=" " alt="" coords="445,77,358,104,356,99,440,78"/>
+<area shape="poly" id="edge6_Node000005_Node000002" title=" " alt="" coords="237,52,208,48,207,43,242,50"/>
+<area shape="poly" id="edge8_Node000006_Node000002" title=" " alt="" coords="262,94,254,91,190,55,191,50,256,87,267,94"/>
+<area shape="rect" id="Node000008" href="$main_8c.html#a840291bc02cba5474a4cb46a9b9566fe" title="Application entry point." alt="" coords="286,152,336,178"/>
+<area shape="poly" id="edge10_Node000007_Node000008" title=" " alt="" coords="432,132,337,161,336,156,427,133"/>
+<area shape="poly" id="edge12_Node000009_Node000008" title=" " alt="" coords="397,165,336,168,336,162,402,165"/>
+</map>

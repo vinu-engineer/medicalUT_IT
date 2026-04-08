@@ -12,10 +12,11 @@
  * - Blood pressure: JNC-8 / ESC 2018 guidelines
  * - Temperature: WHO clinical reference ranges
  * - SpO2: British Thoracic Society supplemental oxygen guidelines
+ * - Respiration rate: Royal College of Physicians NEWS2 / NICE guidelines
  * - BMI: WHO classification 2004
  *
- * @version 1.0.0
- * @date    2026-04-06
+ * @version 1.1.0
+ * @date    2026-04-08
  * @author  vinu-engineer
  */
 
@@ -24,7 +25,7 @@
 /**
  * @brief Classify a heart rate reading.
  * @details Implements SWR-VIT-001 threshold logic.
- *          Critical: bpm < 40 (severe bradycardia) or bpm > 150 (severe tachycardia).
+ *          Critical: bpm <= 40 (severe bradycardia) or bpm > 150 (severe tachycardia).
  *          Warning:  bpm < 60 or bpm > 100.
  *          Normal:   60 <= bpm <= 100.
  */
@@ -80,14 +81,39 @@ AlertLevel check_spo2(int spo2)
 }
 
 /**
- * @brief Return the highest alert level across all four vital parameters.
- * @details Implements SWR-VIT-005. Iterates all four checks and tracks the
+ * @brief Classify a respiration rate reading.
+ * @details Implements SWR-VIT-008 threshold logic.
+ *          Critical: rr_bpm <= 8 (apnoea / severe bradypnoea)
+ *                    or rr_bpm >= 25 (severe tachypnoea).
+ *          Warning:  rr_bpm 9–11 or 21–24 breaths/min.
+ *          Normal:   rr_bpm 12–20 breaths/min (inclusive).
+ *
+ *          NOTE: A caller passing rr_bpm == 0 receives ALERT_CRITICAL
+ *          from this function (0 satisfies the <= 8 condition).
+ *          overall_alert_level() guards against this by skipping the
+ *          check when vitals->respiration_rate == 0.
+ */
+AlertLevel check_respiration_rate(int rr_bpm)
+{
+    if (rr_bpm <= 8  || rr_bpm >= 25) return ALERT_CRITICAL;
+    if (rr_bpm <= 11 || rr_bpm >= 21) return ALERT_WARNING;
+    return ALERT_NORMAL;
+}
+
+/**
+ * @brief Return the highest alert level across all five vital parameters.
+ * @details Implements SWR-VIT-005. Evaluates all five checks and tracks the
  *          maximum. Uses a fixed-size array to avoid branch explosion and
  *          keep cyclomatic complexity low for IEC 62304 review.
+ *
+ *          Respiration rate special case: if vitals->respiration_rate == 0
+ *          the parameter is considered "not measured" and is excluded from
+ *          the aggregate so that a missing RR sensor does not raise a
+ *          spurious alarm.
  */
 AlertLevel overall_alert_level(const VitalSigns *vitals)
 {
-    AlertLevel levels[4];
+    AlertLevel levels[5];
     AlertLevel max = ALERT_NORMAL;
     int i;
 
@@ -96,7 +122,13 @@ AlertLevel overall_alert_level(const VitalSigns *vitals)
     levels[2] = check_temperature(vitals->temperature);
     levels[3] = check_spo2(vitals->spo2);
 
-    for (i = 0; i < 4; i++) {
+    /* respiration_rate == 0 means the parameter was not measured this cycle;
+     * treat it as ALERT_NORMAL rather than raising a spurious critical alert. */
+    levels[4] = (vitals->respiration_rate == 0)
+                    ? ALERT_NORMAL
+                    : check_respiration_rate(vitals->respiration_rate);
+
+    for (i = 0; i < 5; i++) {
         if (levels[i] > max) max = levels[i];
     }
     return max;

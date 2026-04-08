@@ -13,21 +13,23 @@ extern "C" {
 // Helper fixtures
 static VitalSigns make_normal_vitals() {
     VitalSigns v;
-    v.heart_rate   = 72;
-    v.systolic_bp  = 120;
-    v.diastolic_bp = 80;
-    v.temperature  = 36.6f;
-    v.spo2         = 98;
+    v.heart_rate      = 72;
+    v.systolic_bp     = 120;
+    v.diastolic_bp    = 80;
+    v.temperature     = 36.6f;
+    v.spo2            = 98;
+    v.respiration_rate = 0; /* 0 = not measured; skipped by overall_alert_level() */
     return v;
 }
 
 static VitalSigns make_critical_vitals() {
     VitalSigns v;
-    v.heart_rate   = 35;
-    v.systolic_bp  = 60;
-    v.diastolic_bp = 35;
-    v.temperature  = 40.0f;
-    v.spo2         = 85;
+    v.heart_rate      = 35;
+    v.systolic_bp     = 60;
+    v.diastolic_bp    = 35;
+    v.temperature     = 40.0f;
+    v.spo2            = 85;
+    v.respiration_rate = 0; /* 0 = not measured */
     return v;
 }
 

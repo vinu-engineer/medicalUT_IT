@@ -1,0 +1,8 @@
+<map id="include/patient.h" name="include/patient.h">
+<area shape="rect" id="Node000001" title="Patient record management — demographic data and vital sign history." alt="" coords="5,5,122,32"/>
+<area shape="rect" id="Node000002" href="$vitals_8h.html" title="Vital signs data types, thresholds, and validation functions." alt="" coords="32,155,95,181"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="62,30,57,80,57,111,61,140,55,139,52,111,52,80,60,35"/>
+<area shape="rect" id="Node000003" href="$alerts_8h.html" title="Alert record generation from a set of vital sign measurements." alt="" coords="66,80,130,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="70,30,88,66,83,66,69,35"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="94,106,78,142,74,139,90,109"/>
+</map>

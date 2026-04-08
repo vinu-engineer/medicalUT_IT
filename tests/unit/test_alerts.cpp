@@ -13,11 +13,12 @@ extern "C" {
 // Helper — all-normal vitals
 static VitalSigns normal_vitals() {
     VitalSigns v;
-    v.heart_rate   = 80;
-    v.systolic_bp  = 120;
-    v.diastolic_bp = 80;
-    v.temperature  = 36.6f;
-    v.spo2         = 98;
+    v.heart_rate       = 80;
+    v.systolic_bp      = 120;
+    v.diastolic_bp     = 80;
+    v.temperature      = 36.6f;
+    v.spo2             = 98;
+    v.respiration_rate = 0; /* 0 = not measured; skipped by generate_alerts() */
     return v;
 }
 

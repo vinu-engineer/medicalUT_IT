@@ -1,0 +1,433 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="patient_8c" kind="file" language="C++">
+    <compoundname>patient.c</compoundname>
+    <includes refid="patient_8h" local="yes">patient.h</includes>
+    <includes local="no">stdio.h</includes>
+    <includes local="no">string.h</includes>
+    <incdepgraph>
+      <node id="4">
+        <label>alerts.h</label>
+        <link refid="alerts_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>patient.h</label>
+        <link refid="patient_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>vitals.h</label>
+        <link refid="vitals_8h"/>
+      </node>
+      <node id="1">
+        <label>src/patient.c</label>
+        <link refid="patient_8c"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>stdio.h</label>
+      </node>
+      <node id="6">
+        <label>string.h</label>
+      </node>
+    </incdepgraph>
+    <sectiondef kind="define">
+      <memberdef kind="define" id="patient_8c_1af08ec37a8c99d747fb60fa15bc28678b" prot="public" static="no">
+        <name>_CRT_SECURE_NO_WARNINGS</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/patient.c" line="24" column="9" bodyfile="src/patient.c" bodystart="24" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="patient_8c_1a0e22c10046f3778c1f194cc6377d7984" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int patient_add_reading</definition>
+        <argsstring>(PatientRecord *rec, const VitalSigns *v)</argsstring>
+        <name>patient_add_reading</name>
+        <param>
+          <type><ref refid="struct_patient_record" kindref="compound">PatientRecord</ref> *</type>
+          <declname>rec</declname>
+        </param>
+        <param>
+          <type>const <ref refid="struct_vital_signs" kindref="compound">VitalSigns</ref> *</type>
+          <declname>v</declname>
+        </param>
+        <briefdescription>
+<para>Append a vital signs reading, enforcing the MAX_READINGS cap. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Append a vital sign reading to the patient&apos;s history.</para>
+<para><ref refid="struct_vital_signs" kindref="compound">VitalSigns</ref> is copied by value (struct assignment), so the caller retains ownership of the original and may reuse the variable. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/patient.c" line="56" column="5" bodyfile="src/patient.c" bodystart="56" bodyend="61"/>
+        <references refid="patient_8h_1a982953c568e76424021484a001e5c73b" compoundref="patient_8h" startline="47">MAX_READINGS</references>
+        <references refid="struct_patient_record_1a7afb75ac040d473589a9e13a5c20529d" compoundref="patient_8h" startline="83">PatientRecord::reading_count</references>
+        <references refid="struct_patient_record_1adccff17faadacdb6cce641680535a2d2" compoundref="patient_8h" startline="82">PatientRecord::readings</references>
+        <referencedby refid="gui__main_8c_1a50c9496063704973573429586a90b27d" compoundref="gui__main_8c" startline="726" endline="847">dash_proc</referencedby>
+        <referencedby refid="gui__main_8c_1a9d7273263f3a31bf701590beb4c5b1d1" compoundref="gui__main_8c" startline="642" endline="660">do_add_reading</referencedby>
+        <referencedby refid="gui__main_8c_1a9106ea80981b1db52b607a5e58f0ecf3" compoundref="gui__main_8c" startline="681" endline="721">do_scenario</referencedby>
+        <referencedby refid="main_8c_1a1a904050ef641d46ba74b91e8ff5b7f9" compoundref="main_8c" startline="73" endline="105">monitor_patient</referencedby>
+        <referencedby refid="main_8c_1a418db4bf280a08fda4493a816c841643" compoundref="main_8c" startline="114" endline="141">monitor_second_patient</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="patient_8c_1a7efb2602c9a2566fee89ff6d6af42bcf" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324" kindref="member">AlertLevel</ref></type>
+        <definition>AlertLevel patient_current_status</definition>
+        <argsstring>(const PatientRecord *rec)</argsstring>
+        <name>patient_current_status</name>
+        <param>
+          <type>const <ref refid="struct_patient_record" kindref="compound">PatientRecord</ref> *</type>
+          <declname>rec</declname>
+        </param>
+        <briefdescription>
+<para>Return the overall status from the latest reading. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Return the overall alert status derived from the latest reading.</para>
+<para>Delegates entirely to <ref refid="vitals_8c_1af7201b2a5a70f76ab81ade218a863830" kindref="member">overall_alert_level()</ref> to keep classification logic centralised in <ref refid="vitals_8c" kindref="compound">vitals.c</ref> — consistent with single-responsibility. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/patient.c" line="78" column="12" bodyfile="src/patient.c" bodystart="78" bodyend="83"/>
+        <references refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324a719a508e583ddd6e5cc6d863fab2c6c8" compoundref="vitals_8h" startline="47">ALERT_NORMAL</references>
+        <references refid="vitals_8c_1af7201b2a5a70f76ab81ade218a863830" compoundref="vitals_8c" startline="88" endline="103">overall_alert_level</references>
+        <references refid="patient_8c_1aaf2d461ddd1efafe4887647d0c8688d7" compoundref="patient_8c" startline="67" endline="71">patient_latest_reading</references>
+        <referencedby refid="gui__main_8c_1a71c5868a8a8bcd102dfebf5a8cd8e55a" compoundref="gui__main_8c" startline="375" endline="404">paint_status_banner</referencedby>
+        <referencedby refid="patient_8c_1a19d76f7281d5f5ad5408c1ff4dc2ee11" compoundref="patient_8c" startline="98" endline="145">patient_print_summary</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="patient_8c_1a8fa76aa96b383df3556d391e64953536" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void patient_init</definition>
+        <argsstring>(PatientRecord *rec, int id, const char *name, int age, float weight_kg, float height_m)</argsstring>
+        <name>patient_init</name>
+        <param>
+          <type><ref refid="struct_patient_record" kindref="compound">PatientRecord</ref> *</type>
+          <declname>rec</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>id</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>name</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>age</declname>
+        </param>
+        <param>
+          <type>float</type>
+          <declname>weight_kg</declname>
+        </param>
+        <param>
+          <type>float</type>
+          <declname>height_m</declname>
+        </param>
+        <briefdescription>
+<para>Initialise a <ref refid="struct_patient_record" kindref="compound">PatientRecord</ref>, zeroing all fields before populating. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Initialise a <ref refid="struct_patient_record" kindref="compound">PatientRecord</ref> with demographic data.</para>
+<para>memset(0) ensures that any unused readings array slots contain all-zero <ref refid="struct_vital_signs" kindref="compound">VitalSigns</ref>, which classify as CRITICAL across all parameters — a deliberately safe default that prevents silent display of uninitialised data. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/patient.c" line="38" column="6" bodyfile="src/patient.c" bodystart="38" bodyend="49"/>
+        <references refid="struct_patient_info_1adfb737e9dc8cfca072ad572e3796530e" compoundref="patient_8h" startline="66">PatientInfo::age</references>
+        <references refid="struct_patient_info_1a3660352e74d08d02b4039ce9ee4413dd" compoundref="patient_8h" startline="68">PatientInfo::height_m</references>
+        <references refid="struct_patient_info_1a1f5ee862f6bc0244c79ac1088753455b" compoundref="patient_8h" startline="63">PatientInfo::id</references>
+        <references refid="struct_patient_record_1ab7dbbd6e5424bac1e098abb80bfb1471" compoundref="patient_8h" startline="81">PatientRecord::info</references>
+        <references refid="patient_8h_1afd709f201d7643c3909621f620ea648a" compoundref="patient_8h" startline="50">MAX_NAME_LEN</references>
+        <references refid="struct_patient_info_1a3776b66e6a77da15c48178e2fdccb509" compoundref="patient_8h" startline="64">PatientInfo::name</references>
+        <references refid="struct_patient_record_1a7afb75ac040d473589a9e13a5c20529d" compoundref="patient_8h" startline="83">PatientRecord::reading_count</references>
+        <references refid="struct_patient_info_1a611e10017c955370cc2314da85a6b2c2" compoundref="patient_8h" startline="67">PatientInfo::weight_kg</references>
+        <referencedby refid="gui__main_8c_1a50c9496063704973573429586a90b27d" compoundref="gui__main_8c" startline="726" endline="847">dash_proc</referencedby>
+        <referencedby refid="gui__main_8c_1a6bed6b36812029c7bc2eb263a12e5c98" compoundref="gui__main_8c" startline="620" endline="636">do_admit</referencedby>
+        <referencedby refid="main_8c_1a1a904050ef641d46ba74b91e8ff5b7f9" compoundref="main_8c" startline="73" endline="105">monitor_patient</referencedby>
+        <referencedby refid="main_8c_1a418db4bf280a08fda4493a816c841643" compoundref="main_8c" startline="114" endline="141">monitor_second_patient</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="patient_8c_1a8f247ea51062330ba04c15535d530190" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int patient_is_full</definition>
+        <argsstring>(const PatientRecord *rec)</argsstring>
+        <name>patient_is_full</name>
+        <param>
+          <type>const <ref refid="struct_patient_record" kindref="compound">PatientRecord</ref> *</type>
+          <declname>rec</declname>
+        </param>
+        <briefdescription>
+<para>Check if the reading buffer is at capacity. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Check whether the patient record&apos;s reading buffer is full. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/patient.c" line="88" column="5" bodyfile="src/patient.c" bodystart="88" bodyend="91"/>
+        <references refid="patient_8h_1a982953c568e76424021484a001e5c73b" compoundref="patient_8h" startline="47">MAX_READINGS</references>
+        <references refid="struct_patient_record_1a7afb75ac040d473589a9e13a5c20529d" compoundref="patient_8h" startline="83">PatientRecord::reading_count</references>
+        <referencedby refid="gui__main_8c_1a50c9496063704973573429586a90b27d" compoundref="gui__main_8c" startline="726" endline="847">dash_proc</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="patient_8c_1aaf2d461ddd1efafe4887647d0c8688d7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>const <ref refid="struct_vital_signs" kindref="compound">VitalSigns</ref> *</type>
+        <definition>const VitalSigns * patient_latest_reading</definition>
+        <argsstring>(const PatientRecord *rec)</argsstring>
+        <name>patient_latest_reading</name>
+        <param>
+          <type>const <ref refid="struct_patient_record" kindref="compound">PatientRecord</ref> *</type>
+          <declname>rec</declname>
+        </param>
+        <briefdescription>
+<para>Return a pointer to the most recent reading, or NULL if none exist. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Return a pointer to the most recently added vital sign reading.</para>
+<para>Index arithmetic: the last valid slot is readings[reading_count - 1]. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/patient.c" line="67" column="18" bodyfile="src/patient.c" bodystart="67" bodyend="71"/>
+        <references refid="struct_patient_record_1a7afb75ac040d473589a9e13a5c20529d" compoundref="patient_8h" startline="83">PatientRecord::reading_count</references>
+        <references refid="struct_patient_record_1adccff17faadacdb6cce641680535a2d2" compoundref="patient_8h" startline="82">PatientRecord::readings</references>
+        <referencedby refid="gui__main_8c_1a809c12bdd714ab44c54f45da4d3b2dc7" compoundref="gui__main_8c" startline="325" endline="369">paint_tiles</referencedby>
+        <referencedby refid="patient_8c_1a7efb2602c9a2566fee89ff6d6af42bcf" compoundref="patient_8c" startline="78" endline="83">patient_current_status</referencedby>
+        <referencedby refid="patient_8c_1a19d76f7281d5f5ad5408c1ff4dc2ee11" compoundref="patient_8c" startline="98" endline="145">patient_print_summary</referencedby>
+        <referencedby refid="gui__main_8c_1a8faad4cd27c161432ac3388959b1a766" compoundref="gui__main_8c" startline="508" endline="560">update_dashboard</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="patient_8c_1a19d76f7281d5f5ad5408c1ff4dc2ee11" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void patient_print_summary</definition>
+        <argsstring>(const PatientRecord *rec)</argsstring>
+        <name>patient_print_summary</name>
+        <param>
+          <type>const <ref refid="struct_patient_record" kindref="compound">PatientRecord</ref> *</type>
+          <declname>rec</declname>
+        </param>
+        <briefdescription>
+<para>Print a formatted patient summary including vitals and active alerts. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Print a formatted patient summary to stdout.</para>
+<para>Generates alerts inline for the latest reading using <ref refid="alerts_8c_1a98b6140a4d21520d639bc81d1f7c08b7" kindref="member">generate_alerts()</ref>. Output is formatted for an 80-column terminal with box-drawing borders. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/patient.c" line="98" column="6" bodyfile="src/patient.c" bodystart="98" bodyend="145"/>
+        <references refid="struct_patient_info_1adfb737e9dc8cfca072ad572e3796530e" compoundref="patient_8h" startline="66">PatientInfo::age</references>
+        <references refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324a4a380f84419fb8940cfc9bde871a26e7" compoundref="vitals_8h" startline="50">ALERT_CRITICAL</references>
+        <references refid="vitals_8c_1a20a209843ea1eeff8484a7998d492615" compoundref="vitals_8c" startline="135" endline="143">alert_level_str</references>
+        <references refid="vitals_8c_1a7a7981a0a087b3b98763ed48bc789888" compoundref="vitals_8c" startline="121" endline="128">bmi_category</references>
+        <references refid="vitals_8c_1a10dc695991eacf8ffea85c92b9331aec" compoundref="vitals_8c" startline="111" endline="115">calculate_bmi</references>
+        <references refid="vitals_8c_1a3c853e30a899042babf9fdd2bd2cbfc1" compoundref="vitals_8c" startline="45" endline="52">check_blood_pressure</references>
+        <references refid="vitals_8c_1a7604eb6b23010f139f6f960b184a3b28" compoundref="vitals_8c" startline="31" endline="36">check_heart_rate</references>
+        <references refid="vitals_8c_1ac0bc076e63894a96df90f2eab73c88fe" compoundref="vitals_8c" startline="75" endline="80">check_spo2</references>
+        <references refid="vitals_8c_1aef7f6fa183fbc5412c13ea63bd2b62ce" compoundref="vitals_8c" startline="61" endline="66">check_temperature</references>
+        <references refid="struct_vital_signs_1ab81723ab54ad295a71ba56f0ef52318f" compoundref="vitals_8h" startline="68">VitalSigns::diastolic_bp</references>
+        <references refid="alerts_8c_1a98b6140a4d21520d639bc81d1f7c08b7" compoundref="alerts_8c" startline="44" endline="87">generate_alerts</references>
+        <references refid="struct_vital_signs_1ac7162369c92da33cc7a3279c37083f84" compoundref="vitals_8h" startline="66">VitalSigns::heart_rate</references>
+        <references refid="struct_patient_info_1a3660352e74d08d02b4039ce9ee4413dd" compoundref="patient_8h" startline="68">PatientInfo::height_m</references>
+        <references refid="struct_patient_info_1a1f5ee862f6bc0244c79ac1088753455b" compoundref="patient_8h" startline="63">PatientInfo::id</references>
+        <references refid="struct_patient_record_1ab7dbbd6e5424bac1e098abb80bfb1471" compoundref="patient_8h" startline="81">PatientRecord::info</references>
+        <references refid="struct_alert_1af56c1ce36b2939c0bb172344e1340346" compoundref="alerts_8h" startline="57">Alert::level</references>
+        <references refid="alerts_8h_1a40c583285d17e2d0ab75aca5669f53d0" compoundref="alerts_8h" startline="41">MAX_ALERTS</references>
+        <references refid="patient_8h_1a982953c568e76424021484a001e5c73b" compoundref="patient_8h" startline="47">MAX_READINGS</references>
+        <references refid="struct_patient_info_1a3776b66e6a77da15c48178e2fdccb509" compoundref="patient_8h" startline="64">PatientInfo::name</references>
+        <references refid="patient_8c_1a7efb2602c9a2566fee89ff6d6af42bcf" compoundref="patient_8c" startline="78" endline="83">patient_current_status</references>
+        <references refid="patient_8c_1aaf2d461ddd1efafe4887647d0c8688d7" compoundref="patient_8c" startline="67" endline="71">patient_latest_reading</references>
+        <references refid="struct_patient_record_1a7afb75ac040d473589a9e13a5c20529d" compoundref="patient_8h" startline="83">PatientRecord::reading_count</references>
+        <references refid="struct_vital_signs_1a1b524bb13d6c36ec564c7d94a5e953c1" compoundref="vitals_8h" startline="70">VitalSigns::spo2</references>
+        <references refid="struct_vital_signs_1a110b3f24528e0f5769cb82f3a0c07485" compoundref="vitals_8h" startline="67">VitalSigns::systolic_bp</references>
+        <references refid="struct_vital_signs_1af0a43a24a6e26683adde5612cf626365" compoundref="vitals_8h" startline="69">VitalSigns::temperature</references>
+        <references refid="struct_patient_info_1a611e10017c955370cc2314da85a6b2c2" compoundref="patient_8h" startline="67">PatientInfo::weight_kg</references>
+        <referencedby refid="main_8c_1a1a904050ef641d46ba74b91e8ff5b7f9" compoundref="main_8c" startline="73" endline="105">monitor_patient</referencedby>
+        <referencedby refid="main_8c_1a418db4bf280a08fda4493a816c841643" compoundref="main_8c" startline="114" endline="141">monitor_second_patient</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Implementation of patient record management functions. </para>
+    </briefdescription>
+    <detaileddescription>
+<para>Implements all functions declared in <ref refid="patient_8h" kindref="compound">patient.h</ref>. The module uses only static memory (no heap allocation) in compliance with IEC 62304 Class B guidance for embedded medical device software.</para>
+<sect1 id="patient_8c_1autotoc_md2_1s1"><sect2 id="patient_8c_1autotoc_md2_1s2"><sect3 id="patient_8c_1autotoc_md2">
+<title>Memory Safety</title><para><itemizedlist>
+<listitem><para><computeroutput><ref refid="patient_8c_1a8fa76aa96b383df3556d391e64953536" kindref="member">patient_init()</ref></computeroutput> zero-fills the entire record before writing fields, preventing stale data from a previous session.</para>
+</listitem><listitem><para><computeroutput>strncpy</computeroutput> is used with an explicit length limit and explicit null-termination to guard against buffer overrun.</para>
+</listitem><listitem><para><computeroutput><ref refid="patient_8c_1a0e22c10046f3778c1f194cc6377d7984" kindref="member">patient_add_reading()</ref></computeroutput> enforces the MAX_READINGS cap and returns a status code so callers can detect and handle overflow.</para>
+</listitem></itemizedlist>
+</para>
+<para><simplesect kind="version"><para>1.0.0 </para>
+</simplesect>
+<simplesect kind="date"><para>2026-04-06 </para>
+</simplesect>
+<simplesect kind="author"><para>vinu-engineer </para>
+</simplesect>
+</para>
+</sect3></sect2></sect1>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/**</highlight></codeline>
+<codeline lineno="2"><highlight class="comment"><sp/>*<sp/>@file<sp/>patient.c</highlight></codeline>
+<codeline lineno="3"><highlight class="comment"><sp/>*<sp/>@brief<sp/>Implementation<sp/>of<sp/>patient<sp/>record<sp/>management<sp/>functions.</highlight></codeline>
+<codeline lineno="4"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/>*<sp/>@details</highlight></codeline>
+<codeline lineno="6"><highlight class="comment"><sp/>*<sp/>Implements<sp/>all<sp/>functions<sp/>declared<sp/>in<sp/>patient.h.<sp/>The<sp/>module<sp/>uses<sp/>only</highlight></codeline>
+<codeline lineno="7"><highlight class="comment"><sp/>*<sp/>static<sp/>memory<sp/>(no<sp/>heap<sp/>allocation)<sp/>in<sp/>compliance<sp/>with<sp/>IEC<sp/>62304<sp/>Class<sp/>B</highlight></codeline>
+<codeline lineno="8"><highlight class="comment"><sp/>*<sp/>guidance<sp/>for<sp/>embedded<sp/>medical<sp/>device<sp/>software.</highlight></codeline>
+<codeline lineno="9"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="10"><highlight class="comment"><sp/>*<sp/>###<sp/>Memory<sp/>Safety</highlight></codeline>
+<codeline lineno="11"><highlight class="comment"><sp/>*<sp/>-<sp/>`patient_init()`<sp/>zero-fills<sp/>the<sp/>entire<sp/>record<sp/>before<sp/>writing<sp/>fields,</highlight></codeline>
+<codeline lineno="12"><highlight class="comment"><sp/>*<sp/><sp/><sp/>preventing<sp/>stale<sp/>data<sp/>from<sp/>a<sp/>previous<sp/>session.</highlight></codeline>
+<codeline lineno="13"><highlight class="comment"><sp/>*<sp/>-<sp/>`strncpy`<sp/>is<sp/>used<sp/>with<sp/>an<sp/>explicit<sp/>length<sp/>limit<sp/>and<sp/>explicit</highlight></codeline>
+<codeline lineno="14"><highlight class="comment"><sp/>*<sp/><sp/><sp/>null-termination<sp/>to<sp/>guard<sp/>against<sp/>buffer<sp/>overrun.</highlight></codeline>
+<codeline lineno="15"><highlight class="comment"><sp/>*<sp/>-<sp/>`patient_add_reading()`<sp/>enforces<sp/>the<sp/>MAX_READINGS<sp/>cap<sp/>and<sp/>returns<sp/>a</highlight></codeline>
+<codeline lineno="16"><highlight class="comment"><sp/>*<sp/><sp/><sp/>status<sp/>code<sp/>so<sp/>callers<sp/>can<sp/>detect<sp/>and<sp/>handle<sp/>overflow.</highlight></codeline>
+<codeline lineno="17"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="18"><highlight class="comment"><sp/>*<sp/>@version<sp/>1.0.0</highlight></codeline>
+<codeline lineno="19"><highlight class="comment"><sp/>*<sp/>@date<sp/><sp/><sp/><sp/>2026-04-06</highlight></codeline>
+<codeline lineno="20"><highlight class="comment"><sp/>*<sp/>@author<sp/><sp/>vinu-engineer</highlight></codeline>
+<codeline lineno="21"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>_MSC_VER</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24" refid="patient_8c_1af08ec37a8c99d747fb60fa15bc28678b" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>_CRT_SECURE_NO_WARNINGS</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="patient_8h" kindref="compound">patient.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdio.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="31"><highlight class="comment">/**</highlight></codeline>
+<codeline lineno="32"><highlight class="comment"><sp/>*<sp/>@brief<sp/>Initialise<sp/>a<sp/>PatientRecord,<sp/>zeroing<sp/>all<sp/>fields<sp/>before<sp/>populating.</highlight></codeline>
+<codeline lineno="33"><highlight class="comment"><sp/>*<sp/>@details<sp/>memset(0)<sp/>ensures<sp/>that<sp/>any<sp/>unused<sp/>readings<sp/>array<sp/>slots<sp/>contain</highlight></codeline>
+<codeline lineno="34"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>all-zero<sp/>VitalSigns,<sp/>which<sp/>classify<sp/>as<sp/>CRITICAL<sp/>across<sp/>all</highlight></codeline>
+<codeline lineno="35"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>parameters<sp/>—<sp/>a<sp/>deliberately<sp/>safe<sp/>default<sp/>that<sp/>prevents<sp/>silent</highlight></codeline>
+<codeline lineno="36"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>display<sp/>of<sp/>uninitialised<sp/>data.</highlight></codeline>
+<codeline lineno="37"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="38" refid="patient_8c_1a8fa76aa96b383df3556d391e64953536" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="patient_8c_1a8fa76aa96b383df3556d391e64953536" kindref="member">patient_init</ref>(<ref refid="struct_patient_record" kindref="compound">PatientRecord</ref><sp/>*rec,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">id</highlight><highlight class="normal">,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*name,</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>age,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>weight_kg,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>height_m)</highlight></codeline>
+<codeline lineno="40"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/>memset(rec,<sp/>0,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(*rec));</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/>rec-&gt;<ref refid="struct_patient_record_1ab7dbbd6e5424bac1e098abb80bfb1471" kindref="member">info</ref>.<ref refid="struct_patient_info_1a1f5ee862f6bc0244c79ac1088753455b" kindref="member">id</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>id;</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/>rec-&gt;<ref refid="struct_patient_record_1ab7dbbd6e5424bac1e098abb80bfb1471" kindref="member">info</ref>.<ref refid="struct_patient_info_1adfb737e9dc8cfca072ad572e3796530e" kindref="member">age</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>age;</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/>rec-&gt;<ref refid="struct_patient_record_1ab7dbbd6e5424bac1e098abb80bfb1471" kindref="member">info</ref>.<ref refid="struct_patient_info_1a611e10017c955370cc2314da85a6b2c2" kindref="member">weight_kg</ref><sp/>=<sp/>weight_kg;</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/>rec-&gt;<ref refid="struct_patient_record_1ab7dbbd6e5424bac1e098abb80bfb1471" kindref="member">info</ref>.<ref refid="struct_patient_info_1a3660352e74d08d02b4039ce9ee4413dd" kindref="member">height_m</ref><sp/><sp/>=<sp/>height_m;</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/>strncpy(rec-&gt;<ref refid="struct_patient_record_1ab7dbbd6e5424bac1e098abb80bfb1471" kindref="member">info</ref>.<ref refid="struct_patient_info_1a3776b66e6a77da15c48178e2fdccb509" kindref="member">name</ref>,<sp/>name,<sp/><ref refid="patient_8h_1afd709f201d7643c3909621f620ea648a" kindref="member">MAX_NAME_LEN</ref><sp/>-<sp/>1);</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/>rec-&gt;<ref refid="struct_patient_record_1ab7dbbd6e5424bac1e098abb80bfb1471" kindref="member">info</ref>.<ref refid="struct_patient_info_1a3776b66e6a77da15c48178e2fdccb509" kindref="member">name</ref>[<ref refid="patient_8h_1afd709f201d7643c3909621f620ea648a" kindref="member">MAX_NAME_LEN</ref><sp/>-<sp/>1]<sp/>=<sp/></highlight><highlight class="charliteral">&apos;\0&apos;</highlight><highlight class="normal">;<sp/></highlight><highlight class="comment">/*<sp/>guarantee<sp/>null-termination<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/>rec-&gt;<ref refid="struct_patient_record_1a7afb75ac040d473589a9e13a5c20529d" kindref="member">reading_count</ref><sp/><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="49"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="51"><highlight class="comment">/**</highlight></codeline>
+<codeline lineno="52"><highlight class="comment"><sp/>*<sp/>@brief<sp/>Append<sp/>a<sp/>vital<sp/>signs<sp/>reading,<sp/>enforcing<sp/>the<sp/>MAX_READINGS<sp/>cap.</highlight></codeline>
+<codeline lineno="53"><highlight class="comment"><sp/>*<sp/>@details<sp/>VitalSigns<sp/>is<sp/>copied<sp/>by<sp/>value<sp/>(struct<sp/>assignment),<sp/>so<sp/>the<sp/>caller</highlight></codeline>
+<codeline lineno="54"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>retains<sp/>ownership<sp/>of<sp/>the<sp/>original<sp/>and<sp/>may<sp/>reuse<sp/>the<sp/>variable.</highlight></codeline>
+<codeline lineno="55"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="56" refid="patient_8c_1a0e22c10046f3778c1f194cc6377d7984" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="patient_8c_1a0e22c10046f3778c1f194cc6377d7984" kindref="member">patient_add_reading</ref>(<ref refid="struct_patient_record" kindref="compound">PatientRecord</ref><sp/>*rec,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="struct_vital_signs" kindref="compound">VitalSigns</ref><sp/>*v)</highlight></codeline>
+<codeline lineno="57"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(rec-&gt;<ref refid="struct_patient_record_1a7afb75ac040d473589a9e13a5c20529d" kindref="member">reading_count</ref><sp/>&gt;=<sp/><ref refid="patient_8h_1a982953c568e76424021484a001e5c73b" kindref="member">MAX_READINGS</ref>)<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/>rec-&gt;<ref refid="struct_patient_record_1adccff17faadacdb6cce641680535a2d2" kindref="member">readings</ref>[rec-&gt;<ref refid="struct_patient_record_1a7afb75ac040d473589a9e13a5c20529d" kindref="member">reading_count</ref>++]<sp/>=<sp/>*v;</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="61"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="63"><highlight class="comment">/**</highlight></codeline>
+<codeline lineno="64"><highlight class="comment"><sp/>*<sp/>@brief<sp/>Return<sp/>a<sp/>pointer<sp/>to<sp/>the<sp/>most<sp/>recent<sp/>reading,<sp/>or<sp/>NULL<sp/>if<sp/>none<sp/>exist.</highlight></codeline>
+<codeline lineno="65"><highlight class="comment"><sp/>*<sp/>@details<sp/>Index<sp/>arithmetic:<sp/>the<sp/>last<sp/>valid<sp/>slot<sp/>is<sp/>readings[reading_count<sp/>-<sp/>1].</highlight></codeline>
+<codeline lineno="66"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="67" refid="patient_8c_1aaf2d461ddd1efafe4887647d0c8688d7" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="struct_vital_signs" kindref="compound">VitalSigns</ref><sp/>*<ref refid="patient_8c_1aaf2d461ddd1efafe4887647d0c8688d7" kindref="member">patient_latest_reading</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="struct_patient_record" kindref="compound">PatientRecord</ref><sp/>*rec)</highlight></codeline>
+<codeline lineno="68"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(rec-&gt;<ref refid="struct_patient_record_1a7afb75ac040d473589a9e13a5c20529d" kindref="member">reading_count</ref><sp/>==<sp/>0)<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>&amp;rec-&gt;<ref refid="struct_patient_record_1adccff17faadacdb6cce641680535a2d2" kindref="member">readings</ref>[rec-&gt;<ref refid="struct_patient_record_1a7afb75ac040d473589a9e13a5c20529d" kindref="member">reading_count</ref><sp/>-<sp/>1];</highlight></codeline>
+<codeline lineno="71"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="73"><highlight class="comment">/**</highlight></codeline>
+<codeline lineno="74"><highlight class="comment"><sp/>*<sp/>@brief<sp/>Return<sp/>the<sp/>overall<sp/>status<sp/>from<sp/>the<sp/>latest<sp/>reading.</highlight></codeline>
+<codeline lineno="75"><highlight class="comment"><sp/>*<sp/>@details<sp/>Delegates<sp/>entirely<sp/>to<sp/>overall_alert_level()<sp/>to<sp/>keep<sp/>classification</highlight></codeline>
+<codeline lineno="76"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>logic<sp/>centralised<sp/>in<sp/>vitals.c<sp/>—<sp/>consistent<sp/>with<sp/>single-responsibility.</highlight></codeline>
+<codeline lineno="77"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="78" refid="patient_8c_1a7efb2602c9a2566fee89ff6d6af42bcf" refkind="member"><highlight class="normal"><ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324" kindref="member">AlertLevel</ref><sp/><ref refid="patient_8c_1a7efb2602c9a2566fee89ff6d6af42bcf" kindref="member">patient_current_status</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="struct_patient_record" kindref="compound">PatientRecord</ref><sp/>*rec)</highlight></codeline>
+<codeline lineno="79"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="struct_vital_signs" kindref="compound">VitalSigns</ref><sp/>*v<sp/>=<sp/><ref refid="patient_8c_1aaf2d461ddd1efafe4887647d0c8688d7" kindref="member">patient_latest_reading</ref>(rec);</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(v<sp/>==<sp/>NULL)<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324a719a508e583ddd6e5cc6d863fab2c6c8" kindref="member">ALERT_NORMAL</ref>;</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="vitals_8c_1af7201b2a5a70f76ab81ade218a863830" kindref="member">overall_alert_level</ref>(v);</highlight></codeline>
+<codeline lineno="83"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="85"><highlight class="comment">/**</highlight></codeline>
+<codeline lineno="86"><highlight class="comment"><sp/>*<sp/>@brief<sp/>Check<sp/>if<sp/>the<sp/>reading<sp/>buffer<sp/>is<sp/>at<sp/>capacity.</highlight></codeline>
+<codeline lineno="87"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="88" refid="patient_8c_1a8f247ea51062330ba04c15535d530190" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="patient_8c_1a8f247ea51062330ba04c15535d530190" kindref="member">patient_is_full</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="struct_patient_record" kindref="compound">PatientRecord</ref><sp/>*rec)</highlight></codeline>
+<codeline lineno="89"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>rec-&gt;<ref refid="struct_patient_record_1a7afb75ac040d473589a9e13a5c20529d" kindref="member">reading_count</ref><sp/>&gt;=<sp/><ref refid="patient_8h_1a982953c568e76424021484a001e5c73b" kindref="member">MAX_READINGS</ref>;</highlight></codeline>
+<codeline lineno="91"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="93"><highlight class="comment">/**</highlight></codeline>
+<codeline lineno="94"><highlight class="comment"><sp/>*<sp/>@brief<sp/>Print<sp/>a<sp/>formatted<sp/>patient<sp/>summary<sp/>including<sp/>vitals<sp/>and<sp/>active<sp/>alerts.</highlight></codeline>
+<codeline lineno="95"><highlight class="comment"><sp/>*<sp/>@details<sp/>Generates<sp/>alerts<sp/>inline<sp/>for<sp/>the<sp/>latest<sp/>reading<sp/>using<sp/>generate_alerts().</highlight></codeline>
+<codeline lineno="96"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Output<sp/>is<sp/>formatted<sp/>for<sp/>an<sp/>80-column<sp/>terminal<sp/>with<sp/>box-drawing<sp/>borders.</highlight></codeline>
+<codeline lineno="97"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="98" refid="patient_8c_1a19d76f7281d5f5ad5408c1ff4dc2ee11" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="patient_8c_1a19d76f7281d5f5ad5408c1ff4dc2ee11" kindref="member">patient_print_summary</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="struct_patient_record" kindref="compound">PatientRecord</ref><sp/>*rec)</highlight></codeline>
+<codeline lineno="99"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>bmi<sp/>=<sp/><ref refid="vitals_8c_1a10dc695991eacf8ffea85c92b9331aec" kindref="member">calculate_bmi</ref>(rec-&gt;<ref refid="struct_patient_record_1ab7dbbd6e5424bac1e098abb80bfb1471" kindref="member">info</ref>.<ref refid="struct_patient_info_1a611e10017c955370cc2314da85a6b2c2" kindref="member">weight_kg</ref>,<sp/>rec-&gt;<ref refid="struct_patient_record_1ab7dbbd6e5424bac1e098abb80bfb1471" kindref="member">info</ref>.<ref refid="struct_patient_info_1a3660352e74d08d02b4039ce9ee4413dd" kindref="member">height_m</ref>);</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="struct_vital_signs" kindref="compound">VitalSigns</ref><sp/>*latest<sp/>=<sp/><ref refid="patient_8c_1aaf2d461ddd1efafe4887647d0c8688d7" kindref="member">patient_latest_reading</ref>(rec);</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324" kindref="member">AlertLevel</ref><sp/>status<sp/>=<sp/><ref refid="patient_8c_1a7efb2602c9a2566fee89ff6d6af42bcf" kindref="member">patient_current_status</ref>(rec);</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="struct_alert" kindref="compound">Alert</ref><sp/>alerts[<ref refid="alerts_8h_1a40c583285d17e2d0ab75aca5669f53d0" kindref="member">MAX_ALERTS</ref>];</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>alert_count<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"></highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;+--------------------------------------------------+\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;|<sp/>PATIENT<sp/>SUMMARY<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;+--------------------------------------------------+\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;<sp/><sp/>Name<sp/><sp/><sp/><sp/>:<sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/>rec-&gt;<ref refid="struct_patient_record_1ab7dbbd6e5424bac1e098abb80bfb1471" kindref="member">info</ref>.<ref refid="struct_patient_info_1a3776b66e6a77da15c48178e2fdccb509" kindref="member">name</ref>);</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;<sp/><sp/>ID<sp/><sp/><sp/><sp/><sp/><sp/>:<sp/>%d\n&quot;</highlight><highlight class="normal">,<sp/>rec-&gt;<ref refid="struct_patient_record_1ab7dbbd6e5424bac1e098abb80bfb1471" kindref="member">info</ref>.<ref refid="struct_patient_info_1a1f5ee862f6bc0244c79ac1088753455b" kindref="member">id</ref>);</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;<sp/><sp/>Age<sp/><sp/><sp/><sp/><sp/>:<sp/>%d<sp/>years\n&quot;</highlight><highlight class="normal">,<sp/>rec-&gt;<ref refid="struct_patient_record_1ab7dbbd6e5424bac1e098abb80bfb1471" kindref="member">info</ref>.<ref refid="struct_patient_info_1adfb737e9dc8cfca072ad572e3796530e" kindref="member">age</ref>);</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;<sp/><sp/>BMI<sp/><sp/><sp/><sp/><sp/>:<sp/>%.1f<sp/><sp/>(%s)\n&quot;</highlight><highlight class="normal">,<sp/>bmi,<sp/><ref refid="vitals_8c_1a7a7981a0a087b3b98763ed48bc789888" kindref="member">bmi_category</ref>(bmi));</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;<sp/><sp/>Readings:<sp/>%d<sp/>/<sp/>%d\n&quot;</highlight><highlight class="normal">,<sp/>rec-&gt;<ref refid="struct_patient_record_1a7afb75ac040d473589a9e13a5c20529d" kindref="member">reading_count</ref>,<sp/><ref refid="patient_8h_1a982953c568e76424021484a001e5c73b" kindref="member">MAX_READINGS</ref>);</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"></highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(latest)<sp/>{</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;\n<sp/><sp/>Latest<sp/>Vitals:\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/><sp/>Heart<sp/>Rate<sp/><sp/>:<sp/>%3d<sp/>bpm<sp/><sp/><sp/><sp/><sp/><sp/><sp/>[%s]\n&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>latest-&gt;<ref refid="struct_vital_signs_1ac7162369c92da33cc7a3279c37083f84" kindref="member">heart_rate</ref>,</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="vitals_8c_1a20a209843ea1eeff8484a7998d492615" kindref="member">alert_level_str</ref>(<ref refid="vitals_8c_1a7604eb6b23010f139f6f960b184a3b28" kindref="member">check_heart_rate</ref>(latest-&gt;<ref refid="struct_vital_signs_1ac7162369c92da33cc7a3279c37083f84" kindref="member">heart_rate</ref>)));</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/><sp/>BP<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/>%3d/%-3d<sp/>mmHg<sp/><sp/>[%s]\n&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>latest-&gt;<ref refid="struct_vital_signs_1a110b3f24528e0f5769cb82f3a0c07485" kindref="member">systolic_bp</ref>,<sp/>latest-&gt;<ref refid="struct_vital_signs_1ab81723ab54ad295a71ba56f0ef52318f" kindref="member">diastolic_bp</ref>,</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="vitals_8c_1a20a209843ea1eeff8484a7998d492615" kindref="member">alert_level_str</ref>(<ref refid="vitals_8c_1a3c853e30a899042babf9fdd2bd2cbfc1" kindref="member">check_blood_pressure</ref>(latest-&gt;<ref refid="struct_vital_signs_1a110b3f24528e0f5769cb82f3a0c07485" kindref="member">systolic_bp</ref>,</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>latest-&gt;<ref refid="struct_vital_signs_1ab81723ab54ad295a71ba56f0ef52318f" kindref="member">diastolic_bp</ref>)));</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/><sp/>Temperature<sp/>:<sp/>%.1f<sp/>C<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[%s]\n&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>latest-&gt;<ref refid="struct_vital_signs_1af0a43a24a6e26683adde5612cf626365" kindref="member">temperature</ref>,</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="vitals_8c_1a20a209843ea1eeff8484a7998d492615" kindref="member">alert_level_str</ref>(<ref refid="vitals_8c_1aef7f6fa183fbc5412c13ea63bd2b62ce" kindref="member">check_temperature</ref>(latest-&gt;<ref refid="struct_vital_signs_1af0a43a24a6e26683adde5612cf626365" kindref="member">temperature</ref>)));</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/><sp/>SpO2<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/>%3d%%<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[%s]\n&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>latest-&gt;<ref refid="struct_vital_signs_1a1b524bb13d6c36ec564c7d94a5e953c1" kindref="member">spo2</ref>,</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="vitals_8c_1a20a209843ea1eeff8484a7998d492615" kindref="member">alert_level_str</ref>(<ref refid="vitals_8c_1ac0bc076e63894a96df90f2eab73c88fe" kindref="member">check_spo2</ref>(latest-&gt;<ref refid="struct_vital_signs_1a1b524bb13d6c36ec564c7d94a5e953c1" kindref="member">spo2</ref>)));</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"></highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>alert_count<sp/>=<sp/><ref refid="alerts_8c_1a98b6140a4d21520d639bc81d1f7c08b7" kindref="member">generate_alerts</ref>(latest,<sp/>alerts,<sp/><ref refid="alerts_8h_1a40c583285d17e2d0ab75aca5669f53d0" kindref="member">MAX_ALERTS</ref>);</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"></highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;\n<sp/><sp/>Overall<sp/>Status<sp/>:<sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="vitals_8c_1a20a209843ea1eeff8484a7998d492615" kindref="member">alert_level_str</ref>(status));</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"></highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(alert_count<sp/>&gt;<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;\n<sp/><sp/>Active<sp/>Alerts:\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>alert_count;<sp/>i++)<sp/>{</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*pfx<sp/>=<sp/>(alerts[i].<ref refid="struct_alert_1af56c1ce36b2939c0bb172344e1340346" kindref="member">level</ref><sp/>==<sp/><ref refid="vitals_8h_1af7b0ce5f4a123eacac771fba5a411324a4a380f84419fb8940cfc9bde871a26e7" kindref="member">ALERT_CRITICAL</ref>)</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>?<sp/></highlight><highlight class="stringliteral">&quot;<sp/><sp/>!!<sp/>CRITICAL&quot;</highlight><highlight class="normal"><sp/>:<sp/></highlight><highlight class="stringliteral">&quot;<sp/><sp/>!<sp/><sp/>WARNING<sp/>&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;%s<sp/><sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/>pfx,<sp/>alerts[i].message);</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;+--------------------------------------------------+\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="145"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="src/patient.c"/>
+  </compounddef>
+</doxygen>

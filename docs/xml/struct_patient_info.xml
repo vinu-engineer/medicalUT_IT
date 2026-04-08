@@ -1,0 +1,124 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="struct_patient_info" kind="struct" language="C++" prot="public">
+    <compoundname>PatientInfo</compoundname>
+    <includes refid="patient_8h" local="no">patient.h</includes>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct_patient_info_1adfb737e9dc8cfca072ad572e3796530e" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int PatientInfo::age</definition>
+        <argsstring></argsstring>
+        <name>age</name>
+        <qualifiedname>PatientInfo::age</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Age in years. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/patient.h" line="66" column="11" bodyfile="include/patient.h" bodystart="66" bodyend="-1"/>
+        <referencedby refid="main_8c_1a1a904050ef641d46ba74b91e8ff5b7f9" compoundref="main_8c" startline="73" endline="105">monitor_patient</referencedby>
+        <referencedby refid="main_8c_1a418db4bf280a08fda4493a816c841643" compoundref="main_8c" startline="114" endline="141">monitor_second_patient</referencedby>
+        <referencedby refid="patient_8c_1a8fa76aa96b383df3556d391e64953536" compoundref="patient_8c" startline="38" endline="49">patient_init</referencedby>
+        <referencedby refid="patient_8c_1a19d76f7281d5f5ad5408c1ff4dc2ee11" compoundref="patient_8c" startline="98" endline="145">patient_print_summary</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="struct_patient_info_1a3660352e74d08d02b4039ce9ee4413dd" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float PatientInfo::height_m</definition>
+        <argsstring></argsstring>
+        <name>height_m</name>
+        <qualifiedname>PatientInfo::height_m</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Height in metres. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/patient.h" line="68" column="11" bodyfile="include/patient.h" bodystart="68" bodyend="-1"/>
+        <referencedby refid="main_8c_1a1a904050ef641d46ba74b91e8ff5b7f9" compoundref="main_8c" startline="73" endline="105">monitor_patient</referencedby>
+        <referencedby refid="main_8c_1a418db4bf280a08fda4493a816c841643" compoundref="main_8c" startline="114" endline="141">monitor_second_patient</referencedby>
+        <referencedby refid="patient_8c_1a8fa76aa96b383df3556d391e64953536" compoundref="patient_8c" startline="38" endline="49">patient_init</referencedby>
+        <referencedby refid="patient_8c_1a19d76f7281d5f5ad5408c1ff4dc2ee11" compoundref="patient_8c" startline="98" endline="145">patient_print_summary</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="struct_patient_info_1a1f5ee862f6bc0244c79ac1088753455b" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int PatientInfo::id</definition>
+        <argsstring></argsstring>
+        <name>id</name>
+        <qualifiedname>PatientInfo::id</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Unique patient identifier. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/patient.h" line="63" column="11" bodyfile="include/patient.h" bodystart="63" bodyend="-1"/>
+        <referencedby refid="main_8c_1a1a904050ef641d46ba74b91e8ff5b7f9" compoundref="main_8c" startline="73" endline="105">monitor_patient</referencedby>
+        <referencedby refid="main_8c_1a418db4bf280a08fda4493a816c841643" compoundref="main_8c" startline="114" endline="141">monitor_second_patient</referencedby>
+        <referencedby refid="patient_8c_1a8fa76aa96b383df3556d391e64953536" compoundref="patient_8c" startline="38" endline="49">patient_init</referencedby>
+        <referencedby refid="patient_8c_1a19d76f7281d5f5ad5408c1ff4dc2ee11" compoundref="patient_8c" startline="98" endline="145">patient_print_summary</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="struct_patient_info_1a3776b66e6a77da15c48178e2fdccb509" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char PatientInfo::name[64]</definition>
+        <argsstring>[64]</argsstring>
+        <name>name</name>
+        <qualifiedname>PatientInfo::name</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Full name. Null-terminated, truncated to MAX_NAME_LEN - 1 characters if necessary. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/patient.h" line="64" column="11" bodyfile="include/patient.h" bodystart="64" bodyend="-1"/>
+        <referencedby refid="main_8c_1a1a904050ef641d46ba74b91e8ff5b7f9" compoundref="main_8c" startline="73" endline="105">monitor_patient</referencedby>
+        <referencedby refid="main_8c_1a418db4bf280a08fda4493a816c841643" compoundref="main_8c" startline="114" endline="141">monitor_second_patient</referencedby>
+        <referencedby refid="patient_8c_1a8fa76aa96b383df3556d391e64953536" compoundref="patient_8c" startline="38" endline="49">patient_init</referencedby>
+        <referencedby refid="patient_8c_1a19d76f7281d5f5ad5408c1ff4dc2ee11" compoundref="patient_8c" startline="98" endline="145">patient_print_summary</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="struct_patient_info_1a611e10017c955370cc2314da85a6b2c2" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float PatientInfo::weight_kg</definition>
+        <argsstring></argsstring>
+        <name>weight_kg</name>
+        <qualifiedname>PatientInfo::weight_kg</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Body weight in kilograms. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/patient.h" line="67" column="11" bodyfile="include/patient.h" bodystart="67" bodyend="-1"/>
+        <referencedby refid="main_8c_1a1a904050ef641d46ba74b91e8ff5b7f9" compoundref="main_8c" startline="73" endline="105">monitor_patient</referencedby>
+        <referencedby refid="main_8c_1a418db4bf280a08fda4493a816c841643" compoundref="main_8c" startline="114" endline="141">monitor_second_patient</referencedby>
+        <referencedby refid="patient_8c_1a8fa76aa96b383df3556d391e64953536" compoundref="patient_8c" startline="38" endline="49">patient_init</referencedby>
+        <referencedby refid="patient_8c_1a19d76f7281d5f5ad5408c1ff4dc2ee11" compoundref="patient_8c" startline="98" endline="145">patient_print_summary</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Demographic information for a monitored patient. </para>
+    </briefdescription>
+    <detaileddescription>
+<para>This structure stores static patient data that does not change during a monitoring session. It is embedded within <ref refid="struct_patient_record" kindref="compound">PatientRecord</ref>. </para>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>PatientInfo</label>
+        <link refid="struct_patient_info"/>
+      </node>
+    </collaborationgraph>
+    <location file="include/patient.h" line="62" column="1" bodyfile="include/patient.h" bodystart="62" bodyend="69"/>
+    <listofallmembers>
+      <member refid="struct_patient_info_1adfb737e9dc8cfca072ad572e3796530e" prot="public" virt="non-virtual"><scope>PatientInfo</scope><name>age</name></member>
+      <member refid="struct_patient_info_1a3660352e74d08d02b4039ce9ee4413dd" prot="public" virt="non-virtual"><scope>PatientInfo</scope><name>height_m</name></member>
+      <member refid="struct_patient_info_1a1f5ee862f6bc0244c79ac1088753455b" prot="public" virt="non-virtual"><scope>PatientInfo</scope><name>id</name></member>
+      <member refid="struct_patient_info_1a3776b66e6a77da15c48178e2fdccb509" prot="public" virt="non-virtual"><scope>PatientInfo</scope><name>name</name></member>
+      <member refid="struct_patient_info_1a611e10017c955370cc2314da85a6b2c2" prot="public" virt="non-virtual"><scope>PatientInfo</scope><name>weight_kg</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

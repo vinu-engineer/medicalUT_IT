@@ -1,0 +1,203 @@
+        -:    0:Source:C:/Users/vinun/claude AI/src/patient.c
+        -:    0:Graph:build_cov\CMakeFiles\monitor_lib.dir\src\patient.c.gcno
+        -:    0:Data:build_cov\CMakeFiles\monitor_lib.dir\src\patient.c.gcda
+        -:    0:Runs:2
+        -:    0:Programs:2
+        -:    1:/**
+        -:    2: * @file patient.c
+        -:    3: * @brief Implementation of patient record management functions.
+        -:    4: *
+        -:    5: * @details
+        -:    6: * Implements all functions declared in patient.h. The module uses only
+        -:    7: * static memory (no heap allocation) in compliance with IEC 62304 Class B
+        -:    8: * guidance for embedded medical device software.
+        -:    9: *
+        -:   10: * ### Memory Safety
+        -:   11: * - `patient_init()` zero-fills the entire record before writing fields,
+        -:   12: *   preventing stale data from a previous session.
+        -:   13: * - `strncpy` is used with an explicit length limit and explicit
+        -:   14: *   null-termination to guard against buffer overrun.
+        -:   15: * - `patient_add_reading()` enforces the MAX_READINGS cap and returns a
+        -:   16: *   status code so callers can detect and handle overflow.
+        -:   17: *
+        -:   18: * @version 1.0.0
+        -:   19: * @date    2026-04-06
+        -:   20: * @author  vinu-engineer
+        -:   21: */
+        -:   22:
+        -:   23:#ifdef _MSC_VER
+        -:   24:#define _CRT_SECURE_NO_WARNINGS
+        -:   25:#endif
+        -:   26:
+        -:   27:#include "patient.h"
+        -:   28:#include <stdio.h>
+        -:   29:#include <string.h>
+        -:   30:
+        -:   31:/**
+        -:   32: * @brief Initialise a PatientRecord, zeroing all fields before populating.
+        -:   33: * @details memset(0) ensures that any unused readings array slots contain
+        -:   34: *          all-zero VitalSigns, which classify as CRITICAL across all
+        -:   35: *          parameters — a deliberately safe default that prevents silent
+        -:   36: *          display of uninitialised data.
+        -:   37: */
+function patient_init called 32 returned 100% blocks executed 100%
+       32:   38:void patient_init(PatientRecord *rec, int id, const char *name,
+        -:   39:                  int age, float weight_kg, float height_m)
+        -:   40:{
+       32:   41:    memset(rec, 0, sizeof(*rec));
+       32:   42:    rec->info.id        = id;
+       32:   43:    rec->info.age       = age;
+       32:   44:    rec->info.weight_kg = weight_kg;
+       32:   45:    rec->info.height_m  = height_m;
+       32:   46:    strncpy(rec->info.name, name, MAX_NAME_LEN - 1);
+       32:   47:    rec->info.name[MAX_NAME_LEN - 1] = '\0'; /* guarantee null-termination */
+       32:   48:    rec->reading_count  = 0;
+       32:   49:}
+        -:   50:
+        -:   51:/**
+        -:   52: * @brief Append a vital signs reading, enforcing the MAX_READINGS cap.
+        -:   53: * @details VitalSigns is copied by value (struct assignment), so the caller
+        -:   54: *          retains ownership of the original and may reuse the variable.
+        -:   55: */
+function patient_add_reading called 90 returned 100% blocks executed 100%
+       90:   56:int patient_add_reading(PatientRecord *rec, const VitalSigns *v)
+        -:   57:{
+       90:   58:    if (rec->reading_count >= MAX_READINGS) return 0;
+branch  0 taken 2% (fallthrough)
+branch  1 taken 98%
+       88:   59:    rec->readings[rec->reading_count++] = *v;
+       88:   60:    return 1;
+        -:   61:}
+        -:   62:
+        -:   63:/**
+        -:   64: * @brief Return a pointer to the most recent reading, or NULL if none exist.
+        -:   65: * @details Index arithmetic: the last valid slot is readings[reading_count - 1].
+        -:   66: */
+function patient_latest_reading called 48 returned 100% blocks executed 100%
+       48:   67:const VitalSigns *patient_latest_reading(const PatientRecord *rec)
+        -:   68:{
+       48:   69:    if (rec->reading_count == 0) return NULL;
+branch  0 taken 10% (fallthrough)
+branch  1 taken 90%
+       43:   70:    return &rec->readings[rec->reading_count - 1];
+        -:   71:}
+        -:   72:
+        -:   73:/**
+        -:   74: * @brief Return the overall status from the latest reading.
+        -:   75: * @details Delegates entirely to overall_alert_level() to keep classification
+        -:   76: *          logic centralised in vitals.c — consistent with single-responsibility.
+        -:   77: */
+function patient_current_status called 41 returned 100% blocks executed 100%
+       41:   78:AlertLevel patient_current_status(const PatientRecord *rec)
+        -:   79:{
+       41:   80:    const VitalSigns *v = patient_latest_reading(rec);
+call    0 returned 100%
+       41:   81:    if (v == NULL) return ALERT_NORMAL;
+branch  0 taken 7% (fallthrough)
+branch  1 taken 93%
+       38:   82:    return overall_alert_level(v);
+call    0 returned 100%
+        -:   83:}
+        -:   84:
+        -:   85:/**
+        -:   86: * @brief Check if the reading buffer is at capacity.
+        -:   87: */
+function patient_is_full called 3 returned 100% blocks executed 100%
+        3:   88:int patient_is_full(const PatientRecord *rec)
+        -:   89:{
+        3:   90:    return rec->reading_count >= MAX_READINGS;
+        -:   91:}
+        -:   92:
+        -:   93:/**
+        -:   94: * @brief Print a formatted patient summary including vitals and active alerts.
+        -:   95: * @details Generates alerts inline for the latest reading using generate_alerts().
+        -:   96: *          Output is formatted for an 80-column terminal with box-drawing borders.
+        -:   97: */
+function patient_print_summary called 3 returned 100% blocks executed 98%
+        3:   98:void patient_print_summary(const PatientRecord *rec)
+        -:   99:{
+        3:  100:    float bmi = calculate_bmi(rec->info.weight_kg, rec->info.height_m);
+call    0 returned 100%
+        3:  101:    const VitalSigns *latest = patient_latest_reading(rec);
+call    0 returned 100%
+        3:  102:    AlertLevel status = patient_current_status(rec);
+call    0 returned 100%
+        -:  103:    Alert alerts[MAX_ALERTS];
+        3:  104:    int alert_count = 0;
+        -:  105:
+        3:  106:    printf("+--------------------------------------------------+\n");
+call    0 returned 100%
+        3:  107:    printf("| PATIENT SUMMARY                                  |\n");
+call    0 returned 100%
+        3:  108:    printf("+--------------------------------------------------+\n");
+call    0 returned 100%
+        3:  109:    printf("  Name    : %s\n", rec->info.name);
+call    0 returned 100%
+        3:  110:    printf("  ID      : %d\n", rec->info.id);
+call    0 returned 100%
+        3:  111:    printf("  Age     : %d years\n", rec->info.age);
+call    0 returned 100%
+        3:  112:    printf("  BMI     : %.1f  (%s)\n", bmi, bmi_category(bmi));
+call    0 returned 100%
+call    1 returned 100%
+        3:  113:    printf("  Readings: %d / %d\n", rec->reading_count, MAX_READINGS);
+call    0 returned 100%
+        -:  114:
+        3:  115:    if (latest) {
+branch  0 taken 67% (fallthrough)
+branch  1 taken 33%
+        2:  116:        printf("\n  Latest Vitals:\n");
+call    0 returned 100%
+        2:  117:        printf("    Heart Rate  : %3d bpm       [%s]\n",
+call    0 returned 100%
+call    1 returned 100%
+call    2 returned 100%
+        -:  118:               latest->heart_rate,
+        -:  119:               alert_level_str(check_heart_rate(latest->heart_rate)));
+        2:  120:        printf("    BP          : %3d/%-3d mmHg  [%s]\n",
+call    0 returned 100%
+call    1 returned 100%
+call    2 returned 100%
+        -:  121:               latest->systolic_bp, latest->diastolic_bp,
+        -:  122:               alert_level_str(check_blood_pressure(latest->systolic_bp,
+        -:  123:                                                     latest->diastolic_bp)));
+        4:  124:        printf("    Temperature : %.1f C        [%s]\n",
+call    0 returned 100%
+call    1 returned 100%
+call    2 returned 100%
+        2:  125:               latest->temperature,
+        -:  126:               alert_level_str(check_temperature(latest->temperature)));
+        2:  127:        printf("    SpO2        : %3d%%           [%s]\n",
+call    0 returned 100%
+call    1 returned 100%
+call    2 returned 100%
+        -:  128:               latest->spo2,
+        -:  129:               alert_level_str(check_spo2(latest->spo2)));
+        -:  130:
+        2:  131:        alert_count = generate_alerts(latest, alerts, MAX_ALERTS);
+call    0 returned 100%
+        -:  132:    }
+        -:  133:
+        3:  134:    printf("\n  Overall Status : %s\n", alert_level_str(status));
+call    0 returned 100%
+call    1 returned 100%
+        -:  135:
+        3:  136:    if (alert_count > 0) {
+branch  0 taken 33% (fallthrough)
+branch  1 taken 67%
+        1:  137:        printf("\n  Active Alerts:\n");
+call    0 returned 100%
+        5:  138:        for (int i = 0; i < alert_count; i++) {
+branch  0 taken 80%
+branch  1 taken 20% (fallthrough)
+        4:  139:            const char *pfx = (alerts[i].level == ALERT_CRITICAL)
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+        -:  140:                              ? "  !! CRITICAL" : "  !  WARNING ";
+        4:  141:            printf("%s  %s\n", pfx, alerts[i].message);
+call    0 returned 100%
+        -:  142:        }
+        -:  143:    }
+        3:  144:    printf("+--------------------------------------------------+\n");
+call    0 returned 100%
+        3:  145:}

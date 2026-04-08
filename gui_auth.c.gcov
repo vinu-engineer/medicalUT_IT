@@ -1,0 +1,78 @@
+        -:    0:Source:C:/Users/vinun/claude AI/src/gui_auth.c
+        -:    0:Graph:build_cov\tests\CMakeFiles\test_unit.dir\__\src\gui_auth.c.gcno
+        -:    0:Data:build_cov\tests\CMakeFiles\test_unit.dir\__\src\gui_auth.c.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/**
+        -:    2: * @file gui_auth.c
+        -:    3: * @brief GUI authentication implementation.
+        -:    4: *
+        -:    5: * Fixed built-in credential for the clinical workstation login screen.
+        -:    6: * The credential is compiled in; no external credential store or network
+        -:    7: * call is made, satisfying the static-memory requirement (SYS-012).
+        -:    8: *
+        -:    9: * Default login:  username = admin   password = Monitor@2026
+        -:   10: *
+        -:   11: * @req SWR-GUI-001
+        -:   12: * @req SWR-GUI-002
+        -:   13: */
+        -:   14:
+        -:   15:#ifdef _MSC_VER
+        -:   16:#define _CRT_SECURE_NO_WARNINGS
+        -:   17:#endif
+        -:   18:
+        -:   19:#include "gui_auth.h"
+        -:   20:#include <string.h>
+        -:   21:#include <stdio.h>
+        -:   22:
+        -:   23:/* -----------------------------------------------------------------------
+        -:   24: * Built-in credential  (change here only — never store in external files)
+        -:   25: * ----------------------------------------------------------------------- */
+        -:   26:#define BUILT_IN_USERNAME "admin"
+        -:   27:#define BUILT_IN_PASSWORD "Monitor@2026"
+        -:   28:#define DISPLAY_NAME      "Dr. Admin"
+        -:   29:
+        -:   30:/* -----------------------------------------------------------------------
+        -:   31: * auth_validate
+        -:   32: * ----------------------------------------------------------------------- */
+function auth_validate called 10 returned 100% blocks executed 100%
+       10:   33:int auth_validate(const char *username, const char *password)
+        -:   34:{
+       10:   35:    if (username == NULL || password == NULL) {
+branch  0 taken 80% (fallthrough)
+branch  1 taken 20%
+branch  2 taken 13% (fallthrough)
+branch  3 taken 88%
+        3:   36:        return 0;
+        -:   37:    }
+        7:   38:    return (strcmp(username, BUILT_IN_USERNAME) == 0 &&
+        7:   39:            strcmp(password, BUILT_IN_PASSWORD) == 0) ? 1 : 0;
+branch  0 taken 43% (fallthrough)
+branch  1 taken 57%
+branch  2 taken 33% (fallthrough)
+branch  3 taken 67%
+        -:   40:}
+        -:   41:
+        -:   42:/* -----------------------------------------------------------------------
+        -:   43: * auth_display_name
+        -:   44: * ----------------------------------------------------------------------- */
+function auth_display_name called 5 returned 100% blocks executed 100%
+        5:   45:void auth_display_name(const char *username, char *out, int out_len)
+        -:   46:{
+        5:   47:    if (out == NULL || out_len <= 0) {
+branch  0 taken 80% (fallthrough)
+branch  1 taken 20%
+branch  2 taken 25% (fallthrough)
+branch  3 taken 75%
+        2:   48:        return;
+        -:   49:    }
+        3:   50:    if (username != NULL && strcmp(username, BUILT_IN_USERNAME) == 0) {
+branch  0 taken 67% (fallthrough)
+branch  1 taken 33%
+branch  2 taken 50% (fallthrough)
+branch  3 taken 50%
+        1:   51:        snprintf(out, (size_t)out_len, "%s", DISPLAY_NAME);
+        -:   52:    } else {
+        2:   53:        out[0] = '\0';
+        -:   54:    }
+        -:   55:}

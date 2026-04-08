@@ -1,0 +1,7 @@
+<map id="paint_header" name="paint_header">
+<area shape="rect" id="Node000001" title="Paint the application header bar. @req SWR&#45;GUI&#45;002." alt="" coords="5,31,101,57"/>
+<area shape="rect" id="Node000002" href="$gui__main_8c.html#a18faa01dfc1221353f0ca130f5647098" title=" " alt="" coords="149,5,248,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,33,136,29,131,31,102,38"/>
+<area shape="rect" id="Node000003" href="$gui__main_8c.html#a44c4ee73fc9a634398e794afaf73d079" title=" " alt="" coords="167,56,230,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="101,50,154,61,149,62,101,55"/>
+</map>

@@ -1,0 +1,24 @@
+<map id="fill_rect" name="fill_rect">
+<area shape="rect" id="Node000001" title=" " alt="" coords="610,132,673,159"/>
+<area shape="rect" id="Node000002" href="$gui__main_8c.html#ab5a6eab1941232f61da34dc646009e99" title=" " alt="" coords="284,5,364,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="625,117,599,80,581,61,560,46,511,27,458,17,407,15,365,16,364,11,408,9,459,12,512,22,563,42,585,57,603,77,630,119"/>
+<area shape="rect" id="Node000004" href="$gui__main_8c.html#a188d44abc7793a822368986491e74f37" title="Paint the application header bar. @req SWR&#45;GUI&#45;002." alt="" coords="454,56,549,83"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="606,123,560,97,537,86,538,80,563,92,611,123"/>
+<area shape="rect" id="Node000006" href="$gui__main_8c.html#a3a6ecd59596770bcfc1ecf6fa4fd3219" title="Paint the patient summary bar. @req SWR&#45;GUI&#45;003." alt="" coords="441,107,562,133"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="592,137,562,134,562,128,597,137"/>
+<area shape="rect" id="Node000007" href="$gui__main_8c.html#a71c5868a8a8bcd102dfebf5a8cd8e55a" title="Paint the aggregate status banner. @req SWR&#45;GUI&#45;003." alt="" coords="255,157,393,184"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="591,150,394,168,393,163,597,148"/>
+<area shape="rect" id="Node000008" href="$gui__main_8c.html#acd6770839efac2b7a1806be591ea1d80" title="Paint one colour&#45;coded vital sign tile." alt="" coords="465,208,538,235"/>
+<area shape="poly" id="edge10_Node000001_Node000008" title=" " alt="" coords="605,166,563,192,530,210,528,205,560,187,600,168"/>
+<area shape="rect" id="Node000009" href="$gui__main_8c.html#a809c12bdd714ab44c54f45da4d3b2dc7" title="Paint the 2×2 vital sign tile grid. @req SWR&#45;GUI&#45;003." alt="" coords="284,208,364,235"/>
+<area shape="poly" id="edge13_Node000001_Node000009" title=" " alt="" coords="630,171,604,215,585,234,563,249,536,259,508,264,452,263,399,252,357,238,358,233,401,247,453,257,508,259,535,254,560,244,582,230,599,212,625,174"/>
+<area shape="rect" id="Node000003" href="$gui__main_8c.html#aab234127c99873cb463e482155cb679f" title=" " alt="" coords="5,81,78,108"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="269,36,79,88,77,83,270,31"/>
+<area shape="rect" id="Node000005" href="$gui__main_8c.html#a50c9496063704973573429586a90b27d" title=" " alt="" coords="126,107,207,133"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="437,78,255,104,208,113,207,108,255,99,441,74"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="108,110,79,105,77,99,113,107"/>
+<area shape="poly" id="edge7_Node000006_Node000005" title=" " alt="" coords="424,122,208,123,207,117,427,118"/>
+<area shape="poly" id="edge9_Node000007_Node000005" title=" " alt="" coords="263,153,207,136,207,130,268,151"/>
+<area shape="poly" id="edge11_Node000008_Node000009" title=" " alt="" coords="447,222,365,224,365,219,452,221"/>
+<area shape="poly" id="edge12_Node000009_Node000005" title=" " alt="" coords="267,203,254,198,211,166,179,136,181,131,214,162,256,194,272,204"/>
+</map>

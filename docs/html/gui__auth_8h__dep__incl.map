@@ -1,0 +1,7 @@
+<map id="include/gui_auth.h" name="include/gui_auth.h">
+<area shape="rect" id="Node000001" title="GUI authentication interface." alt="" coords="58,5,184,32"/>
+<area shape="rect" id="Node000002" href="$gui__auth_8c.html" title="GUI authentication implementation." alt="" coords="5,80,109,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,43,70,82,66,78,97,45"/>
+<area shape="rect" id="Node000003" href="$gui__main_8c.html" title="Win32 GUI entry point — Patient Vital Signs Monitor." alt="" coords="133,80,240,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="144,41,178,80,172,80,141,46"/>
+</map>
