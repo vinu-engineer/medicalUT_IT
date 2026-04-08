@@ -17,11 +17,11 @@ extern "C" {
  * Language enumeration
  * =================================================================== */
 typedef enum {
-    LANG_ENGLISH = 0,
-    LANG_SPANISH = 1,
-    LANG_FRENCH = 2,
-    LANG_GERMAN = 3,
-    LANG_COUNT = 4
+    LOC_LANG_ENGLISH = 0,
+    LOC_LANG_SPANISH = 1,
+    LOC_LANG_FRENCH = 2,
+    LOC_LANG_GERMAN = 3,
+    LOC_LANG_COUNT = 4
 } Language;
 
 /* ===================================================================

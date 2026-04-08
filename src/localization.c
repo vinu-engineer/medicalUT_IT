@@ -12,7 +12,7 @@
 /* ===================================================================
  * Global language state (static, no heap)
  * =================================================================== */
-static Language g_current_language = LANG_ENGLISH;
+static Language g_current_language = LOC_LANG_ENGLISH;
 
 /* ===================================================================
  * String tables (4 languages x 100+ strings)
@@ -307,7 +307,7 @@ static const char* g_strings_german[STR_COUNT] = {
 };
 
 /* All language tables */
-static const char** g_string_tables[LANG_COUNT] = {
+static const char** g_string_tables[LOC_LANG_COUNT] = {
     g_strings_english,
     g_strings_spanish,
     g_strings_french,
@@ -317,7 +317,7 @@ static const char** g_string_tables[LANG_COUNT] = {
 /* ===================================================================
  * Language names (for display in UI)
  * =================================================================== */
-static const char* g_language_names[LANG_COUNT] = {
+static const char* g_language_names[LOC_LANG_COUNT] = {
     "English",
     "Español",
     "Français",
@@ -330,7 +330,7 @@ static const char* g_language_names[LANG_COUNT] = {
 
 void localization_set_language(Language lang)
 {
-    if (lang >= 0 && lang < LANG_COUNT) {
+    if (lang >= 0 && lang < LOC_LANG_COUNT) {
         g_current_language = lang;
     }
 }
@@ -350,7 +350,7 @@ const char* localization_get_string(StringID id)
 
 const char* localization_get_language_name(Language lang)
 {
-    if (lang >= 0 && lang < LANG_COUNT) {
+    if (lang >= 0 && lang < LOC_LANG_COUNT) {
         return g_language_names[lang];
     }
     return "Unknown";
