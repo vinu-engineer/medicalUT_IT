@@ -1,6 +1,6 @@
 /**
  * @file gui_main.c
- * @brief Win32 GUI — Patient Vital Signs Monitor v1.9.0
+ * @brief Win32 GUI — Patient Vital Signs Monitor v2.0.0
  *
  * Windows:
  *   1. Login (PVM_Login)      — auth with role detection
@@ -37,7 +37,7 @@
  * App metadata
  * =================================================================== */
 #define APP_TITLE   "Patient Vital Signs Monitor"
-#define APP_VERSION "v1.9.0"
+#define APP_VERSION "v2.0.0"
 #define IDI_APPICON 101
 
 /* ===================================================================
@@ -554,6 +554,27 @@ static void create_dash_controls(HWND w)
     CreateWindowExA(WS_EX_CLIENTEDGE,"LISTBOX","",
                     WS_CHILD|WS_VISIBLE|WS_VSCROLL|LBS_NOINTEGRALHEIGHT,
                     20,CY+302,872,130,w,(HMENU)(INT_PTR)IDC_LIST_HISTORY,g_app.inst,NULL);
+}
+
+/* ===================================================================
+ * Dashboard: dynamic control repositioning on WM_SIZE
+ * All header buttons anchor to right edge; listboxes stretch to fill.
+ * =================================================================== */
+static void reposition_dash_controls(HWND w, int cw)
+{
+    HWND btn;
+    /* Header buttons — right-edge anchored */
+    SetWindowPos(GetDlgItem(w, IDC_BTN_LOGOUT),   NULL, cw - 86,  14,  72, 28, SWP_NOZORDER|SWP_NOACTIVATE);
+    SetWindowPos(GetDlgItem(w, IDC_BTN_PAUSE),    NULL, cw - 176, 14,  86, 28, SWP_NOZORDER|SWP_NOACTIVATE);
+    SetWindowPos(GetDlgItem(w, IDC_BTN_SIM_MODE), NULL, cw - 372, 14,  90, 28, SWP_NOZORDER|SWP_NOACTIVATE);
+
+    btn = GetDlgItem(w, IDC_BTN_SETTINGS);
+    if (!btn) btn = GetDlgItem(w, IDC_BTN_ACCOUNT);
+    if (btn)  SetWindowPos(btn, NULL, cw - 272, 14, 86, 28, SWP_NOZORDER|SWP_NOACTIVATE);
+
+    /* Wide list boxes — stretch horizontally */
+    SetWindowPos(GetDlgItem(w, IDC_LIST_ALERTS),  NULL, 20, CY+182, cw - 40, 88,  SWP_NOZORDER|SWP_NOACTIVATE);
+    SetWindowPos(GetDlgItem(w, IDC_LIST_HISTORY), NULL, 20, CY+302, cw - 40, 130, SWP_NOZORDER|SWP_NOACTIVATE);
 }
 
 /* ===================================================================
@@ -1140,7 +1161,6 @@ static LRESULT CALLBACK adduser_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
  * =================================================================== */
 static LRESULT CALLBACK dash_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
 {
-    (void)lp;
     switch (msg) {
     case WM_CREATE: {
         VitalSigns first_v;
@@ -1184,7 +1204,23 @@ static LRESULT CALLBACK dash_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
             patient_add_reading(&g_app.patient, &first_v);
             SetTimer(w, TIMER_SIM, 2000, NULL);
         }
+        reposition_dash_controls(w, WIN_CW);   /* initial layout */
         update_dashboard(w);
+        return 0;
+    }
+
+    case WM_GETMINMAXINFO: {
+        MINMAXINFO *mmi = (MINMAXINFO *)lp;
+        mmi->ptMinTrackSize.x = 760;
+        mmi->ptMinTrackSize.y = 640;
+        return 0;
+    }
+
+    case WM_SIZE: {
+        RECT cr;
+        GetClientRect(w, &cr);
+        reposition_dash_controls(w, cr.right);
+        InvalidateRect(w, NULL, TRUE);
         return 0;
     }
 
@@ -1411,7 +1447,7 @@ static LRESULT CALLBACK login_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
 static void create_dashboard(void)
 {
     RECT wr = {0,0,WIN_CW,WIN_CH};
-    DWORD style = WS_OVERLAPPEDWINDOW & ~(WS_MAXIMIZEBOX|WS_THICKFRAME);
+    DWORD style = WS_OVERLAPPEDWINDOW;   /* resizable + maximizable */
     AdjustWindowRect(&wr, style, FALSE);
     {
         HWND hw = CreateWindowExA(
