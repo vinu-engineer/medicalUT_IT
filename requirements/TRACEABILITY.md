@@ -1,8 +1,8 @@
 # Requirements Traceability Matrix (RTM)
 
-**Document ID:** RTM-001-REV-G
+**Document ID:** RTM-001-REV-H
 **Project:** Patient Vital Signs Monitor
-**Version:** 2.7.0
+**Version:** 2.8.1
 **Date:** 2026-04-08
 **Status:** Approved
 **Standard:** IEC 62304 §5.7.3 / FDA SW Validation Guidance
@@ -47,6 +47,7 @@ implementation and test coverage, and every UNS must reach at least one SWR.
 | UNS-001, UNS-009 | SYS-001, SYS-002 | SWR-TRD-001 | `trend.c` : `trend_direction()`, `trend_extract_*()` | `TrendDirection.*`, `TrendExtract.*` (18 tests) | — |
 | UNS-015 | SYS-015 | SWR-GUI-010 | `gui_main.c`, `app_config.c` : sim toggle + persistence | `ConfigTest.*` (27 tests) | — |
 | UNS-015 | SYS-005 | SWR-GUI-011 | `gui_main.c` : rolling message in sim mode (`paint_status_banner()`, scroll offset) | GUI demo | — |
+| UNS-017 | SYS-012 | SWR-GUI-012 | `localization.c`, `app_config.c`, `gui_main.c` : language selection + persistence | `LocalizationTest.*` (20 tests), `AppConfigTest.*` (15 tests) | — |
 | UNS-005, UNS-006 | SYS-005 | SWR-ALT-001 | `alerts.c` : `generate_alerts()` | `REQ_ALT_002_*` (4 tests) | `REQ_INT_MON_004`, `REQ_INT_ESC_002`, `REQ_INT_ESC_003` |
 | UNS-005 | SYS-005 | SWR-ALT-002 | `alerts.c` : `generate_alerts()` | `REQ_ALT_001_*` (1 test) | `REQ_INT_ESC_004` |
 | UNS-011 | SYS-012 | SWR-ALT-003 | `alerts.c` : `generate_alerts()` | `REQ_ALT_004_*` (2 tests) | — |

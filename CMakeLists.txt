@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(PatientMonitor VERSION 2.6.0 LANGUAGES C CXX)
+project(PatientMonitor VERSION 2.8.1 LANGUAGES C CXX)
 
 # GTest release-1.10.0 calls find_package(PythonInterp) internally.
 # Under CMake 3.27+ policy CMP0148, FindPythonInterp is deprecated.
@@ -32,6 +32,7 @@ add_library(monitor_lib STATIC
     src/news2.c
     src/alarm_limits.c
     src/trend.c
+    src/localization.c
 )
 target_include_directories(monitor_lib PUBLIC include)
 target_compile_options(monitor_lib PRIVATE
@@ -99,6 +100,14 @@ option(BUILD_TESTS "Build unit and integration tests" ON)
 
 if(BUILD_TESTS)
     include(FetchContent)
+
+    # GTest release-1.10.0 has a compilation issue with newer GCC/Clang compilers
+    # related to maybe-uninitialized warnings. Suppress this for GTest build.
+    set(SAVED_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+    if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-maybe-uninitialized -Wno-error=maybe-uninitialized")
+    endif()
+
     FetchContent_Declare(
         googletest
         GIT_REPOSITORY https://github.com/google/googletest.git
@@ -108,6 +117,9 @@ if(BUILD_TESTS)
     set(BUILD_GMOCK  OFF CACHE BOOL "" FORCE)
     set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
     FetchContent_MakeAvailable(googletest)
+
+    # Restore original CXX flags
+    set(CMAKE_CXX_FLAGS ${SAVED_CXX_FLAGS})
 
     # MinGW compatibility: GTest release-1.10.0 uses MSVC-specific headers and
     # symbols (_stricmp, _fileno, crtdbg.h, etc.) inside GTEST_OS_WINDOWS blocks.

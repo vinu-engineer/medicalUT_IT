@@ -1,8 +1,8 @@
 # Software Requirements Specification (SWR)
 
-**Document ID:** SWR-001-REV-G
+**Document ID:** SWR-001-REV-H
 **Project:** Patient Vital Signs Monitor
-**Version:** 2.7.0
+**Version:** 2.8.1
 **Date:** 2026-04-08
 **Status:** Approved
 **Standard:** IEC 62304 §5.2
@@ -571,6 +571,49 @@ rolling message in status banner.
 
 ---
 
+### SWR-GUI-012 — Multi-Language Localization
+
+**Requirement:** The system shall support display of the user interface in four
+languages: English, Spanish (Español), French (Français), and German (Deutsch).
+The language subsystem shall:
+
+1. Provide a static translation table for all user-facing strings (50+ strings per language)
+2. Implement language enumeration `Language` with values `LANG_ENGLISH` (0), `LANG_SPANISH` (1),
+   `LANG_FRENCH` (2), `LANG_GERMAN` (3)
+3. Implement string ID enumeration `StringID` for all translatable strings
+4. Provide public API functions:
+   - `localization_set_language(Language lang)` — set current active language
+   - `localization_get_language()` — retrieve current language
+   - `localization_get_string(StringID id)` — get translated string for current language
+   - `localization_get_language_name(Language lang)` — get localized name of a language
+5. Use static memory allocation only (no heap allocation) for IEC 62304 Class B compliance
+6. Return fallback strings ("???" for invalid string ID, "Unknown" for invalid language)
+7. Persist the user's language preference across application restarts via `app_config_save/load`
+8. Provide a language selection dropdown in the Settings panel → Language tab
+9. All string tables shall include translations for all critical UI elements
+   including status messages, button labels, error messages, and vital sign names
+
+**Traces to:** SYS-012 (Multi-language support for international use)
+**Implemented in:**
+- `include/localization.h` — Language and StringID enumerations
+- `src/localization.c` — Static string tables and API implementation
+- `include/app_config.h`, `src/app_config.c` — Language persistence
+- `src/gui_main.c` — Language tab in Settings, language dropdown control
+**Verified by:**
+- `tests/unit/test_localization.cpp` — 20+ unit tests covering all 4 languages,
+  string retrieval, language switching, error handling
+- `tests/unit/test_app_config.cpp` — 15+ tests for language persistence,
+  save/load, file formats
+
+**Compliance Notes:**
+- No dynamic memory allocation; all strings are compile-time static arrays
+- Each language table is a fixed array of string pointers, sized STR_COUNT
+- Invalid string/language IDs return safe fallback strings (never NULL)
+- Language is loaded on application startup from configuration file
+- Language changes are persisted immediately when user selects from dropdown
+
+---
+
 ## Module UNIT-ALM — Configurable Alarm Limits (`alarm_limits.c`)
 
 ### SWR-ALM-001 — Per-Patient Configurable Alarm Limits
@@ -632,3 +675,4 @@ extract per-parameter arrays from a `VitalSigns` history buffer.
 | E   | 2026-04-07 | vinu-engineer   | Added SWR-GUI-010 (simulation mode toggle) — v1.8.0 |
 | F   | 2026-04-08 | vinu-engineer   | Added SWR-VIT-008 (RR), SWR-NEW-001 (NEWS2), SWR-ALM-001 (alarm limits), SWR-TRD-001 (trend) — v2.6.0 |
 | G   | 2026-04-08 | claude          | Added SWR-GUI-011 (rolling message in simulation mode) — v2.7.0 |
+| H   | 2026-04-08 | claude          | Added SWR-GUI-012 (multi-language localization support) — v2.8.1 |

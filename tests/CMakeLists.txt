@@ -11,21 +11,31 @@ endif()
 # -------------------------------------------------------
 # Unit Tests
 # -------------------------------------------------------
-add_executable(test_unit
+set(TEST_SOURCES
     unit/test_vitals.cpp
     unit/test_alerts.cpp
     unit/test_patient.cpp
-    unit/test_auth.cpp
     unit/test_hal.cpp
     unit/test_config.cpp
     unit/test_news2.cpp
     unit/test_alarm_limits.cpp
     unit/test_trend.cpp
-    ${PROJECT_SOURCE_DIR}/src/gui_auth.c
-    ${PROJECT_SOURCE_DIR}/src/gui_users.c
+    unit/test_localization.cpp
+    unit/test_app_config.cpp
     ${PROJECT_SOURCE_DIR}/src/pw_hash.c
     ${PROJECT_SOURCE_DIR}/src/sim_vitals.c
 )
+
+# GUI source files (including auth/users) are Windows-only due to windows.h and io.h headers
+if(WIN32)
+    list(APPEND TEST_SOURCES
+        unit/test_auth.cpp
+        ${PROJECT_SOURCE_DIR}/src/gui_auth.c
+        ${PROJECT_SOURCE_DIR}/src/gui_users.c
+    )
+endif()
+
+add_executable(test_unit ${TEST_SOURCES})
 target_link_libraries(test_unit PRIVATE monitor_lib ${GTEST_MAIN_TARGET})
 target_include_directories(test_unit PRIVATE ${PROJECT_SOURCE_DIR}/include)
 add_test(NAME UnitTests COMMAND test_unit --gtest_output=xml:${CMAKE_BINARY_DIR}/results_unit.xml)

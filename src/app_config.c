@@ -5,16 +5,18 @@
  * The configuration file is a simple key=value text file:
  *
  *   sim_enabled=1
+ *   language=0
  *
  * File location (in priority order):
  *  1. Path supplied by app_config_set_path() (non-NULL).
  *  2. Directory of the running executable + "/" + APP_CFG_FILENAME,
  *     resolved via GetModuleFileNameA().
  *
- * @req SWR-GUI-010
+ * @req SWR-GUI-010, SWR-GUI-012
  */
 
 #include "app_config.h"
+#include "localization.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -97,13 +99,14 @@ void app_config_set_path(const char *path)
     }
 }
 
-int app_config_load(int *sim_enabled_out)
+int app_config_load(int *sim_enabled_out, int *language_out)
 {
-    if (sim_enabled_out == NULL)
+    if (sim_enabled_out == NULL || language_out == NULL)
         return 0;
 
-    /* Apply default before attempting to read */
+    /* Apply defaults before attempting to read */
     *sim_enabled_out = 1;
+    *language_out = LANG_ENGLISH;
 
     char cfg_path[CFG_MAX_PATH] = {0};
     if (!get_cfg_path(cfg_path, sizeof(cfg_path)))
@@ -111,34 +114,32 @@ int app_config_load(int *sim_enabled_out)
 
     FILE *f = fopen(cfg_path, "r");
     if (f == NULL)
-        return 0; /* file absent – caller gets the default */
+        return 0; /* file absent – caller gets the defaults */
 
     char line[128];
-    int parsed = 0;
+    int sim_parsed = 0, lang_parsed = 0;
     while (fgets(line, (int)sizeof(line), f) != NULL)
     {
         int value = 0;
         if (sscanf(line, "sim_enabled=%d", &value) == 1)
         {
             *sim_enabled_out = (value != 0) ? 1 : 0;
-            parsed = 1;
-            break;
+            sim_parsed = 1;
+        }
+        else if (sscanf(line, "language=%d", &value) == 1)
+        {
+            if (value >= 0 && value < LANG_COUNT)
+                *language_out = value;
+            lang_parsed = 1;
         }
     }
 
     fclose(f);
 
-    if (!parsed)
-    {
-        /* File exists but does not contain a recognisable value */
-        *sim_enabled_out = 1;
-        return 0;
-    }
-
-    return 1;
+    return (sim_parsed || lang_parsed) ? 1 : 0;
 }
 
-int app_config_save(int sim_enabled)
+int app_config_save(int sim_enabled, int language)
 {
     char cfg_path[CFG_MAX_PATH] = {0};
     if (!get_cfg_path(cfg_path, sizeof(cfg_path)))
@@ -148,7 +149,8 @@ int app_config_save(int sim_enabled)
     if (f == NULL)
         return 0;
 
-    int ok = (fprintf(f, "sim_enabled=%d\n", sim_enabled ? 1 : 0) > 0);
+    int ok = (fprintf(f, "sim_enabled=%d\nlanguage=%d\n",
+                     sim_enabled ? 1 : 0, language) > 0);
     fclose(f);
     return ok ? 1 : 0;
 }

@@ -22,6 +22,7 @@
 
 extern "C" {
 #include "app_config.h"
+#include "localization.h"
 }
 
 // ---------------------------------------------------------------------------
@@ -93,7 +94,8 @@ TEST_F(ConfigTest, DefaultWhenFileAbsent)
     app_config_set_path(nonexistent.c_str());
 
     int sim_enabled = 99; // sentinel
-    int result = app_config_load(&sim_enabled);
+    int lang = LANG_ENGLISH;
+    int result = app_config_load(&sim_enabled, &lang);
 
     EXPECT_EQ(0, result)        << "Load should return 0 when file is absent";
     EXPECT_EQ(1, sim_enabled)   << "Default sim_enabled must be 1";
@@ -105,11 +107,12 @@ TEST_F(ConfigTest, DefaultWhenFileAbsent)
 // @req SWR-GUI-010 - Save sim_enabled=0 then load, expect 0
 TEST_F(ConfigTest, SaveZeroThenLoadReturnsZero)
 {
-    int save_result = app_config_save(0);
+    int save_result = app_config_save(0, LANG_ENGLISH);
     ASSERT_EQ(1, save_result) << "Save should succeed";
 
     int sim_enabled = 99;
-    int load_result = app_config_load(&sim_enabled);
+    int lang = LANG_ENGLISH;
+    int load_result = app_config_load(&sim_enabled, &lang);
     EXPECT_EQ(1, load_result)  << "Load should succeed after save";
     EXPECT_EQ(0, sim_enabled)  << "sim_enabled should be 0";
 }
@@ -117,11 +120,12 @@ TEST_F(ConfigTest, SaveZeroThenLoadReturnsZero)
 // @req SWR-GUI-010 - Save sim_enabled=1 then load, expect 1
 TEST_F(ConfigTest, SaveOneThenLoadReturnsOne)
 {
-    int save_result = app_config_save(1);
+    int save_result = app_config_save(1, LANG_ENGLISH);
     ASSERT_EQ(1, save_result) << "Save should succeed";
 
     int sim_enabled = 99;
-    int load_result = app_config_load(&sim_enabled);
+    int lang = LANG_ENGLISH;
+    int load_result = app_config_load(&sim_enabled, &lang);
     EXPECT_EQ(1, load_result)  << "Load should succeed after save";
     EXPECT_EQ(1, sim_enabled)  << "sim_enabled should be 1";
 }
@@ -142,10 +146,11 @@ TEST_F(ConfigTest, MultipleSaveLoadCyclesPreserveValue)
     {
         SCOPED_TRACE("save_val=" + std::to_string(c.save_val));
 
-        ASSERT_EQ(1, app_config_save(c.save_val)) << "Save must succeed";
+        ASSERT_EQ(1, app_config_save(c.save_val, LANG_ENGLISH)) << "Save must succeed";
 
         int sim_enabled = 99;
-        ASSERT_EQ(1, app_config_load(&sim_enabled)) << "Load must succeed";
+        int lang = LANG_ENGLISH;
+        ASSERT_EQ(1, app_config_load(&sim_enabled, &lang)) << "Load must succeed";
         EXPECT_EQ(c.expect_val, sim_enabled)
             << "Loaded value must match saved value";
     }
@@ -155,18 +160,22 @@ TEST_F(ConfigTest, MultipleSaveLoadCyclesPreserveValue)
 TEST_F(ConfigTest, OverwriteExistingFile)
 {
     // Write 1 first
-    ASSERT_EQ(1, app_config_save(1));
+    ASSERT_EQ(1, app_config_save(1, LANG_ENGLISH));
     {
         int v = 99;
-        ASSERT_EQ(1, app_config_load(&v));
+        int lang_temp = LANG_ENGLISH;
+
+        ASSERT_EQ(1, app_config_load(&v, &lang_temp));
         EXPECT_EQ(1, v);
     }
 
     // Overwrite with 0
-    ASSERT_EQ(1, app_config_save(0));
+    ASSERT_EQ(1, app_config_save(0, LANG_ENGLISH));
     {
         int v = 99;
-        ASSERT_EQ(1, app_config_load(&v));
+        int lang_temp = LANG_ENGLISH;
+
+        ASSERT_EQ(1, app_config_load(&v, &lang_temp));
         EXPECT_EQ(0, v);
     }
 }
@@ -182,7 +191,9 @@ TEST_F(ConfigTest, MalformedFileReturnsDefault)
     fclose(f);
 
     int sim_enabled = 99;
-    int result = app_config_load(&sim_enabled);
+    int lang = LANG_ENGLISH;
+
+    int result = app_config_load(&sim_enabled, &lang);
 
     EXPECT_EQ(0, result)      << "Load should return 0 for malformed file";
     EXPECT_EQ(1, sim_enabled) << "Default sim_enabled=1 when file is malformed";
@@ -197,7 +208,9 @@ TEST_F(ConfigTest, EmptyFileReturnsDefault)
     fclose(f);
 
     int sim_enabled = 99;
-    int result = app_config_load(&sim_enabled);
+    int lang = LANG_ENGLISH;
+
+    int result = app_config_load(&sim_enabled, &lang);
 
     EXPECT_EQ(0, result)      << "Load should return 0 for empty file";
     EXPECT_EQ(1, sim_enabled) << "Default sim_enabled=1 for empty file";
@@ -213,7 +226,9 @@ TEST_F(ConfigTest, FileWithExtraKeysBeforeTarget)
     fclose(f);
 
     int sim_enabled = 99;
-    int result = app_config_load(&sim_enabled);
+    int lang = LANG_ENGLISH;
+
+    int result = app_config_load(&sim_enabled, &lang);
 
     EXPECT_EQ(1, result)      << "Load should succeed";
     EXPECT_EQ(0, sim_enabled) << "sim_enabled=0 must be parsed even after extra keys";
@@ -231,9 +246,10 @@ TEST_F(ConfigTest, SetPathNullResetsThenReapply)
     // Re-apply our temp path so the fixture TearDown can clean up correctly
     app_config_set_path(temp_path_.c_str());
 
-    ASSERT_EQ(1, app_config_save(1));
+    ASSERT_EQ(1, app_config_save(1, LANG_ENGLISH));
     int v = 99;
-    ASSERT_EQ(1, app_config_load(&v));
+    int lang_v = LANG_ENGLISH;
+    ASSERT_EQ(1, app_config_load(&v, &lang_v));
     EXPECT_EQ(1, v);
 }
 
@@ -247,7 +263,9 @@ TEST_F(ConfigTest, NonZeroValueTreatedAsEnabled)
     fclose(f);
 
     int sim_enabled = 99;
-    int result = app_config_load(&sim_enabled);
+    int lang = LANG_ENGLISH;
+
+    int result = app_config_load(&sim_enabled, &lang);
     EXPECT_EQ(1, result);
     EXPECT_EQ(1, sim_enabled) << "Any non-zero value should be normalised to 1";
 }

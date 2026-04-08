@@ -1,6 +1,6 @@
 /**
  * @file gui_main.c
- * @brief Win32 GUI — Patient Vital Signs Monitor v2.7.0
+ * @brief Win32 GUI — Patient Vital Signs Monitor v2.8.1
  *
  * Windows:
  *   1. Login (PVM_Login)      — auth with role detection
@@ -37,12 +37,13 @@
 #include "gui_users.h"
 #include "hw_vitals.h"
 #include "app_config.h"
+#include "localization.h"
 
 /* ===================================================================
  * App metadata
  * =================================================================== */
 #define APP_TITLE   "Patient Vital Signs Monitor"
-#define APP_VERSION "v2.7.0"
+#define APP_VERSION "v2.8.1"
 #define IDI_APPICON 101
 
 /* ===================================================================
@@ -111,6 +112,9 @@
 /* Simulation tab in Settings @req SWR-GUI-010 */
 #define IDC_BTN_SIM_TOGGLE 1225
 #define IDC_STC_SIM_STATUS 1226
+/* Language tab in Settings @req SWR-GUI-012 */
+#define IDC_CMB_LANGUAGE   1450
+#define IDC_LBL_LANGUAGE   1451
 
 /* ===================================================================
  * Control IDs — Password change dialog
@@ -850,6 +854,9 @@ static LRESULT CALLBACK settings_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
     /* My Account tab control handles */
     static HWND acct_ctrls[4];
     static int  acct_count = 0;
+    /* Language tab control handles @req SWR-GUI-012 */
+    static HWND lang_ctrls[6];
+    static int  lang_count = 0;
 
     switch (msg) {
     case WM_CREATE: {
@@ -870,12 +877,14 @@ static LRESULT CALLBACK settings_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
             ti.pszText = "About";         TabCtrl_InsertItem(hw_tab, 2, &ti);
             ti.pszText = "Alarm Limits";  TabCtrl_InsertItem(hw_tab, 3, &ti);
             ti.pszText = "My Account";    TabCtrl_InsertItem(hw_tab, 4, &ti);
+            ti.pszText = "Language";      TabCtrl_InsertItem(hw_tab, 5, &ti);
         } else {
             /* Clinical users: no Users tab */
             ti.pszText = "Simulation";    TabCtrl_InsertItem(hw_tab, 0, &ti);
             ti.pszText = "Alarm Limits";  TabCtrl_InsertItem(hw_tab, 1, &ti);
             ti.pszText = "My Account";    TabCtrl_InsertItem(hw_tab, 2, &ti);
             ti.pszText = "About";         TabCtrl_InsertItem(hw_tab, 3, &ti);
+            ti.pszText = "Language";      TabCtrl_InsertItem(hw_tab, 4, &ti);
         }
 
         /* --- Users tab controls --- */
@@ -1029,6 +1038,32 @@ static LRESULT CALLBACK settings_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
         for (i = 0; i < acct_count; ++i)
             ShowWindow(acct_ctrls[i], SW_HIDE);
 
+        /* --- Language tab controls @req SWR-GUI-012 --- */
+        lang_count = 0;
+        lang_ctrls[lang_count++] = make_label(w,
+            "Select a language for the application:",
+            16, 58, 520, 22);
+        {
+            HWND cmb = CreateWindowExA(0, WC_COMBOBOXA, "",
+                WS_CHILD|WS_VISIBLE|CBS_DROPDOWNLIST,
+                16, 90, 200, 200, w, (HMENU)(INT_PTR)IDC_CMB_LANGUAGE,
+                g_app.inst, NULL);
+            SendMessage(cmb, WM_SETFONT, (WPARAM)g_app.font_ui, TRUE);
+            /* Add language options */
+            for (int j = 0; j < LANG_COUNT; j++) {
+                const char* lang_name = localization_get_language_name((Language)j);
+                SendMessageA(cmb, CB_ADDSTRING, 0, (LPARAM)lang_name);
+            }
+            /* Set current selection */
+            SendMessage(cmb, CB_SETCURSEL, localization_get_language(), 0);
+            lang_ctrls[lang_count++] = cmb;
+        }
+        lang_ctrls[lang_count++] = make_label(w,
+            "Language changes take effect after relaunching the application.",
+            16, 130, 520, 20);
+        for (i = 0; i < lang_count; ++i)
+            ShowWindow(lang_ctrls[i], SW_HIDE);
+
         font_children(w, g_app.font_ui);
         if (about_count > 0)
             SendMessage(about_ctrls[0], WM_SETFONT, (WPARAM)g_app.font_status, TRUE);
@@ -1057,20 +1092,22 @@ static LRESULT CALLBACK settings_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
             int i;
             /* Map tab index to content: depends on role */
             int show_users=SW_HIDE, show_sim=SW_HIDE, show_about=SW_HIDE,
-                show_alm=SW_HIDE, show_acct=SW_HIDE;
+                show_alm=SW_HIDE, show_acct=SW_HIDE, show_lang=SW_HIDE;
             if (g_app.logged_role == ROLE_ADMIN) {
-                /* Admin tabs: 0=Users, 1=Sim, 2=About, 3=Alarm, 4=MyAccount */
+                /* Admin tabs: 0=Users, 1=Sim, 2=About, 3=Alarm, 4=MyAccount, 5=Language */
                 if (sel==0) show_users=SW_SHOW;
                 if (sel==1) show_sim=SW_SHOW;
                 if (sel==2) show_about=SW_SHOW;
                 if (sel==3) show_alm=SW_SHOW;
                 if (sel==4) show_acct=SW_SHOW;
+                if (sel==5) show_lang=SW_SHOW;
             } else {
-                /* Clinical tabs: 0=Sim, 1=Alarm, 2=MyAccount, 3=About */
+                /* Clinical tabs: 0=Sim, 1=Alarm, 2=MyAccount, 3=About, 4=Language */
                 if (sel==0) show_sim=SW_SHOW;
                 if (sel==1) show_alm=SW_SHOW;
                 if (sel==2) show_acct=SW_SHOW;
                 if (sel==3) show_about=SW_SHOW;
+                if (sel==4) show_lang=SW_SHOW;
             }
             ShowWindow(hw_list,    show_users);
             ShowWindow(hw_btn_add, show_users);
@@ -1085,6 +1122,8 @@ static LRESULT CALLBACK settings_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
                 ShowWindow(alm_ctrls[i],   show_alm);
             for (i = 0; i < acct_count;  ++i)
                 ShowWindow(acct_ctrls[i],  show_acct);
+            for (i = 0; i < lang_count;  ++i)
+                ShowWindow(lang_ctrls[i],  show_lang);
             InvalidateRect(w, NULL, TRUE);
         }
         if (nm->idFrom == IDC_LST_USERS && nm->code == (UINT)LBN_SELCHANGE) {
@@ -1156,7 +1195,7 @@ static LRESULT CALLBACK settings_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
         }
         case IDC_BTN_SIM_TOGGLE:    /* @req SWR-GUI-010 */
             g_app.sim_enabled = !g_app.sim_enabled;
-            app_config_save(g_app.sim_enabled);
+            app_config_save(g_app.sim_enabled, localization_get_language());
             /* Update toggle button label and status label */
             SetWindowTextA(GetDlgItem(w, IDC_BTN_SIM_TOGGLE),
                            g_app.sim_enabled ? "Disable Simulation" : "Enable Simulation");
@@ -1242,6 +1281,18 @@ static LRESULT CALLBACK settings_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
         case IDC_BTN_MY_PWD:
             open_pwddlg(w, g_app.logged_username, 0);
             break;
+
+        case IDC_CMB_LANGUAGE: {  /* @req SWR-GUI-012 */
+            if (HIWORD(wp) == CBN_SELCHANGE) {
+                HWND cmb = GetDlgItem(w, IDC_CMB_LANGUAGE);
+                int sel = (int)SendMessage(cmb, CB_GETCURSEL, 0, 0);
+                if (sel != CB_ERR && sel >= 0 && sel < LANG_COUNT) {
+                    localization_set_language((Language)sel);
+                    app_config_save(g_app.sim_enabled, sel);
+                }
+            }
+            break;
+        }
         }
         return 0;
 
@@ -1544,7 +1595,11 @@ static LRESULT CALLBACK dash_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
         btn = make_btn(w, IDC_BTN_SETTINGS, "Settings",  WIN_CW-272, 14, 86, 28);
         SendMessage(btn, WM_SETFONT, (WPARAM)g_app.font_ui, TRUE);
 
-        app_config_load(&g_app.sim_enabled);          /* restore sim mode */
+        {
+            int lang = LANG_ENGLISH;
+            app_config_load(&g_app.sim_enabled, &lang);  /* restore sim mode and language @req SWR-GUI-010, SWR-GUI-012 */
+            localization_set_language((Language)lang);
+        }
         alarm_limits_load(&g_app.alarm_limits);       /* restore alarm limits @req SWR-ALM-001 */
         hw_init();
         g_app.sim_paused = 0;
@@ -1642,7 +1697,7 @@ static LRESULT CALLBACK dash_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
             return 0;
         case IDC_BTN_LOGOUT:
             KillTimer(w, TIMER_SIM);
-            app_config_save(g_app.sim_enabled);
+            app_config_save(g_app.sim_enabled, localization_get_language());
             ZeroMemory(&g_app.patient, sizeof(g_app.patient));
             g_app.has_patient    = 0;
             g_app.sim_paused     = 0;
