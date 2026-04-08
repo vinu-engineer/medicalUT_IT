@@ -32,6 +32,7 @@
 #include "patient.h"
 #include "news2.h"
 #include "alarm_limits.h"
+#include "trend.h"
 #include "gui_auth.h"
 #include "gui_users.h"
 #include "hw_vitals.h"
@@ -41,7 +42,7 @@
  * App metadata
  * =================================================================== */
 #define APP_TITLE   "Patient Vital Signs Monitor"
-#define APP_VERSION "v2.4.0"
+#define APP_VERSION "v2.5.0"
 #define IDI_APPICON 101
 
 /* ===================================================================
@@ -355,18 +356,61 @@ static void paint_patient_bar(HDC hdc, int cw)
     }
 }
 
+/**
+ * @brief Draw a mini sparkline from @p vals[0..n-1] into a bounding rectangle.
+ *
+ * The sparkline occupies the bottom strip of a tile (between the value text and
+ * the badge row). Points are scaled to fit the full width and height of the
+ * designated strip. Uses GDI Polyline for hardware-accelerated rendering.
+ *
+ * @req SWR-TRD-001
+ */
+static void paint_sparkline(HDC hdc, int sx, int sy, int sw, int sh,
+                             const int *vals, int n, COLORREF clr)
+{
+    POINT pts[MAX_READINGS];
+    int v_min, v_max, range, i;
+    HPEN pen, open;
+
+    if (n < 2 || sw < 2 || sh < 2) return;
+
+    /* Find min/max for scaling */
+    v_min = vals[0]; v_max = vals[0];
+    for (i = 1; i < n; ++i) {
+        if (vals[i] < v_min) v_min = vals[i];
+        if (vals[i] > v_max) v_max = vals[i];
+    }
+    range = v_max - v_min;
+    if (range == 0) range = 1; /* flat line in centre */
+
+    for (i = 0; i < n; ++i) {
+        pts[i].x = sx + (i * (sw - 1)) / (n - 1);
+        /* Invert Y: high value = top of strip */
+        pts[i].y = sy + sh - 1 - ((vals[i] - v_min) * (sh - 1)) / range;
+    }
+
+    pen  = CreatePen(PS_SOLID, 1, clr);
+    open = (HPEN)SelectObject(hdc, pen);
+    Polyline(hdc, pts, n);
+    SelectObject(hdc, open);
+    DeleteObject(pen);
+}
+
 static void paint_tile(HDC hdc,
                         int tx, int ty, int tw, int th,
                         const char *label, const char *value, const char *unit,
-                        AlertLevel level)
+                        AlertLevel level,
+                        const int *spark_vals, int spark_n)
 {
     COLORREF bg, fg;
     char badge[24], full_val[48];
-    /* vertical split: label top, value middle, badge bottom (no overlap) */
+    /* vertical split: label top, value middle, sparkline, badge bottom */
     int lbl_y  = ty + 6;                  /* label row top */
     int val_y  = ty + 26;                 /* value row top (below label) */
-    int val_h  = th - 26 - 22;           /* value height: leaves room for badge */
-    int bdg_y  = ty + th - 20;           /* badge row top (bottom-anchored) */
+    int val_h  = th - 26 - 26;           /* value height: leaves room for sparkline + badge */
+    int spk_y  = ty + th - 30;           /* sparkline strip top */
+    int spk_h  = 12;                      /* sparkline strip height */
+    int bdg_y  = ty + th - 18;           /* badge row top (bottom-anchored) */
     HPEN pen; HPEN open; HBRUSH obr;
 
     switch (level) {
@@ -389,6 +433,9 @@ static void paint_tile(HDC hdc,
 
     draw_text_ex(hdc, label,     tx+10, lbl_y,  tw-20, 18,    g_app.font_tile_lbl, fg,           DT_SINGLELINE|DT_LEFT);
     draw_text_ex(hdc, full_val,  tx+8,  val_y,  tw-16, val_h, g_app.font_tile_val, CLR_DARK_TEXT, DT_SINGLELINE|DT_LEFT|DT_VCENTER);
+    /* Sparkline strip — draw only when we have at least 2 data points */
+    if (spark_n >= 2)
+        paint_sparkline(hdc, tx+8, spk_y, tw-16, spk_h, spark_vals, spark_n, fg);
     draw_text_ex(hdc, badge,     tx+8,  bdg_y,  tw-16, 18,    g_app.font_tile_lbl, fg,           DT_SINGLELINE|DT_LEFT);
 }
 
@@ -398,8 +445,12 @@ static void paint_tiles(HDC hdc, int cw)
     char hr_s[16], bp_s[24], tp_s[16], sp_s[16], rr_s[16];
     AlertLevel lhr=ALERT_NORMAL, lbp=ALERT_NORMAL, ltp=ALERT_NORMAL,
                lsp=ALERT_NORMAL, lrr=ALERT_NORMAL;
-    /* 3-column layout — 5 vital tiles, 6th slot reserved for future use */
+    /* 3-column layout — 5 vital tiles, 6th slot = NEWS2 */
     int pad=10, tw=(cw-4*pad)/3, th=(TILE_H-3*pad)/2;
+    /* Sparkline arrays (last up to MAX_READINGS points per parameter) @req SWR-TRD-001 */
+    int spk_hr[MAX_READINGS], spk_sbp[MAX_READINGS], spk_tp[MAX_READINGS];
+    int spk_sp[MAX_READINGS], spk_rr[MAX_READINGS];
+    int n_hr=0, n_sbp=0, n_tp=0, n_sp=0, n_rr=0;
 
     fill_rect(hdc, 0, TILE_Y, cw, TILE_H+pad, CLR_NEAR_WHITE);
     if (!g_app.sim_enabled) {
@@ -426,6 +477,16 @@ static void paint_tiles(HDC hdc, int cw)
             lsp=check_spo2(v->spo2);
             if (v->respiration_rate != 0)
                 lrr=check_respiration_rate(v->respiration_rate);
+            /* Extract sparkline data from patient history @req SWR-TRD-001 */
+            {
+                const VitalSigns *rd = g_app.patient.readings;
+                int cnt = g_app.patient.reading_count;
+                n_hr  = trend_extract_hr  (rd, cnt, spk_hr,  MAX_READINGS);
+                n_sbp = trend_extract_sbp (rd, cnt, spk_sbp, MAX_READINGS);
+                n_tp  = trend_extract_temp(rd, cnt, spk_tp,  MAX_READINGS);
+                n_sp  = trend_extract_spo2(rd, cnt, spk_sp,  MAX_READINGS);
+                n_rr  = trend_extract_rr  (rd, cnt, spk_rr,  MAX_READINGS);
+            }
         } else {
             strncpy(hr_s,"--",   sizeof(hr_s)-1);  hr_s[sizeof(hr_s)-1]='\0';
             strncpy(bp_s,"--/--",sizeof(bp_s)-1);  bp_s[sizeof(bp_s)-1]='\0';
@@ -435,12 +496,12 @@ static void paint_tiles(HDC hdc, int cw)
         }
     }
     /* Row 1 */
-    paint_tile(hdc, pad,             TILE_Y+pad,        tw, th, "HEART RATE",     hr_s, "bpm",    lhr);
-    paint_tile(hdc, pad+tw+pad,      TILE_Y+pad,        tw, th, "BLOOD PRESSURE", bp_s, "mmHg",   lbp);
-    paint_tile(hdc, pad+2*(tw+pad),  TILE_Y+pad,        tw, th, "TEMPERATURE",    tp_s, "C",      ltp);
+    paint_tile(hdc, pad,             TILE_Y+pad,        tw, th, "HEART RATE",     hr_s, "bpm",    lhr, spk_hr,  n_hr);
+    paint_tile(hdc, pad+tw+pad,      TILE_Y+pad,        tw, th, "BLOOD PRESSURE", bp_s, "mmHg",   lbp, spk_sbp, n_sbp);
+    paint_tile(hdc, pad+2*(tw+pad),  TILE_Y+pad,        tw, th, "TEMPERATURE",    tp_s, "C",      ltp, spk_tp,  n_tp);
     /* Row 2 */
-    paint_tile(hdc, pad,             TILE_Y+pad+th+pad, tw, th, "SpO2",           sp_s, "%",      lsp);
-    paint_tile(hdc, pad+tw+pad,      TILE_Y+pad+th+pad, tw, th, "RESP RATE",      rr_s, "br/min", lrr);
+    paint_tile(hdc, pad,             TILE_Y+pad+th+pad, tw, th, "SpO2",           sp_s, "%",      lsp, spk_sp,  n_sp);
+    paint_tile(hdc, pad+tw+pad,      TILE_Y+pad+th+pad, tw, th, "RESP RATE",      rr_s, "br/min", lrr, spk_rr,  n_rr);
     /* 6th tile: NEWS2 Early Warning Score @req SWR-NEW-001 */
     {
         char n2_score[8] = "--";
@@ -461,7 +522,7 @@ static void paint_tiles(HDC hdc, int cw)
             n2_score[sizeof(n2_score)-1] = '\0';
         }
         paint_tile(hdc, pad+2*(tw+pad), TILE_Y+pad+th+pad, tw, th,
-                   "NEWS2 SCORE", n2_score, n2_unit, n2_lvl);
+                   "NEWS2 SCORE", n2_score, n2_unit, n2_lvl, NULL, 0);
     }
 }
 

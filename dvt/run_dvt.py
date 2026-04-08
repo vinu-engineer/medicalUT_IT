@@ -71,7 +71,9 @@ REQUIREMENT_MAP = {
     # NEWS2 — GTest suites: News2HR, News2RR, News2SpO2, News2SBP, News2Temp, News2Calc
     "SWR-NEW-001": ("test_unit", "News2Calc",         "NEWS2 total score, risk category, clinical response"),
     # Alarm limits — GTest suite: AlarmLimitsTest
-    "SWR-ALM-001": ("test_unit", "AlarmLimitsTest",  "Configurable alarm limits: defaults, save/load, check functions"),
+    "SWR-ALM-001": ("test_unit", "AlarmLimitsTest",   "Configurable alarm limits: defaults, save/load, check functions"),
+    # Trend / sparkline — GTest suites: TrendDirection, TrendExtract
+    "SWR-TRD-001": ("test_unit", "TrendDirection",    "Vital signs trend: RISING/FALLING/STABLE classification"),
     # Alert generation — GTest suites: GenerateAlerts, OverallAlert
     "SWR-ALT-001": ("test_unit", "GenerateAlerts", "generate_alerts() produces correct alerts"),
     "SWR-ALT-002": ("test_unit", "OverallAlert",   "overall_alert_level() aggregation"),

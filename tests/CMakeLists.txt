@@ -20,6 +20,7 @@ add_executable(test_unit
     unit/test_config.cpp
     unit/test_news2.cpp
     unit/test_alarm_limits.cpp
+    unit/test_trend.cpp
     ${PROJECT_SOURCE_DIR}/src/gui_auth.c
     ${PROJECT_SOURCE_DIR}/src/gui_users.c
     ${PROJECT_SOURCE_DIR}/src/pw_hash.c
