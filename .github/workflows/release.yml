@@ -38,14 +38,11 @@ jobs:
       # ----------------------------------------------------------------
       - name: Extract version
         id: ver
+        env:
+          INPUT_TAG: ${{ github.event.inputs.tag || github.ref_name }}
         run: |
-          # Handle both tag push and manual workflow_dispatch
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            TAG="${{ github.event.inputs.tag }}"
-          else
-            TAG="${GITHUB_REF_NAME}"          # e.g. v2.0.0
-          fi
-          VER="${TAG#v}"                    # e.g. 2.0.0
+          TAG="${INPUT_TAG}"          # e.g. v2.7.0
+          VER="${TAG#v}"              # e.g. 2.7.0
           echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
           echo "ver=${VER}" >> "$GITHUB_OUTPUT"
           echo "Version: ${VER}"
