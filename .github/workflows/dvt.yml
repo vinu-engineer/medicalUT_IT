@@ -1,11 +1,7 @@
 name: DVT — Design Verification Tests
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-  workflow_dispatch:
+  workflow_dispatch:  # Pipeline handles push/PR triggers
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -44,19 +40,19 @@ jobs:
             -Wno-dev
 
       # ----------------------------------------------------------------
-      # 3. Build all targets
+      # 4. Build all targets
       # ----------------------------------------------------------------
       - name: Build
         run: cmake --build build_dvt --parallel
 
       # ----------------------------------------------------------------
-      # 4. Create output directories for test results
+      # 5. Create output directories for test results
       # ----------------------------------------------------------------
       - name: Create output directories
         run: mkdir -p dvt/results
 
       # ----------------------------------------------------------------
-      # 5. Run unit tests
+      # 6. Run unit tests
       # ----------------------------------------------------------------
       - name: Run unit tests
         id: unit
@@ -67,7 +63,7 @@ jobs:
           echo "unit_exit=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
 
       # ----------------------------------------------------------------
-      # 5. Run integration tests
+      # 7. Run integration tests
       # ----------------------------------------------------------------
       - name: Run integration tests
         id: integration

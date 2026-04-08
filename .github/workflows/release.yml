@@ -2,10 +2,7 @@ name: Release — Build & Publish Assets
 
 # Triggered when a version tag (v*) is pushed or manually via workflow_dispatch
 on:
-  push:
-    tags:
-      - "v*"
-  workflow_dispatch:
+  workflow_dispatch:  # Pipeline handles tag-push triggers
     inputs:
       tag:
         description: 'Tag to build (e.g., v2.7.0)'
