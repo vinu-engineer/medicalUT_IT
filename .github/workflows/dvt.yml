@@ -1,0 +1,210 @@
+name: DVT — Design Verification Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  dvt:
+    name: DVT — Build, Test & Report
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      # ----------------------------------------------------------------
+      # 1. Checkout
+      # ----------------------------------------------------------------
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ----------------------------------------------------------------
+      # 2. Configure — MinGW-w64 (matches production toolchain)
+      # ----------------------------------------------------------------
+      - name: Configure CMake (MinGW-w64, BUILD_TESTS=ON)
+        run: |
+          cmake -G "MinGW Makefiles" -B build_dvt \
+            -DCMAKE_C_COMPILER=gcc \
+            -DCMAKE_CXX_COMPILER=g++ \
+            -DBUILD_TESTS=ON \
+            -Wno-dev
+
+      # ----------------------------------------------------------------
+      # 3. Build all targets
+      # ----------------------------------------------------------------
+      - name: Build
+        run: cmake --build build_dvt --parallel
+
+      # ----------------------------------------------------------------
+      # 4. Run unit tests
+      # ----------------------------------------------------------------
+      - name: Run unit tests
+        id: unit
+        run: |
+          set -o pipefail
+          ./build_dvt/tests/test_unit.exe --gtest_output=xml:dvt/results/unit_results.xml \
+            2>&1 | tee dvt/results/unit_raw.txt
+          echo "unit_exit=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+
+      # ----------------------------------------------------------------
+      # 5. Run integration tests
+      # ----------------------------------------------------------------
+      - name: Run integration tests
+        id: integration
+        run: |
+          set -o pipefail
+          ./build_dvt/tests/test_integration.exe \
+            --gtest_output=xml:dvt/results/integration_results.xml \
+            2>&1 | tee dvt/results/integration_raw.txt
+          echo "int_exit=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+
+      # ----------------------------------------------------------------
+      # 6. Generate DVT report artefact
+      # ----------------------------------------------------------------
+      - name: Generate DVT report
+        run: |
+          python3 - << 'PYEOF'
+          import os, re, datetime, xml.etree.ElementTree as ET
+
+          date_str = datetime.datetime.utcnow().strftime("%Y-%m-%d_%H%M%S")
+          report_path = f"dvt/results/dvt_report_{date_str}.txt"
+
+          def parse_gtest_xml(path):
+              try:
+                  tree = ET.parse(path)
+                  root = tree.getroot()
+                  tests  = int(root.attrib.get("tests",  0))
+                  fails  = int(root.attrib.get("failures", 0))
+                  errors = int(root.attrib.get("errors", 0))
+                  return tests, tests - fails - errors, fails + errors
+              except Exception as e:
+                  return 0, 0, -1
+
+          u_total, u_pass, u_fail = parse_gtest_xml("dvt/results/unit_results.xml")
+          i_total, i_pass, i_fail = parse_gtest_xml("dvt/results/integration_results.xml")
+
+          overall = "PASS" if (u_fail == 0 and i_fail == 0) else "FAIL"
+
+          lines = [
+              "=" * 72,
+              "  PATIENT VITAL SIGNS MONITOR — DVT REPORT",
+              f"  Generated  : {datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')} UTC",
+              f"  Repository : {os.environ.get('GITHUB_REPOSITORY', 'local')}",
+              f"  Commit     : {os.environ.get('GITHUB_SHA', 'local')[:12]}",
+              f"  Ref        : {os.environ.get('GITHUB_REF', 'local')}",
+              "=" * 72,
+              "",
+              "AUTOMATED TEST RESULTS",
+              "-" * 72,
+              f"  Unit tests        : {u_pass:3d} / {u_total:3d} passed   {'PASS' if u_fail==0 else 'FAIL'}",
+              f"  Integration tests : {i_pass:3d} / {i_total:3d} passed   {'PASS' if i_fail==0 else 'FAIL'}",
+              f"  Total             : {u_pass+i_pass:3d} / {u_total+i_total:3d} passed",
+              "",
+              f"  OVERALL RESULT    : {overall}",
+              "",
+              "PASS CRITERIA",
+              "-" * 72,
+              f"  Unit pass rate 100%       : {'PASS' if u_fail==0 else 'FAIL'} ({u_pass}/{u_total})",
+              f"  Integration pass rate 100%: {'PASS' if i_fail==0 else 'FAIL'} ({i_pass}/{i_total})",
+              "",
+              "NOTES",
+              "-" * 72,
+              "  GUI checklist (DVT_Protocol.md §4) requires manual verification.",
+              "  Static analysis: see static-analysis workflow results.",
+              "  SAST: see codeql workflow results.",
+              "",
+              "  Referenced protocol : dvt/DVT_Protocol.md (DVT-001-REV-A)",
+              "  Traceability matrix : requirements/TRACEABILITY.md",
+              "=" * 72,
+          ]
+          report_text = "\n".join(lines)
+          print(report_text)
+          os.makedirs("dvt/results", exist_ok=True)
+          with open(report_path, "w") as f:
+              f.write(report_text + "\n")
+          print(f"\nReport written to: {report_path}")
+          PYEOF
+
+      # ----------------------------------------------------------------
+      # 7. Write GitHub Step Summary (Markdown table)
+      # ----------------------------------------------------------------
+      - name: Write job summary
+        if: always()
+        run: |
+          python3 - << 'PYEOF'
+          import os, xml.etree.ElementTree as ET
+
+          def parse_xml(path):
+              try:
+                  tree = ET.parse(path)
+                  root = tree.getroot()
+                  tests = int(root.attrib.get("tests", 0))
+                  fails = int(root.attrib.get("failures", 0)) + int(root.attrib.get("errors", 0))
+                  return tests, tests - fails, fails
+              except:
+                  return 0, 0, -1
+
+          u_t, u_p, u_f = parse_xml("dvt/results/unit_results.xml")
+          i_t, i_p, i_f = parse_xml("dvt/results/integration_results.xml")
+
+          status = lambda f: ":white_check_mark: PASS" if f == 0 else ":x: FAIL"
+
+          summary = f"""## DVT — Design Verification Results
+
+| Test Suite | Total | Passed | Failed | Result |
+|-----------|------:|-------:|-------:|--------|
+| Unit tests | {u_t} | {u_p} | {u_f} | {status(u_f)} |
+| Integration tests | {i_t} | {i_p} | {i_f} | {status(i_f)} |
+| **Combined** | **{u_t+i_t}** | **{u_p+i_p}** | **{u_f+i_f}** | {status(u_f+i_f)} |
+
+> Protocol: `dvt/DVT_Protocol.md` (DVT-001-REV-A)
+> Full report: `dvt/results/dvt_report_*.txt` (download artefact)
+"""
+          sumfile = os.environ.get("GITHUB_STEP_SUMMARY", "")
+          if sumfile:
+              with open(sumfile, "a") as f:
+                  f.write(summary)
+          print(summary)
+          PYEOF
+
+      # ----------------------------------------------------------------
+      # 8. Upload DVT results as workflow artefact
+      # ----------------------------------------------------------------
+      - name: Upload DVT results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dvt-results-${{ github.sha }}
+          path: dvt/results/
+          retention-days: 90
+
+      # ----------------------------------------------------------------
+      # 9. Fail the job if any tests failed
+      # ----------------------------------------------------------------
+      - name: Check pass criteria
+        run: |
+          python3 - << 'PYEOF'
+          import xml.etree.ElementTree as ET, sys
+
+          def get_failures(path):
+              try:
+                  root = ET.parse(path).getroot()
+                  return int(root.attrib.get("failures", 0)) + int(root.attrib.get("errors", 0))
+              except:
+                  return 1  # treat parse error as failure
+
+          uf = get_failures("dvt/results/unit_results.xml")
+          if_ = get_failures("dvt/results/integration_results.xml")
+          total = uf + if_
+          if total > 0:
+              print(f"DVT FAIL: {total} test(s) failed")
+              sys.exit(1)
+          print(f"DVT PASS: all tests passed")
+          PYEOF
