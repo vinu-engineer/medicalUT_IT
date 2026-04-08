@@ -31,6 +31,7 @@
 #include "alerts.h"
 #include "patient.h"
 #include "news2.h"
+#include "alarm_limits.h"
 #include "gui_auth.h"
 #include "gui_users.h"
 #include "hw_vitals.h"
@@ -40,7 +41,7 @@
  * App metadata
  * =================================================================== */
 #define APP_TITLE   "Patient Vital Signs Monitor"
-#define APP_VERSION "v2.3.0"
+#define APP_VERSION "v2.4.0"
 #define IDI_APPICON 101
 
 /* ===================================================================
@@ -120,6 +121,23 @@
 #define IDC_STC_PWERR     1245
 
 /* ===================================================================
+ * Control IDs — Alarm Limits tab (Settings)  @req SWR-ALM-001
+ * =================================================================== */
+#define IDC_ALM_HR_LOW    1400
+#define IDC_ALM_HR_HIGH   1401
+#define IDC_ALM_SBP_LOW   1402
+#define IDC_ALM_SBP_HIGH  1403
+#define IDC_ALM_DBP_LOW   1404
+#define IDC_ALM_DBP_HIGH  1405
+#define IDC_ALM_TMP_LOW   1406
+#define IDC_ALM_TMP_HIGH  1407
+#define IDC_ALM_SPO2_LOW  1408
+#define IDC_ALM_RR_LOW    1409
+#define IDC_ALM_RR_HIGH   1410
+#define IDC_ALM_BTN_APPLY 1411
+#define IDC_ALM_BTN_DEF   1412
+
+/* ===================================================================
  * Control IDs — Add User dialog
  * =================================================================== */
 #define IDC_EDT_NEWUSER   1230
@@ -180,6 +198,7 @@ typedef struct {
     int           has_patient;
     int           sim_paused;
     int           sim_enabled;  /**< 1=simulation mode, 0=device/HAL mode @req SWR-GUI-010 */
+    AlarmLimits   alarm_limits; /**< Configurable per-parameter alarm limits @req SWR-ALM-001 */
 
     HFONT font_hdr;
     HFONT font_tile_val;
@@ -748,6 +767,9 @@ static LRESULT CALLBACK settings_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
     static int  sim_count  = 0;
     static HWND about_ctrls[8];
     static int  about_count = 0;
+    /* Alarm limits tab control handles */
+    static HWND alm_ctrls[32];
+    static int  alm_count = 0;
 
     switch (msg) {
     case WM_CREATE: {
@@ -762,9 +784,10 @@ static LRESULT CALLBACK settings_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
         SendMessage(hw_tab, WM_SETFONT, (WPARAM)g_app.font_ui, TRUE);
 
         ZeroMemory(&ti, sizeof(ti)); ti.mask = TCIF_TEXT;
-        ti.pszText = "Users";       TabCtrl_InsertItem(hw_tab, 0, &ti);
-        ti.pszText = "Simulation";  TabCtrl_InsertItem(hw_tab, 1, &ti);
-        ti.pszText = "About";       TabCtrl_InsertItem(hw_tab, 2, &ti);
+        ti.pszText = "Users";         TabCtrl_InsertItem(hw_tab, 0, &ti);
+        ti.pszText = "Simulation";    TabCtrl_InsertItem(hw_tab, 1, &ti);
+        ti.pszText = "About";         TabCtrl_InsertItem(hw_tab, 2, &ti);
+        ti.pszText = "Alarm Limits";  TabCtrl_InsertItem(hw_tab, 3, &ti);
 
         /* --- Users tab controls --- */
         hw_list = CreateWindowExA(WS_EX_CLIENTEDGE,"LISTBOX","",
@@ -826,6 +849,80 @@ static LRESULT CALLBACK settings_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
         for (i = 0; i < about_count; ++i)
             ShowWindow(about_ctrls[i], SW_HIDE);
 
+        /* --- Alarm Limits tab controls @req SWR-ALM-001 --- */
+        alm_count = 0;
+        {
+            char buf[24];
+            /* Helper lambda-style: label + edit pair (done via macros) */
+#define ALM_ROW(label, id_low, val_low, id_high, val_high, row_y) \
+    alm_ctrls[alm_count++] = make_label(w, label,     16,  (row_y),    90, 18); \
+    alm_ctrls[alm_count++] = make_label(w, "Low:",   110,  (row_y),    34, 18); \
+    alm_ctrls[alm_count++] = make_edit (w, (id_low),  (val_low), 148, (row_y), 72, 22); \
+    alm_ctrls[alm_count++] = make_label(w, "High:",  226,  (row_y),    40, 18); \
+    alm_ctrls[alm_count++] = make_edit (w, (id_high), (val_high),270, (row_y), 72, 22)
+
+#define ALM_ROW1(label, id_low, val_low, row_y) \
+    alm_ctrls[alm_count++] = make_label(w, label,     16,  (row_y),    90, 18); \
+    alm_ctrls[alm_count++] = make_label(w, "Low:",   110,  (row_y),    34, 18); \
+    alm_ctrls[alm_count++] = make_edit (w, (id_low),  (val_low), 148, (row_y), 72, 22)
+
+            snprintf(buf, sizeof(buf), "%d", g_app.alarm_limits.hr_low);
+            alm_ctrls[alm_count++] = make_label(w,
+                "Alarm Limits  (IEC 60601-1-8)", 16, 52, 520, 20);
+
+            snprintf(buf, sizeof(buf), "%d",   g_app.alarm_limits.hr_low);
+            make_label(w, "HR (bpm)",   16, 82, 90, 18);
+            make_label(w, "Low:",      110, 82, 34, 18);
+            alm_ctrls[alm_count++] = make_edit(w, IDC_ALM_HR_LOW,  buf, 148, 82, 72, 22);
+            make_label(w, "High:",     226, 82, 40, 18);
+            snprintf(buf, sizeof(buf), "%d",   g_app.alarm_limits.hr_high);
+            alm_ctrls[alm_count++] = make_edit(w, IDC_ALM_HR_HIGH, buf, 270, 82, 72, 22);
+
+            make_label(w, "SBP (mmHg)",16,110, 90, 18);
+            make_label(w, "Low:",     110,110, 34, 18);
+            snprintf(buf, sizeof(buf), "%d", g_app.alarm_limits.sbp_low);
+            alm_ctrls[alm_count++] = make_edit(w, IDC_ALM_SBP_LOW,  buf, 148,110, 72, 22);
+            make_label(w, "High:",    226,110, 40, 18);
+            snprintf(buf, sizeof(buf), "%d", g_app.alarm_limits.sbp_high);
+            alm_ctrls[alm_count++] = make_edit(w, IDC_ALM_SBP_HIGH, buf, 270,110, 72, 22);
+
+            make_label(w, "DBP (mmHg)",16,138, 90, 18);
+            make_label(w, "Low:",     110,138, 34, 18);
+            snprintf(buf, sizeof(buf), "%d", g_app.alarm_limits.dbp_low);
+            alm_ctrls[alm_count++] = make_edit(w, IDC_ALM_DBP_LOW,  buf, 148,138, 72, 22);
+            make_label(w, "High:",    226,138, 40, 18);
+            snprintf(buf, sizeof(buf), "%d", g_app.alarm_limits.dbp_high);
+            alm_ctrls[alm_count++] = make_edit(w, IDC_ALM_DBP_HIGH, buf, 270,138, 72, 22);
+
+            make_label(w, "Temp (C)",  16,166, 90, 18);
+            make_label(w, "Low:",     110,166, 34, 18);
+            snprintf(buf, sizeof(buf), "%.1f", (double)g_app.alarm_limits.temp_low);
+            alm_ctrls[alm_count++] = make_edit(w, IDC_ALM_TMP_LOW,  buf, 148,166, 72, 22);
+            make_label(w, "High:",    226,166, 40, 18);
+            snprintf(buf, sizeof(buf), "%.1f", (double)g_app.alarm_limits.temp_high);
+            alm_ctrls[alm_count++] = make_edit(w, IDC_ALM_TMP_HIGH, buf, 270,166, 72, 22);
+
+            make_label(w, "SpO2 (%)", 16,194, 90, 18);
+            make_label(w, "Low:",    110,194, 34, 18);
+            snprintf(buf, sizeof(buf), "%d", g_app.alarm_limits.spo2_low);
+            alm_ctrls[alm_count++] = make_edit(w, IDC_ALM_SPO2_LOW, buf, 148,194, 72, 22);
+
+            make_label(w, "RR (br/m)",16,222, 90, 18);
+            make_label(w, "Low:",    110,222, 34, 18);
+            snprintf(buf, sizeof(buf), "%d", g_app.alarm_limits.rr_low);
+            alm_ctrls[alm_count++] = make_edit(w, IDC_ALM_RR_LOW,  buf, 148,222, 72, 22);
+            make_label(w, "High:",   226,222, 40, 18);
+            snprintf(buf, sizeof(buf), "%d", g_app.alarm_limits.rr_high);
+            alm_ctrls[alm_count++] = make_edit(w, IDC_ALM_RR_HIGH, buf, 270,222, 72, 22);
+
+            alm_ctrls[alm_count++] = make_btn(w, IDC_ALM_BTN_APPLY, "Apply & Save", 16, 260, 120, 28);
+            alm_ctrls[alm_count++] = make_btn(w, IDC_ALM_BTN_DEF,   "Reset Defaults",148, 260, 120, 28);
+#undef ALM_ROW
+#undef ALM_ROW1
+        }
+        for (i = 0; i < alm_count; ++i)
+            ShowWindow(alm_ctrls[i], SW_HIDE);
+
         font_children(w, g_app.font_ui);
         if (about_count > 0)
             SendMessage(about_ctrls[0], WM_SETFONT, (WPARAM)g_app.font_status, TRUE);
@@ -862,6 +959,8 @@ static LRESULT CALLBACK settings_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
                 ShowWindow(sim_ctrls[i],   (sel==1)?SW_SHOW:SW_HIDE);
             for (i = 0; i < about_count; ++i)
                 ShowWindow(about_ctrls[i], (sel==2)?SW_SHOW:SW_HIDE);
+            for (i = 0; i < alm_count;   ++i)
+                ShowWindow(alm_ctrls[i],   (sel==3)?SW_SHOW:SW_HIDE);
             InvalidateRect(w, NULL, TRUE);
         }
         if (nm->idFrom == IDC_LST_USERS && nm->code == (UINT)LBN_SELCHANGE) {
@@ -883,6 +982,54 @@ static LRESULT CALLBACK settings_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
 
     case WM_COMMAND:
         switch (LOWORD(wp)) {
+        case IDC_ALM_BTN_APPLY: {   /* @req SWR-ALM-001 */
+            char buf[32]; double dv; int iv;
+            AlarmLimits tmp;
+            alarm_limits_defaults(&tmp); /* start from safe baseline */
+            #define READ_INT(id, field) \
+                get_txt(w,(id),buf,(int)sizeof(buf)); \
+                if(sscanf(buf,"%d",&iv)==1) tmp.field=iv
+            #define READ_FLT(id, field) \
+                get_txt(w,(id),buf,(int)sizeof(buf)); \
+                if(sscanf(buf,"%lf",&dv)==1) tmp.field=(float)dv
+            READ_INT(IDC_ALM_HR_LOW,   hr_low);
+            READ_INT(IDC_ALM_HR_HIGH,  hr_high);
+            READ_INT(IDC_ALM_SBP_LOW,  sbp_low);
+            READ_INT(IDC_ALM_SBP_HIGH, sbp_high);
+            READ_INT(IDC_ALM_DBP_LOW,  dbp_low);
+            READ_INT(IDC_ALM_DBP_HIGH, dbp_high);
+            READ_FLT(IDC_ALM_TMP_LOW,  temp_low);
+            READ_FLT(IDC_ALM_TMP_HIGH, temp_high);
+            READ_INT(IDC_ALM_SPO2_LOW, spo2_low);
+            READ_INT(IDC_ALM_RR_LOW,   rr_low);
+            READ_INT(IDC_ALM_RR_HIGH,  rr_high);
+            #undef READ_INT
+            #undef READ_FLT
+            g_app.alarm_limits = tmp;
+            alarm_limits_save(&g_app.alarm_limits);
+            MessageBoxA(w, "Alarm limits saved.", "Settings", MB_OK|MB_ICONINFORMATION);
+            return 0;
+        }
+        case IDC_ALM_BTN_DEF: {     /* @req SWR-ALM-001 */
+            char buf[24];
+            alarm_limits_defaults(&g_app.alarm_limits);
+            #define SET_INT(id, val) snprintf(buf,sizeof(buf),"%d",(val)); set_txt(w,(id),buf)
+            #define SET_FLT(id, val) snprintf(buf,sizeof(buf),"%.1f",(double)(val)); set_txt(w,(id),buf)
+            SET_INT(IDC_ALM_HR_LOW,   g_app.alarm_limits.hr_low);
+            SET_INT(IDC_ALM_HR_HIGH,  g_app.alarm_limits.hr_high);
+            SET_INT(IDC_ALM_SBP_LOW,  g_app.alarm_limits.sbp_low);
+            SET_INT(IDC_ALM_SBP_HIGH, g_app.alarm_limits.sbp_high);
+            SET_INT(IDC_ALM_DBP_LOW,  g_app.alarm_limits.dbp_low);
+            SET_INT(IDC_ALM_DBP_HIGH, g_app.alarm_limits.dbp_high);
+            SET_FLT(IDC_ALM_TMP_LOW,  g_app.alarm_limits.temp_low);
+            SET_FLT(IDC_ALM_TMP_HIGH, g_app.alarm_limits.temp_high);
+            SET_INT(IDC_ALM_SPO2_LOW, g_app.alarm_limits.spo2_low);
+            SET_INT(IDC_ALM_RR_LOW,   g_app.alarm_limits.rr_low);
+            SET_INT(IDC_ALM_RR_HIGH,  g_app.alarm_limits.rr_high);
+            #undef SET_INT
+            #undef SET_FLT
+            return 0;
+        }
         case IDC_BTN_SIM_TOGGLE:    /* @req SWR-GUI-010 */
             g_app.sim_enabled = !g_app.sim_enabled;
             app_config_save(g_app.sim_enabled);
@@ -1274,7 +1421,8 @@ static LRESULT CALLBACK dash_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
         }
         SendMessage(btn, WM_SETFONT, (WPARAM)g_app.font_ui, TRUE);
 
-        app_config_load(&g_app.sim_enabled);  /* restore from previous session */
+        app_config_load(&g_app.sim_enabled);          /* restore sim mode */
+        alarm_limits_load(&g_app.alarm_limits);       /* restore alarm limits @req SWR-ALM-001 */
         hw_init();
         g_app.sim_paused = 0;
 
