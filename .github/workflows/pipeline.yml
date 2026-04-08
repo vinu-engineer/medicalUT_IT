@@ -342,54 +342,48 @@ jobs:
           ./build_cov/tests/test_integration.exe --gtest_brief=1 2>&1; echo "Exit: $?"
 
       - name: Generate coverage report
+        shell: bash
         run: |
-          pip install gcovr
+          set +e
           mkdir -p coverage-report
+          pip install gcovr 2>&1 | tail -3
 
-          echo "=== Debug: .gcno files ==="
-          find build_cov -name '*.gcno' 2>/dev/null | head -10
-          echo "=== Debug: .gcda files ==="
-          find build_cov -name '*.gcda' 2>/dev/null | head -10
+          echo "=== .gcno files ==="
+          find build_cov -name '*.gcno' 2>/dev/null | head -5 || true
+          echo "=== .gcda files ==="
+          GCDA_COUNT=$(find build_cov -name '*.gcda' 2>/dev/null | tee /dev/stderr | wc -l)
+          echo "Found $GCDA_COUNT .gcda files"
 
-          ROOT="$(pwd -W 2>/dev/null || pwd)"
-          echo "=== Root: $ROOT ==="
-
-          echo "=== Running gcovr with absolute paths ==="
-          gcovr \
-            --root "$ROOT" \
+          echo "=== Attempt 1: gcovr with relative paths ==="
+          gcovr --root . \
             --search-path build_cov \
             --gcov-executable gcov \
-            --filter "$ROOT/src/" \
+            --filter 'src/' \
             --xml coverage-report/coverage.xml \
             --html-details coverage-report/index.html \
-            --print-summary \
-            --verbose 2>&1 | tail -50
+            --print-summary 2>&1 || true
 
-          # Check if we got real coverage
-          if [ -f coverage-report/coverage.xml ]; then
-            echo "=== Coverage XML head ==="
-            head -5 coverage-report/coverage.xml
-          fi
-
-          # Fallback: if gcovr produced nothing useful, try without filter
-          if [ ! -s coverage-report/coverage.xml ] || grep -q 'lines-valid="0"' coverage-report/coverage.xml 2>/dev/null; then
-            echo "=== Retrying gcovr without filter ==="
-            gcovr \
-              --root "$ROOT" \
+          # Check result
+          if [ -f coverage-report/coverage.xml ] && ! grep -q 'lines-valid="0"' coverage-report/coverage.xml 2>/dev/null; then
+            echo "=== Coverage generated successfully ==="
+            head -3 coverage-report/coverage.xml
+          else
+            echo "=== Attempt 2: gcovr without filter ==="
+            gcovr --root . \
               --search-path build_cov \
               --gcov-executable gcov \
-              --print-summary --verbose 2>&1 | tail -30
+              --xml coverage-report/coverage.xml \
+              --html-details coverage-report/index.html \
+              --print-summary 2>&1 || true
           fi
 
-          # Ensure artifact always exists
+          # Placeholder if everything failed
           if [ ! -s coverage-report/coverage.xml ]; then
             echo '<?xml version="1.0"?><coverage line-rate="0" branch-rate="0"><packages/></coverage>' > coverage-report/coverage.xml
           fi
           if [ ! -f coverage-report/index.html ]; then
-            echo '<html><body><h1>Coverage unavailable</h1><p>Check pipeline logs.</p></body></html>' > coverage-report/index.html
+            echo '<html><body><h1>Coverage unavailable</h1></body></html>' > coverage-report/index.html
           fi
-
-          echo "=== coverage-report ==="
           ls -la coverage-report/
 
       - name: Coverage summary
