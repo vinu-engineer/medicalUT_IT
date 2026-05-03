@@ -4,17 +4,17 @@
 
 .DESCRIPTION
     Runs in foreground until you Ctrl-C or close the terminal. There is no
-    Windows Service install — every reboot, you run this script again.
+    Windows Service install; every reboot, you run this script again.
 
     On first run, this script creates a local Python venv at
     <target>/agentry/.venv/ and pip-installs agentry into it. On subsequent
     runs it just activates the venv and starts the orchestrator.
 
     Run this script from the target repo root or from inside the agentry/
-    folder — both work.
+    folder; both work.
 
 .EXAMPLE
-    cd C:\projects\rpi-home-monitor
+    cd C:\projects\medvital-monitor
     .\agentry\start.ps1
 #>
 
@@ -30,7 +30,6 @@ $AgentryRepo = 'https://github.com/vinu-dev/agentry.git'
 $AgentryRef = '7176fca18819fdc0f848841a6f6d471eac69ebed'
 if ($env:AGENTRY_INSTALL_REF) { $AgentryRef = $env:AGENTRY_INSTALL_REF }
 
-# Locate Python.
 $python = $null
 foreach ($name in @('python', 'py')) {
     $cmd = Get-Command $name -ErrorAction SilentlyContinue
@@ -43,7 +42,6 @@ if (-not $python) {
     exit 1
 }
 
-# Create venv on first run; pip-install agentry into it.
 if (-not (Test-Path (Join-Path $Venv 'Scripts\python.exe'))) {
     Write-Host "==> First-time setup: creating venv at $Venv" -ForegroundColor Cyan
     & $python -m venv $Venv
@@ -63,7 +61,7 @@ if (-not (Test-Path (Join-Path $Venv 'Scripts\python.exe'))) {
 
 $AgentryExe = Join-Path $Venv 'Scripts\agentry.exe'
 if (-not (Test-Path $AgentryExe)) {
-    Write-Host "agentry binary not found at $AgentryExe — venv may be corrupted" -ForegroundColor Red
+    Write-Host "agentry binary not found at $AgentryExe - venv may be corrupted" -ForegroundColor Red
     Write-Host "Delete agentry\.venv and re-run this script." -ForegroundColor Yellow
     exit 1
 }

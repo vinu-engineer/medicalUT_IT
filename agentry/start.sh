@@ -2,7 +2,7 @@
 # Start Agentry against this target repository.
 #
 # Runs in foreground until you Ctrl-C or close the terminal. There is no
-# systemd install — every reboot, you run this script again.
+# systemd install; every reboot, you run this script again.
 #
 # On first run, this script creates a local Python venv at
 # <target>/agentry/.venv/ and pip-installs agentry into it. On subsequent
@@ -16,7 +16,6 @@ VENV="$SCRIPT_DIR/.venv"
 AGENTRY_REPO="https://github.com/vinu-dev/agentry.git"
 AGENTRY_REF="${AGENTRY_INSTALL_REF:-7176fca18819fdc0f848841a6f6d471eac69ebed}"
 
-# Locate Python.
 PYTHON=""
 for name in python3 python; do
     if command -v "$name" >/dev/null 2>&1; then
@@ -31,7 +30,6 @@ if [[ -z "$PYTHON" ]]; then
     exit 1
 fi
 
-# Create venv on first run; pip-install agentry into it.
 if [[ ! -x "$VENV/bin/python" ]]; then
     echo "==> First-time setup: creating venv at $VENV"
     "$PYTHON" -m venv "$VENV"
@@ -42,7 +40,7 @@ if [[ ! -x "$VENV/bin/python" ]]; then
 fi
 
 if [[ ! -x "$VENV/bin/agentry" ]]; then
-    echo "agentry binary not found at $VENV/bin/agentry — venv may be corrupted"
+    echo "agentry binary not found at $VENV/bin/agentry - venv may be corrupted"
     echo "Delete agentry/.venv and re-run this script."
     exit 1
 fi
