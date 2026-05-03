@@ -10,6 +10,11 @@ if(POLICY CMP0148)
     cmake_policy(SET CMP0148 OLD)
 endif()
 
+# CMake 4.x no longer accepts GoogleTest release-1.10.0's old
+# cmake_minimum_required() policy range unless a compatibility floor is set.
+set(CMAKE_POLICY_VERSION_MINIMUM 3.5 CACHE STRING
+    "Minimum policy compatibility for vendored dependencies" FORCE)
+
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
