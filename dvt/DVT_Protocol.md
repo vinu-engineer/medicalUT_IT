@@ -1,9 +1,9 @@
 # Design Verification Test (DVT) Protocol
 
-**Document ID:** DVT-001-REV-A  
+**Document ID:** DVT-001-REV-B  
 **Project:** Patient Vital Signs Monitor  
-**Version Under Test:** 2.0.0  
-**Date:** 2026-04-07  
+**Version Under Test:** 2.7.0  
+**Date:** 2026-05-03  
 **Standard:** IEC 62304 §5.7, §5.8  
 **Author:** vinu-engineer  
 **Status:** Approved  
@@ -12,116 +12,157 @@
 
 ## 1. Purpose
 
-This protocol defines the automated Design Verification Tests (DVT) for the
-Patient Vital Signs Monitor software.  DVT confirms that the software meets its
-Software Requirements Specification (SWR-001) before release.  All tests are
-executed by the CI pipeline; results are captured in `dvt/results/`.
+This protocol defines the Design Verification Test (DVT) evidence set for the
+Patient Vital Signs Monitor software. DVT confirms that the released software
+version is verified against the approved software requirements and that the
+recorded evidence matches the executable test assets used for release review.
 
 ---
 
-## 2. Scope
+## 2. Scope and Evidence Sources
 
-| Layer | Executable | Requirements |
-|-------|-----------|--------------|
-| Unit tests | `test_unit.exe` | SWR-VIT-001..007, SWR-ALT-001..004, SWR-PAT-001..008, SWR-SEC-001..004 |
-| Integration tests | `test_integration.exe` | SWR-PAT-007, SWR-ALT-003, SWR-SEC-001..003 |
+This DVT package is split into three evidence classes:
 
-GUI-only requirements (SWR-GUI-001..010) are verified by manual inspection
-and recorded in the GUI Verification Checklist (§4).
+| Evidence class | Artefact | Role in release evidence |
+|---|---|---|
+| Automated unit + integration tests | `test_unit.exe`, `test_integration.exe`, `dvt/run_dvt.py` | Primary automated PASS/FAIL evidence for approved SWR IDs covered by GTest |
+| Automated GUI checks | `dvt/automation/run_dvt.py` (`DVT-GUI-01` .. `DVT-GUI-20`) | Supplemental black-box evidence for GUI workflows and settings behavior |
+| Residual manual GUI checks | Checklist in §4.3 | Visual/manual evidence for presentation-only behavior not reliably asserted by automation |
+
+Approved SWR coverage in this protocol is limited to IDs defined in
+`requirements/SWR.md` and traced in `requirements/TRACEABILITY.md`
+(`RTM-001-REV-G`).
+
+Localization-related evidence currently emitted by `dvt/automation/run_dvt.py`
+for a legacy `SWR-GUI-012` reference is not treated as an approved DVT
+requirement claim in this protocol because `SWR-GUI-012` is not present in the
+approved SWR or RTM documents on this branch.
 
 ---
 
 ## 3. Entry Criteria
 
-1. Source code is on the `main` branch and all CI checks are green.
-2. CMake configures successfully with `BUILD_TESTS=ON`.
-3. No open P1/P2 defects against the version under test.
+1. The feature branch under verification is rebased onto `origin/main`.
+2. CMake configures successfully with `BUILD_TESTS=ON` when a build is required.
+3. The approved SWR and RTM documents for the version under test are present.
+4. No open P1/P2 defects remain against the version under test.
 
 ---
 
-## 4. GUI Verification Checklist
+## 4. GUI Verification Approach
 
-The following items are verified manually by a tester and recorded in the
-DVT results artefact.  Each line maps to one or more SWR requirements.
+### 4.1 Automated GUI Evidence
 
-| ID | Requirement | Test Action | Expected Result | Pass/Fail |
-|----|-------------|-------------|-----------------|-----------|
-| GUI-01 | SWR-GUI-001 | Launch application | Login window opens with title "Patient Vital Signs Monitor" | |
-| GUI-02 | SWR-GUI-001 | Enter wrong password | Error message displayed, password field cleared | |
-| GUI-03 | SWR-GUI-001 | Enter correct admin credentials | Dashboard opens, "ADMIN" role badge shown in header | |
-| GUI-04 | SWR-GUI-002 | Observe dashboard | Vital tiles (HR, BP, Temp, SpO2) update every ~2 s in simulation mode | |
-| GUI-05 | SWR-GUI-003 | Set HR > 150 manually, click Add Reading | HR tile turns red (CRITICAL), alert list updated | |
-| GUI-06 | SWR-GUI-004 | Observe status banner with critical reading | Banner shows red "CRITICAL" text | |
-| GUI-07 | SWR-GUI-005 | Code review: `hw_vitals.h` / `sim_vitals.c` | HAL interface present; sim back-end swappable | |
-| GUI-08 | SWR-GUI-006 | Observe "* SIM LIVE" indicator in header | Flips to "SIM PAUSED" when Pause Sim pressed | |
-| GUI-09 | SWR-GUI-007 | Login as admin, open Settings > Users | User list shown; Add/Remove/Set Password buttons present | |
-| GUI-10 | SWR-GUI-008 | Verify application icon in taskbar | Icon matches resources/app.ico | |
-| GUI-11 | SWR-GUI-009 | Settings > About tab | Version v2.0.0, IEC 62304 Class B, SHA-256 credential note | |
-| GUI-12 | SWR-GUI-010 | Click "Sim: ON" to toggle off | All tiles show "N/A"; patient bar shows "DEVICE MODE" | |
-| GUI-13 | SWR-GUI-010 | Click "Sim: OFF" to toggle on | Simulation resumes; vitals update; tiles show live values | |
-| GUI-14 | SWR-GUI-010 | Restart app; check sim state | Persisted sim_enabled loaded from monitor.cfg | |
-| GUI-15 | SWR-SEC-001 | Login with valid / invalid credentials | Only valid credentials succeed | |
-| GUI-16 | SWR-SEC-003 | Change password (My Account) | New password required ≥ 8 chars; old password verified | |
-| GUI-17 | — | Resize dashboard window | All painted zones scale; list boxes stretch; buttons reanchor | |
-| GUI-18 | — | Maximise dashboard window | All zones fill screen; no clipping or overlap | |
+| Evidence ID range | Primary scope | Approved SWR status |
+|---|---|---|
+| `DVT-GUI-01` .. `DVT-GUI-15` | Login, dashboard, patient entry, alerts, admin settings, sim controls | May be cited as supplemental evidence for approved GUI/SEC/ALM requirements |
+| `DVT-GUI-16` | Localization selector presence | Informational only; pending RTM/SWR reconciliation, not an approved SWR claim |
+| `DVT-GUI-17` .. `DVT-GUI-20` | Alarm limits, sim controls, logout, version display | Supplemental GUI evidence |
+
+Automated GUI checks supplement but do not replace the GTest evidence used by
+`dvt/run_dvt.py` for the automated release verdict.
+
+### 4.2 Approved GUI Requirements Covered by Automation vs Manual Review
+
+| Requirement | Evidence mode | Notes |
+|---|---|---|
+| `SWR-GUI-001` | Automated GUI + unit tests | Login workflow and credential handling |
+| `SWR-GUI-002` | Automated GUI + unit tests | Session/login flow evidence |
+| `SWR-GUI-003` | Manual visual review | Colour rendering and repaint behavior |
+| `SWR-GUI-004` | Automated GUI + manual review | Control presence can be automated; presentation remains visual |
+| `SWR-GUI-005` | Architecture review | `test_hal.cpp` is supporting implementation evidence only; approved verification remains architecture review of HAL isolation |
+| `SWR-GUI-006` | Manual GUI demo | `test_hal.cpp` exercises simulator behavior, but approved DVT evidence remains GUI demonstration of the clinical scenario cycle |
+| `SWR-GUI-007` | Unit tests + automated GUI | Account-management API plus settings workflow |
+| `SWR-GUI-008` | Manual visual review | Role badge/icon/presentation evidence |
+| `SWR-GUI-009` | Automated GUI + manual review | Settings panel/tab structure plus visual confirmation |
+| `SWR-GUI-010` | Manual GUI review + supplemental automation | `ConfigTest` covers persistence and GUI automation checks control presence, but full mode-switch behavior remains manual GUI verification |
+| `SWR-GUI-011` | Manual visual review | Rolling status message content/motion is not asserted by current automation |
+
+### 4.3 Residual Manual GUI Checklist
+
+The following items remain manual because they depend on rendered appearance,
+layout behavior, or animated presentation rather than stable control state.
+
+| ID | Requirement / Area | Test Action | Expected Result | Pass/Fail |
+|---|---|---|---|---|
+| GUI-MAN-01 | `SWR-GUI-003` | Observe warning/critical transitions | Tile colours and banner colours match alert severity | |
+| GUI-MAN-02 | `SWR-GUI-008` | Inspect role badge and application icon | Correct role styling and application icon visible | |
+| GUI-MAN-03 | `SWR-GUI-011` | Enable simulation mode and observe banner | Rolling message scrolls continuously on current alert background | |
+| GUI-MAN-04 | Layout robustness | Resize dashboard window | Controls repaint and scale without clipping/overlap | |
+| GUI-MAN-05 | Layout robustness | Maximize dashboard window | Full layout remains legible and anchored correctly | |
 
 ---
 
-## 5. Automated Test Cases
-
-Automated tests are executed by the DVT workflow (`.github/workflows/dvt.yml`).
-The following table maps each test suite to the SWR it verifies.
+## 5. Automated GTest Evidence
 
 ### 5.1 Unit Tests (`test_unit.exe`)
 
-| Test Group | Count | SWR IDs |
-|------------|-------|---------|
-| VitalsTest (check_heart_rate, check_blood_pressure, check_temperature, check_spo2, alert_level_str, calculate_bmi, bmi_category) | 34 | SWR-VIT-001..007 |
-| AlertsTest (generate_alerts, overall_alert_level, format_alert_message) | 28 | SWR-ALT-001..004 |
-| PatientTest (patient_init, patient_add_reading, patient_is_full, patient_latest_reading, patient_current_status, patient_print_summary) | 47 | SWR-PAT-001..008 |
-| UsersTest (init, authenticate, change_password, admin_set_password, add, remove, count, get_by_index, save) | 12 | SWR-SEC-001..004 |
-| **Total** | **121** | |
+| Test file / suites | Count | Automated scope / supporting evidence |
+|---|---:|---|
+| `tests/unit/test_vitals.cpp` (`HeartRate`, `BloodPressure`, `Temperature`, `SpO2`, `RespRate`, `OverallAlert`, `BMI`, `AlertStr`) | 80 | `SWR-VIT-001` .. `SWR-VIT-008` |
+| `tests/unit/test_alerts.cpp` (`GenerateAlerts`) | 11 | `SWR-ALT-001` .. `SWR-ALT-004` |
+| `tests/unit/test_patient.cpp` (`PatientInit`, `PatientAddReading`, `PatientLatestReading`, `PatientStatus`, `PatientIsFull`, `PatientPrintSummary`) | 19 | `SWR-PAT-001` .. `SWR-PAT-006` |
+| `tests/unit/test_auth.cpp` (`UsersTest`) | 41 | `SWR-GUI-001`, `SWR-GUI-002`, `SWR-GUI-007`, `SWR-SEC-001` .. `SWR-SEC-004` |
+| `tests/unit/test_news2.cpp` (`News2*`) | 53 | `SWR-NEW-001` |
+| `tests/unit/test_alarm_limits.cpp` (`AlarmLimitsTest`) | 31 | `SWR-ALM-001` |
+| `tests/unit/test_trend.cpp` (`TrendDirection`, `TrendExtract`) | 18 | `SWR-TRD-001` |
+| `tests/unit/test_hal.cpp` (`HALTest`, `HALTestNoInit`, `SimSequenceTest`) | 12 | Supporting checks for HAL safety and simulator sequence behavior; not an approved automated DVT claim for `SWR-GUI-005` / `SWR-GUI-006` |
+| `tests/unit/test_config.cpp` (`ConfigTest`) | 10 | Supporting persistence checks for `monitor.cfg`; not a full approved automated DVT claim for `SWR-GUI-010` |
+| **Total** | **275** | |
 
 ### 5.2 Integration Tests (`test_integration.exe`)
 
-| Test Group | Count | SWR IDs |
-|------------|-------|---------|
-| PatientMonitoringFlow (admit, add readings, check status) | 8 | SWR-PAT-007, SWR-PAT-008 |
-| AlertEscalation (escalate + critical boundary) | 13 | SWR-ALT-003, SWR-ALT-004 |
-| **Total** | **21** | |
+| Test file / suites | Count | Primary approved requirements |
+|---|---:|---|
+| `tests/integration/test_patient_monitoring.cpp` (`PatientMonitoring`) | 6 | `SWR-PAT-001` .. `SWR-PAT-005`, `SWR-VIT-005`, `SWR-VIT-006`, `SWR-ALT-001` |
+| `tests/integration/test_alert_escalation.cpp` (`AlertEscalation`) | 6 | `SWR-VIT-001` .. `SWR-VIT-004`, `SWR-PAT-004`, `SWR-ALT-001`, `SWR-ALT-002` |
+| **Total** | **12** | |
 
 ---
 
 ## 6. Pass Criteria
 
 | Criterion | Threshold |
-|-----------|-----------|
-| Unit test pass rate | 100 % (121/121) |
-| Integration test pass rate | 100 % (21/21) |
-| GUI checklist items | All marked Pass |
-| Static analysis (cppcheck) | 0 errors, 0 warnings |
-| SAST (CodeQL security-extended) | 0 open alerts |
+|---|---|
+| Unit test pass rate | 100% (`275 / 275`) |
+| Integration test pass rate | 100% (`12 / 12`) |
+| Automated GTest total | 100% (`287 / 287`) |
+| Automated GUI checks for approved IDs | All executed approved-ID checks pass |
+| Manual GUI checklist | All applicable manual items marked Pass |
+| Unapproved localization reference | Must remain explicitly flagged as pending traceability, not counted as approved SWR coverage |
+
+Manual-only GUI items and pending localization evidence are not part of the
+automated PASS/FAIL verdict generated by `dvt/run_dvt.py`.
+
+Supporting implementation tests such as `test_hal.cpp` and `test_config.cpp`
+may execute during validation, but they do not convert `SWR-GUI-005`,
+`SWR-GUI-006`, or `SWR-GUI-010` into automated PASS claims in the DVT report.
 
 ---
 
 ## 7. Exit Criteria
 
-1. All automated tests pass (as recorded in `dvt/results/dvt_report_<date>.txt`).
-2. GUI checklist completed and signed off.
-3. No regressions vs. previous release.
-4. DVT results committed to `dvt/results/` in the release commit.
+1. `dvt/run_dvt.py` reports PASS for all automated GTest evidence.
+2. Any automated GUI run performed for release review is attached with its
+   generated artefacts and retains the pending-traceability note for the
+   localization selector evidence item.
+3. Residual manual GUI checklist items are completed and signed off.
+4. No obsolete or nonexistent SWR IDs are shown as PASS in the DVT evidence set.
 
 ---
 
-## 8. Traceability
+## 8. Traceability References
 
-Full requirement-to-test traceability is maintained in
-`requirements/TRACEABILITY.md` (RTM-001-REV-E).
+- Approved SWR: `requirements/SWR.md` (`SWR-001-REV-G`)
+- Approved RTM: `requirements/TRACEABILITY.md` (`RTM-001-REV-G`)
+- Non-GUI DVT runner: `dvt/run_dvt.py`
+- GUI DVT automation: `dvt/automation/run_dvt.py`
 
 ---
 
 ## Revision History
 
-| Rev | Date       | Author        | Description              |
-|-----|------------|---------------|--------------------------|
-| A   | 2026-04-07 | vinu-engineer | Initial DVT protocol — v2.0.0 |
+| Rev | Date | Author | Description |
+|---|---|---|---|
+| A | 2026-04-07 | vinu-engineer | Initial DVT protocol for v2.0.0 evidence set |
+| B | 2026-05-03 | Codex implementer | Aligned protocol with v2.7.0 test counts, approved SWR IDs, GUI automation split, and pending localization traceability note |
