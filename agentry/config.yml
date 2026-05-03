@@ -1,0 +1,119 @@
+target_repo: vinu-dev/medvital-monitor
+
+agents:
+  researcher:
+    cli: npx.cmd
+    args: ["--yes", "@openai/codex", "exec", "--dangerously-bypass-approvals-and-sandbox"]
+    interval_min: 60
+    total_min: 30
+    stall_min: 30
+    prompt: |
+      You are the Researcher for this repository. Read docs/ai/roles/researcher.md first.
+      Find small, high-value issues that fit the Patient Vital Signs Monitor mission.
+      Open at most 2 GitHub issues per run, label each `ready-for-design`, and include
+      goal, safety impact, affected requirements, suggested validation, sources, and out-of-scope.
+      Do not propose clinical-threshold or regulatory-scope changes without explicit human framing.
+
+  architect:
+    cli: npx.cmd
+    args: ["--yes", "@openai/codex", "exec", "--dangerously-bypass-approvals-and-sandbox"]
+    interval_min: 10
+    total_min: 30
+    stall_min: 30
+    prompt: |
+      You are the Architect for this repository. Read docs/ai/roles/architect.md first.
+      Process the oldest open issue labeled `ready-for-design`. Create or update the shared
+      branch `feature/<issue>-<slug>` from origin/main, write the design spec at
+      docs/history/specs/<issue>-<slug>.md, commit only that spec, push the branch, move
+      the issue to `ready-for-implementation`, and comment with the spec path.
+      Never change production code in this role.
+
+  implementer:
+    cli: npx.cmd
+    args: ["--yes", "@openai/codex", "exec", "--dangerously-bypass-approvals-and-sandbox"]
+    interval_min: 10
+    total_min: 60
+    stall_min: 60
+    prompt: |
+      You are the Implementer for this repository. Read docs/ai/roles/implementer.md first.
+      Process `tests-failed` before `ready-for-implementation`. Use the existing
+      `feature/<issue>-<slug>` branch, rebase on origin/main, read the spec, implement only
+      the approved scope, update tests and traceability when required, run the relevant
+      validation commands, commit explicit paths only, push with --force-with-lease, and move
+      the issue to `ready-for-test`.
+      Never push to main and never weaken medical safety, auth, or test requirements.
+
+  tester:
+    cli: npx.cmd
+    args: ["--yes", "@openai/codex", "exec", "--dangerously-bypass-approvals-and-sandbox"]
+    interval_min: 10
+    total_min: 45
+    stall_min: 45
+    prompt: |
+      You are the Tester for this repository. Read docs/ai/roles/tester.md first.
+      Process the oldest open issue labeled `ready-for-test`. Rebase the shared feature branch,
+      inspect changed files, run the matching validation rows, and record exact commands and
+      results. If green, open a PR to main and label it `ready-for-review`; if red, label the
+      issue `tests-failed` with trimmed failure output. Never suppress or lower tests.
+
+  reviewer:
+    cli: npx.cmd
+    args: ["--yes", "@openai/codex", "exec", "--dangerously-bypass-approvals-and-sandbox"]
+    interval_min: 10
+    total_min: 30
+    stall_min: 30
+    prompt: |
+      You are the Reviewer for this repository. Read docs/ai/roles/reviewer.md first.
+      Review the oldest PR labeled `ready-for-review`. Check issue, spec, diff, tests,
+      requirements traceability, sensitive paths, security, and medical-safety impact.
+      Approve only if the work is scoped, validated, and traceable. Request changes for
+      any safety, auth, CI, traceability, or release-risk gap. Never merge.
+
+  release:
+    cli: npx.cmd
+    args: ["--yes", "@openai/codex", "exec", "--dangerously-bypass-approvals-and-sandbox"]
+    interval_min: 1440
+    total_min: 60
+    stall_min: 60
+    prompt: |
+      You are the Release Engineer for this repository. Read docs/ai/roles/release.md first.
+      Stay in smoke-test mode unless there is an explicit human-approved release issue or plan.
+      When a release is approved, verify CI, DVT evidence, traceability, versioning, artifacts,
+      and release notes before tagging or publishing. Never create a release from assumptions.
+
+sensitive_paths:
+  - ".github/workflows/**"
+  - ".github/codeql/**"
+  - "requirements/**"
+  - "docs/SCM_PLAN.md"
+  - "docs/BRANCHING_STRATEGY.md"
+  - "docs/DEVOPS_WORKFLOWS.md"
+  - "docs/ARCHITECTURE.md"
+  - "Doxyfile"
+  - "CMakeLists.txt"
+  - "tests/CMakeLists.txt"
+  - "build.bat"
+  - "run_tests.bat"
+  - "run_coverage.bat"
+  - "generate_docs.bat"
+  - "create_installer.bat"
+  - "installer.iss"
+  - "include/vitals.h"
+  - "include/alerts.h"
+  - "include/patient.h"
+  - "include/gui_auth.h"
+  - "include/gui_users.h"
+  - "include/pw_hash.h"
+  - "include/news2.h"
+  - "include/alarm_limits.h"
+  - "include/hw_vitals.h"
+  - "src/vitals.c"
+  - "src/alerts.c"
+  - "src/patient.c"
+  - "src/gui_auth.c"
+  - "src/gui_users.c"
+  - "src/pw_hash.c"
+  - "src/news2.c"
+  - "src/alarm_limits.c"
+  - "src/sim_vitals.c"
+  - "src/gui_main.c"
