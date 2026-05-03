@@ -1,6 +1,6 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
-Design Verification Test (DVT) — GUI Automation
+Design Verification Test (DVT) â€” GUI Automation
 Patient Vital Signs Monitor (IEC 62304 Class B)
 
 Launches patient_monitor_gui.exe and tests every verifiable requirement
@@ -12,7 +12,7 @@ Usage:
 Requirements:
     pip install pywinauto
 
-Reference: dvt/DVT_Protocol.md (DVT-001-REV-A)
+Reference: dvt/DVT_Protocol.md (DVT-001-REV-B)
 """
 
 import sys
@@ -115,11 +115,11 @@ def get_text(hwnd, ctrl_id):
     h = GetDlgItem(hwnd, ctrl_id)
     if not h:
         return ""
-    length = SendMessageA(h, WM_GETTEXTLENGTH, 0, 0)
+    length = GetWindowTextLengthA(h)
     if length <= 0:
         return ""
     buf = ctypes.create_string_buffer(length + 1)
-    SendMessageA(h, WM_GETTEXT, length + 1, ctypes.addressof(buf))
+    GetWindowTextA(h, buf, length + 1)
     return buf.value.decode("utf-8", errors="replace")
 
 
@@ -206,12 +206,12 @@ def run_dvt(exe_path):
 
     results = DVTResult()
 
-    # ── Start the application ──────────────────────────────
+    # â”€â”€ Start the application â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     print(f"\nLaunching: {exe_path}")
     proc = subprocess.Popen([exe_path])
     time.sleep(3)
 
-    # ── DVT-GUI-01: Application launches with correct title ──
+    # â”€â”€ DVT-GUI-01: Application launches with correct title â”€â”€
     login = find_window("PVM_Login", timeout=10)
     if login:
         title = get_window_title(login)
@@ -226,7 +226,7 @@ def run_dvt(exe_path):
         proc.kill()
         return results
 
-    # ── DVT-GUI-02: Wrong password shows error ──
+    # â”€â”€ DVT-GUI-02: Wrong password shows error â”€â”€
     set_text(login, IDC_LGN_USER, "admin")
     set_text(login, IDC_LGN_PASS, "wrong_password")
     click_button(login, IDC_LGN_BTN)
@@ -244,7 +244,26 @@ def run_dvt(exe_path):
         "Login window remains open after failed auth",
         still_open)
 
-    # ── DVT-GUI-03: Correct admin login opens dashboard ──
+    # Start a fresh session for the positive-login path so the two
+    # authentication checks do not depend on UI state left by the failure case.
+    proc.terminate()
+    try:
+        proc.wait(timeout=5)
+    except subprocess.TimeoutExpired:
+        proc.kill()
+
+    proc = subprocess.Popen([exe_path])
+    time.sleep(3)
+    login = find_window("PVM_Login", timeout=10)
+
+    if not login:
+        results.record("DVT-GUI-03", "SWR-GUI-001, SWR-SEC-001",
+            "Correct admin credentials open dashboard",
+            False, "Login window not found after relaunch")
+        proc.kill()
+        return results
+
+    # â”€â”€ DVT-GUI-03: Correct admin login opens dashboard â”€â”€
     set_text(login, IDC_LGN_USER, "admin")
     set_text(login, IDC_LGN_PASS, "Monitor@2026")
     click_button(login, IDC_LGN_BTN)
@@ -259,7 +278,7 @@ def run_dvt(exe_path):
         proc.kill()
         return results
 
-    # ── DVT-GUI-04: Vital signs fields present and readable ──
+    # â”€â”€ DVT-GUI-04: Vital signs fields present and readable â”€â”€
     hr = get_text(dash, IDC_VIT_HR)
     sys_bp = get_text(dash, IDC_VIT_SYS)
     dia_bp = get_text(dash, IDC_VIT_DIA)
@@ -273,7 +292,7 @@ def run_dvt(exe_path):
         vitals_present,
         f"HR={hr} SYS={sys_bp} DIA={dia_bp} TEMP={temp} SPO2={spo2} RR={rr}")
 
-    # ── DVT-GUI-05: Vitals update in simulation mode (~2s) ──
+    # â”€â”€ DVT-GUI-05: Vitals update in simulation mode (~2s) â”€â”€
     hr_before = get_text(dash, IDC_VIT_HR)
     time.sleep(3)
     hr_after = get_text(dash, IDC_VIT_HR)
@@ -282,7 +301,7 @@ def run_dvt(exe_path):
         hr_before != hr_after or len(hr_after) > 0,
         f"HR before={hr_before}, after={hr_after}")
 
-    # ── DVT-GUI-06: Patient info fields present ──
+    # â”€â”€ DVT-GUI-06: Patient info fields present â”€â”€
     pat_id = get_text(dash, IDC_PAT_ID)
     pat_name = get_text(dash, IDC_PAT_NAME)
     pat_age = get_text(dash, IDC_PAT_AGE)
@@ -291,7 +310,7 @@ def run_dvt(exe_path):
         len(pat_id) > 0 and len(pat_name) > 0 and len(pat_age) > 0,
         f"ID={pat_id} Name={pat_name} Age={pat_age}")
 
-    # ── DVT-GUI-07: BMI calculation (weight + height present) ──
+    # â”€â”€ DVT-GUI-07: BMI calculation (weight + height present) â”€â”€
     pat_wt = get_text(dash, IDC_PAT_WEIGHT)
     pat_ht = get_text(dash, IDC_PAT_HEIGHT)
     results.record("DVT-GUI-07", "SWR-VIT-006",
@@ -299,7 +318,7 @@ def run_dvt(exe_path):
         len(pat_wt) > 0 and len(pat_ht) > 0,
         f"Weight={pat_wt} Height={pat_ht}")
 
-    # ── DVT-GUI-08: Alert list present ──
+    # â”€â”€ DVT-GUI-08: Alert list present â”€â”€
     alert_list = GetDlgItem(dash, IDC_LIST_ALERTS)
     alert_count = SendMessageA(alert_list, LB_GETCOUNT, 0, 0) if alert_list else -1
     results.record("DVT-GUI-08", "SWR-ALT-001",
@@ -307,7 +326,7 @@ def run_dvt(exe_path):
         alert_list is not None and alert_list != 0,
         f"Alert count: {alert_count}")
 
-    # ── DVT-GUI-09: Reading history list present ──
+    # â”€â”€ DVT-GUI-09: Reading history list present â”€â”€
     history_list = GetDlgItem(dash, IDC_LIST_HISTORY)
     hist_count = SendMessageA(history_list, LB_GETCOUNT, 0, 0) if history_list else -1
     results.record("DVT-GUI-09", "SWR-PAT-002",
@@ -315,7 +334,7 @@ def run_dvt(exe_path):
         history_list is not None and hist_count > 0,
         f"History entries: {hist_count}")
 
-    # ── DVT-GUI-10: Manual reading entry (Add Reading button) ──
+    # â”€â”€ DVT-GUI-10: Manual reading entry (Add Reading button) â”€â”€
     set_text(dash, IDC_VIT_HR, "150")
     set_text(dash, IDC_VIT_SYS, "180")
     set_text(dash, IDC_VIT_DIA, "110")
@@ -330,7 +349,7 @@ def run_dvt(exe_path):
         new_hist_count > hist_count,
         f"History before={hist_count} after={new_hist_count}")
 
-    # ── DVT-GUI-11: Alert generated for critical vitals ──
+    # â”€â”€ DVT-GUI-11: Alert generated for critical vitals â”€â”€
     time.sleep(1)
     alert_count_after = SendMessageA(alert_list, LB_GETCOUNT, 0, 0) if alert_list else -1
     results.record("DVT-GUI-11", "SWR-ALT-001, SWR-ALT-002",
@@ -338,32 +357,32 @@ def run_dvt(exe_path):
         alert_count_after > 0,
         f"Alert count: {alert_count_after}")
 
-    # ── DVT-GUI-12: Open Settings window ──
+    # â”€â”€ DVT-GUI-12: Open Settings window â”€â”€
     click_button(dash, IDC_BTN_SETTINGS)
     time.sleep(1)
     settings = find_window("PVM_Settings", timeout=5)
-    results.record("DVT-GUI-12", "SWR-GUI-007",
+    results.record("DVT-GUI-12", "SWR-GUI-009",
         "Settings window opens from dashboard",
         settings is not None)
 
     if settings:
-        # ── DVT-GUI-13: Settings has tabs ──
+        # â”€â”€ DVT-GUI-13: Settings has tabs â”€â”€
         tab = GetDlgItem(settings, IDC_TAB_SETTINGS)
         tab_count = SendMessageA(tab, TCM_GETITEMCOUNT, 0, 0) if tab else 0
-        results.record("DVT-GUI-13", "SWR-GUI-007",
+        results.record("DVT-GUI-13", "SWR-GUI-009",
             "Settings window has multiple tabs",
             tab_count >= 4,
             f"Tab count: {tab_count}")
 
-        # ── DVT-GUI-14: User management list (Admin only) ──
+        # â”€â”€ DVT-GUI-14: User management list (Admin only) â”€â”€
         user_list = GetDlgItem(settings, IDC_LST_USERS)
         user_count = SendMessageA(user_list, LB_GETCOUNT, 0, 0) if user_list else -1
-        results.record("DVT-GUI-14", "SWR-GUI-007, SWR-SEC-003",
+        results.record("DVT-GUI-14", "SWR-GUI-008, SWR-GUI-009",
             "User management list visible for Admin role",
             user_list is not None and user_count > 0,
             f"Users listed: {user_count}")
 
-        # ── DVT-GUI-15: Simulation toggle tab ──
+        # â”€â”€ DVT-GUI-15: Simulation toggle tab â”€â”€
         # Switch to Simulation tab (index 1 for admin)
         if tab:
             SendMessageA(tab, TCM_SETCURSEL, 1, 0)
@@ -380,7 +399,7 @@ def run_dvt(exe_path):
             len(sim_status) > 0,
             f"Status: '{sim_status}'")
 
-        # ── DVT-GUI-16: Language tab has combo box ──
+        # â”€â”€ DVT-GUI-16: Language tab has combo box â”€â”€
         # Switch to Language tab (index 5 for admin)
         if tab:
             SendMessageA(tab, TCM_SETCURSEL, 5, 0)
@@ -390,12 +409,12 @@ def run_dvt(exe_path):
 
         lang_cmb = GetDlgItem(settings, IDC_CMB_LANG)
         lang_count = SendMessageA(lang_cmb, CB_GETCOUNT, 0, 0) if lang_cmb else 0
-        results.record("DVT-GUI-16", "SWR-GUI-012",
-            "Language selector with 4 languages available",
+        results.record("DVT-GUI-16", "PENDING-RTM (legacy SWR-GUI-012)",
+            "Language selector with 4 languages available; pending approved SWR/RTM traceability",
             lang_count == 4,
             f"Languages in combo: {lang_count}")
 
-        # ── DVT-GUI-17: Alarm limits tab ──
+        # â”€â”€ DVT-GUI-17: Alarm limits tab â”€â”€
         if tab:
             SendMessageA(tab, TCM_SETCURSEL, 3, 0)
             nmhdr = ctypes.create_string_buffer(NMHDR_SIZE)
@@ -412,14 +431,14 @@ def run_dvt(exe_path):
         PostMessageA(settings, WM_CLOSE, 0, 0)
         time.sleep(1)
 
-    # ── DVT-GUI-18: Pause Sim button ──
+    # â”€â”€ DVT-GUI-18: Pause Sim button â”€â”€
     pause_btn = GetDlgItem(dash, IDC_BTN_PAUSE)
     pause_visible = IsWindowVisible(pause_btn) if pause_btn else False
     results.record("DVT-GUI-18", "SWR-GUI-010",
         "Pause Sim button visible in simulation mode",
         pause_visible)
 
-    # ── DVT-GUI-19: Logout returns to login ──
+    # â”€â”€ DVT-GUI-19: Logout returns to login â”€â”€
     click_button(dash, IDC_BTN_LOGOUT)
     time.sleep(2)
     login_again = find_window("PVM_Login", timeout=5)
@@ -427,7 +446,7 @@ def run_dvt(exe_path):
         "Logout returns to login window",
         login_again is not None)
 
-    # ── DVT-GUI-20: Version string in login ──
+    # â”€â”€ DVT-GUI-20: Version string in login â”€â”€
     if login_again:
         ver_text = get_text(login_again, IDC_LGN_VER)
         results.record("DVT-GUI-20", "SWR-GUI-001",
@@ -435,7 +454,7 @@ def run_dvt(exe_path):
             len(ver_text) > 0 and "v" in ver_text.lower(),
             f"Version: '{ver_text}'")
 
-    # ── Cleanup ──
+    # â”€â”€ Cleanup â”€â”€
     proc.terminate()
     try:
         proc.wait(timeout=5)
@@ -460,7 +479,7 @@ def generate_report(results, exe_path, output_dir):
         "=" * 80,
         f"  Generated  : {now.strftime('%Y-%m-%d %H:%M:%S')} UTC",
         f"  Executable : {exe_path}",
-        f"  Protocol   : dvt/DVT_Protocol.md (DVT-001-REV-A)",
+        f"  Protocol   : dvt/DVT_Protocol.md (DVT-001-REV-B)",
         "=" * 80,
         "",
         f"  OVERALL RESULT: {results.overall()}",
@@ -483,14 +502,16 @@ def generate_report(results, exe_path, output_dir):
         "",
         "  MANUAL VERIFICATION (not automated)",
         "  " + "-" * 76,
-        "  - GUI-COLOR : Tile color changes (red=critical, amber=warning)",
-        "  - GUI-ICON  : Application icon in taskbar matches app.ico",
-        "  - GUI-RESIZE: Window resize — zones scale, no clipping",
-        "  - GUI-MAXIMIZE: Maximize — all zones fill screen",
+        "  - GUI-COLOR   : Tile color changes (red=critical, amber=warning)",
+        "  - GUI-ICON    : Application icon in taskbar matches app.ico",
+        "  - GUI-ROLLING : SWR-GUI-011 rolling status banner content/motion",
+        "  - GUI-RESIZE  : Window resize â€” zones scale, no clipping",
+        "  - GUI-MAXIMIZE: Maximize â€” all zones fill screen",
+        "  - GUI-L10N-RTM: DVT-GUI-16 is informational only until SWR/RTM approve localization traceability",
         "",
         "  REFERENCES",
         "  " + "-" * 76,
-        "  Protocol     : dvt/DVT_Protocol.md (DVT-001-REV-A)",
+        "  Protocol     : dvt/DVT_Protocol.md (DVT-001-REV-B)",
         "  Traceability : requirements/TRACEABILITY.md",
         "  SWR          : requirements/SWR.md",
         "=" * 80,
@@ -532,7 +553,7 @@ if __name__ == "__main__":
         sys.exit(2)
 
     print("=" * 60)
-    print("  DVT — Design Verification Test (Automated GUI)")
+    print("  DVT â€” Design Verification Test (Automated GUI)")
     print("  Patient Vital Signs Monitor")
     print("=" * 60)
 
@@ -545,3 +566,4 @@ if __name__ == "__main__":
     print(f"{'=' * 60}")
 
     sys.exit(0 if results.fail_count == 0 else 1)
+

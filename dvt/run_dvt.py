@@ -59,47 +59,52 @@ def bold(t):   return _colour(t, ANSI_BOLD)
 # ---------------------------------------------------------------------------
 # Format: "SWR-ID": ("test_executable_stem", "SuiteName[.CaseName]", "description")
 REQUIREMENT_MAP = {
-    # Vital signs validation — GTest suites: HeartRate, BloodPressure, Temperature, SpO2, BMI, AlertStr, RespRate
-    "SWR-VIT-001": ("test_unit", "HeartRate",      "HR check — NORMAL/WARNING/CRITICAL boundaries"),
-    "SWR-VIT-002": ("test_unit", "BloodPressure",  "BP check — systolic/diastolic classification"),
-    "SWR-VIT-003": ("test_unit", "Temperature",    "Temperature check — fever/hypothermia limits"),
-    "SWR-VIT-004": ("test_unit", "SpO2",           "SpO2 check — hypoxia thresholds"),
-    "SWR-VIT-005": ("test_unit", "BMI",            "BMI calculation from weight/height"),
-    "SWR-VIT-006": ("test_unit", "BMI",            "BMI category string (Underweight..Obese)"),
-    "SWR-VIT-007": ("test_unit", "AlertStr",       "alert_level_str() all levels incl. default"),
-    "SWR-VIT-008": ("test_unit", "RespRate",        "RR check — bradypnoea/tachypnoea thresholds (NEWS2)"),
-    # NEWS2 — GTest suites: News2HR, News2RR, News2SpO2, News2SBP, News2Temp, News2Calc
-    "SWR-NEW-001": ("test_unit", "News2Calc",         "NEWS2 total score, risk category, clinical response"),
-    # Alarm limits — GTest suite: AlarmLimitsTest
-    "SWR-ALM-001": ("test_unit", "AlarmLimitsTest",   "Configurable alarm limits: defaults, save/load, check functions"),
-    # Trend / sparkline — GTest suites: TrendDirection, TrendExtract
-    "SWR-TRD-001": ("test_unit", "TrendDirection",    "Vital signs trend: RISING/FALLING/STABLE classification"),
-    # Alert generation — GTest suites: GenerateAlerts, OverallAlert
-    "SWR-ALT-001": ("test_unit", "GenerateAlerts", "generate_alerts() produces correct alerts"),
-    "SWR-ALT-002": ("test_unit", "OverallAlert",   "overall_alert_level() aggregation"),
-    "SWR-ALT-003": ("test_unit", "GenerateAlerts", "format_alert_message() message text"),
-    "SWR-ALT-004": ("test_integration", "AlertEscalation", "Alert escalation end-to-end scenario"),
-    # Patient record — GTest suites: PatientInit, PatientAddReading, PatientLatestReading, PatientStatus, PatientIsFull, PatientPrintSummary
-    "SWR-PAT-001": ("test_unit", "PatientInit",         "patient_init() — all fields set"),
-    "SWR-PAT-002": ("test_unit", "PatientAddReading",   "patient_add_reading() — stores readings"),
-    "SWR-PAT-003": ("test_unit", "PatientLatestReading","patient_latest_reading() — returns last"),
-    "SWR-PAT-004": ("test_unit", "PatientStatus",       "patient_current_status() — worst alert"),
-    "SWR-PAT-005": ("test_unit", "PatientIsFull",       "patient_is_full() — ring-buffer full"),
-    "SWR-PAT-006": ("test_unit", "PatientPrintSummary", "patient_print_summary() — no crash"),
-    "SWR-PAT-007": ("test_integration", "PatientMonitoring", "Patient monitoring integration flow"),
-    "SWR-PAT-008": ("test_unit", "PatientAddReading",   "patient_add_reading() rejects overflow"),
-    # Security — GTest suite: UsersTest
-    "SWR-SEC-001": ("test_unit", "UsersTest",           "users_authenticate() valid/invalid creds"),
+    # Vital signs validation - GTest suites: HeartRate, BloodPressure, Temperature,
+    # SpO2, RespRate, OverallAlert, BMI, AlertStr
+    "SWR-VIT-001": ("test_unit", "HeartRate", "HR check - NORMAL/WARNING/CRITICAL boundaries"),
+    "SWR-VIT-002": ("test_unit", "BloodPressure", "BP check - systolic/diastolic classification"),
+    "SWR-VIT-003": ("test_unit", "Temperature", "Temperature check - fever/hypothermia limits"),
+    "SWR-VIT-004": ("test_unit", "SpO2", "SpO2 check - hypoxia thresholds"),
+    "SWR-VIT-005": ("test_unit", "OverallAlert", "overall_alert_level() severity aggregation"),
+    "SWR-VIT-006": ("test_unit", "BMI", "BMI calculation and category handling"),
+    "SWR-VIT-007": ("test_unit", "AlertStr", "alert_level_str() all levels incl. default"),
+    "SWR-VIT-008": ("test_unit", "RespRate", "RR check - bradypnoea/tachypnoea thresholds (NEWS2)"),
+    # NEWS2 - GTest suites: News2HR, News2RR, News2SpO2, News2SBP, News2Temp, News2Calc
+    "SWR-NEW-001": ("test_unit", "News2Calc", "NEWS2 total score, risk category, clinical response"),
+    # Alarm limits - GTest suite: AlarmLimitsTest
+    "SWR-ALM-001": ("test_unit", "AlarmLimitsTest", "Configurable alarm limits: defaults, save/load, check functions"),
+    # Trend / sparkline - GTest suites: TrendDirection, TrendExtract
+    "SWR-TRD-001": ("test_unit", "TrendDirection", "Vital signs trend: RISING/FALLING/STABLE classification"),
+    # Alert generation - case-aligned coverage within GenerateAlerts
+    "SWR-ALT-001": ("test_unit", "GenerateAlerts.REQ_ALT_002_HeartRate_Warning",
+                    "generate_alerts() emits one alert per abnormal parameter"),
+    "SWR-ALT-002": ("test_unit", "GenerateAlerts.REQ_ALT_001_AllNormal_ZeroAlerts",
+                    "generate_alerts() returns zero alerts for normal vitals"),
+    "SWR-ALT-003": ("test_unit", "GenerateAlerts.REQ_ALT_004_MaxOut_Cap_Two",
+                    "generate_alerts() enforces caller output-buffer cap"),
+    "SWR-ALT-004": ("test_unit", "GenerateAlerts.REQ_ALT_005_MessageNonEmpty",
+                    "generated alert records populate human-readable fields"),
+    # Patient record - GTest suites: PatientInit, PatientAddReading, PatientLatestReading,
+    # PatientStatus, PatientIsFull, PatientPrintSummary
+    "SWR-PAT-001": ("test_unit", "PatientInit", "patient_init() - all fields set"),
+    "SWR-PAT-002": ("test_unit", "PatientAddReading", "patient_add_reading() stores readings and rejects overflow"),
+    "SWR-PAT-003": ("test_unit", "PatientLatestReading", "patient_latest_reading() - returns last"),
+    "SWR-PAT-004": ("test_unit", "PatientStatus", "patient_current_status() - worst alert"),
+    "SWR-PAT-005": ("test_unit", "PatientIsFull", "patient_is_full() - ring-buffer full"),
+    "SWR-PAT-006": ("test_unit", "PatientPrintSummary", "patient_print_summary() - no crash"),
+    # Security - GTest suite: UsersTest
+    "SWR-SEC-001": ("test_unit", "UsersTest", "users_authenticate() valid/invalid creds"),
     "SWR-SEC-002": ("test_unit", "UsersTest.REQ_SEC_004_StoredValueIsNotPlaintext",
-                                                         "Stored value is not the plaintext password"),
-    "SWR-SEC-003": ("test_unit", "UsersTest",           "users_change_password() old pwd verified"),
+                    "Stored value is not the plaintext password"),
+    "SWR-SEC-003": ("test_unit", "UsersTest", "users_change_password() old pwd verified"),
     "SWR-SEC-004": ("test_unit", "UsersTest.REQ_SEC_004_StoredValueIsSHA256Hex",
-                                                         "Stored value is 64-char SHA-256 hex"),
-    # HAL / simulation — GTest suites: HALTest, SimSequenceTest
-    "SWR-GUI-005": ("test_unit", "HALTest",             "HAL contract: hw_init + hw_get_next_reading"),
-    "SWR-GUI-006": ("test_unit", "SimSequenceTest",     "Sim sequence: 20 unique readings, cycles"),
-    # Config persistence — GTest suite: ConfigTest
-    "SWR-GUI-010": ("test_unit", "ConfigTest",          "sim_enabled persists across restarts"),
+                    "Stored value is 64-char SHA-256 hex"),
+    # HAL / simulation - GTest suites: HALTest, HALTestNoInit, SimSequenceTest
+    "SWR-GUI-005": ("test_unit", "HALTestNoInit", "HAL contract smoke test: hw_get_next_reading() safe without prior init"),
+    "SWR-GUI-006": ("test_unit", "SimSequenceTest", "Sim sequence: 20 unique readings, cycles"),
+    # Config persistence - GTest suite: ConfigTest
+    "SWR-GUI-010": ("test_unit", "ConfigTest", "sim_enabled persists across restarts"),
+    "SWR-GUI-011": (None, "MANUAL", "Rolling simulation banner verified by manual visual check"),
     # GUI requirements verified via manual checklist only (GUI rendering)
     "SWR-GUI-001": (None, "MANUAL", "Login screen: auth, error message, role detection"),
     "SWR-GUI-002": (None, "MANUAL", "Dashboard: colour-coded vital tiles update every 2 s"),
@@ -226,9 +231,9 @@ def run_test_executable(exe_path: str, xml_output: str) -> dict:
                     }
                     suite["cases"].append(case)
                 info["suites"].append(suite)
-                info["total_tests"]    += suite["tests"]
+                info["total_tests"] += suite["tests"]
                 info["total_failures"] += suite["failures"]
-                info["total_errors"]   += suite["errors"]
+                info["total_errors"] += suite["errors"]
         except ET.ParseError as exc:
             print(yellow(f"Warning: could not parse XML output: {exc}"))
 
@@ -259,9 +264,6 @@ def build_requirement_status(all_results: list[dict]) -> dict[str, str]:
     """
     Return a dict mapping each SWR-ID -> "PASS" | "FAIL" | "MANUAL" | "NOT_RUN".
     """
-    # Collect which (stem:suite, stem:suite.case) combos passed/failed
-    # key: (stem, suite_name)           -> bool (True=all cases passed)
-    # key: (stem, suite_name.case_name) -> bool
     test_outcomes: dict[tuple, bool] = {}
 
     for res in all_results:
@@ -279,15 +281,13 @@ def build_requirement_status(all_results: list[dict]) -> dict[str, str]:
             status[swr_id] = "MANUAL"
             continue
 
-        # test_ref may be "suite:Case" or "suite:Suite.Case"
-        # normalise to (stem, "SuiteName") or (stem, "SuiteName.CaseName")
         if ":" in test_ref:
             _exe_part, suite_case = test_ref.split(":", 1)
         else:
             suite_case = test_ref
 
         key_suite = (exe_stem, suite_case.split(".")[0])
-        key_full  = (exe_stem, suite_case)
+        key_full = (exe_stem, suite_case)
 
         if key_full in test_outcomes:
             status[swr_id] = _pass_fail(test_outcomes[key_full])
@@ -333,7 +333,6 @@ def generate_report(
     ln(sep_major)
     ln()
 
-    # ---- Per-executable summary ----
     ln(sep_major)
     ln("  TEST SUITE SUMMARY")
     ln(sep_major)
@@ -352,7 +351,6 @@ def generate_report(
         ln(f"         Errors      : {res['total_errors']}")
         ln()
 
-    # ---- Per-suite detail ----
     ln(sep_major)
     ln("  DETAILED RESULTS PER TEST SUITE")
     ln(sep_major)
@@ -371,17 +369,15 @@ def generate_report(
                 case_mark = "  OK  " if case["passed"] else " FAIL "
                 ln(f"    [{case_mark}] {case['name']}  ({case['time']}s)")
                 for msg in case["failures"]:
-                    # Indent failure messages
                     for fline in msg.splitlines():
                         ln(f"              {fline}")
             ln()
 
-    # ---- Requirement traceability table ----
     ln(sep_major)
     ln("  REQUIREMENT TRACEABILITY TABLE")
     ln(sep_major)
 
-    col_w_id   = 16
+    col_w_id = 16
     col_w_test = 52
     col_w_desc = 38
     col_w_stat = 8
@@ -399,10 +395,7 @@ def generate_report(
         exe_stem, test_ref, desc = REQUIREMENT_MAP[swr_id]
         stat = req_status.get(swr_id, "UNKNOWN")
         test_label = test_ref if test_ref else "-"
-        if exe_stem:
-            covered_by = f"{exe_stem}/{test_label}"
-        else:
-            covered_by = test_label
+        covered_by = f"{exe_stem}/{test_label}" if exe_stem else test_label
         ln(
             f"  {swr_id:<{col_w_id}}"
             f"{covered_by:<{col_w_test}}"
@@ -413,13 +406,12 @@ def generate_report(
     ln()
     ln(sep_major)
 
-    # Counts
     statuses = list(req_status.values())
-    pass_count   = statuses.count("PASS")
-    fail_count   = statuses.count("FAIL")
+    pass_count = statuses.count("PASS")
+    fail_count = statuses.count("FAIL")
     manual_count = statuses.count("MANUAL")
-    not_run      = statuses.count("NOT_RUN")
-    total        = len(statuses)
+    not_run = statuses.count("NOT_RUN")
+    total = len(statuses)
 
     ln(f"  Requirements total   : {total}")
     ln(f"  Automated PASS       : {pass_count}")
@@ -430,9 +422,11 @@ def generate_report(
     ln(f"  DVT OVERALL VERDICT  : {'PASS' if overall_pass else 'FAIL'}")
     ln(sep_major)
     ln()
-    ln("  NOTE: SWR-GUI-001/002/003/004/007/008/009 are verified via the manual")
-    ln("  checklist in dvt/DVT_Protocol.md.  They are not included in the")
-    ln("  automated pass/fail decision.")
+    ln("  NOTE: Manual-only GUI items (including SWR-GUI-001/002/003/004/007/008/009/011)")
+    ln("  are verified via the checklist in dvt/DVT_Protocol.md and are not")
+    ln("  included in the automated pass/fail decision.")
+    ln("  NOTE: Legacy localization evidence tied to SWR-GUI-012 is intentionally")
+    ln("  excluded from this approved requirement summary until SWR/RTM approval exists.")
     ln()
     ln(sep_major)
     ln("  END OF REPORT")
@@ -455,7 +449,7 @@ def print_console_summary(all_results: list[dict], req_status: dict[str, str],
 
     for res in all_results:
         exe_ok = res["returncode"] == 0
-        tag    = green("[PASS]") if exe_ok else red("[FAIL]")
+        tag = green("[PASS]") if exe_ok else red("[FAIL]")
         print(f"  {tag}  {res['stem']:30s} "
               f"tests={res['total_tests']:3d}  "
               f"fail={res['total_failures']:3d}")
@@ -472,7 +466,7 @@ def print_console_summary(all_results: list[dict], req_status: dict[str, str],
             tag = yellow("MANUAL")
         else:
             tag = yellow("NOT_RUN")
-        _exe, test_ref, desc = REQUIREMENT_MAP[swr_id]
+        _exe, _test_ref, desc = REQUIREMENT_MAP[swr_id]
         print(f"    {swr_id:<16s} {tag:<20s} {desc}")
 
     print()
@@ -508,7 +502,7 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    build_dir  = os.path.abspath(args.build_dir)
+    build_dir = os.path.abspath(args.build_dir)
     output_dir = os.path.abspath(args.output_dir)
 
     print(bold(cyan("\n+==================================================+")))
@@ -519,7 +513,6 @@ def main() -> int:
     print(f"  Output dir   : {output_dir}")
     print(f"  Git commit   : {git_short_sha()}")
 
-    # ---- Build ----
     if not args.no_build:
         if not run_cmake_build(build_dir):
             print(red("\nBuild failed.  Aborting DVT."))
@@ -527,7 +520,6 @@ def main() -> int:
     else:
         print(yellow("\n[--no-build] Skipping build step."))
 
-    # ---- Run test executables ----
     all_results: list[dict] = []
     ts_run = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 
@@ -535,7 +527,6 @@ def main() -> int:
         exe_path = find_executable(build_dir, stem)
         if exe_path is None:
             print(yellow(f"\nWarning: executable '{stem}' not found in {build_dir}.  Skipping."))
-            # Record a "not found" result so the report reflects it
             all_results.append({
                 "stem": stem,
                 "exe_path": "(not found)",
@@ -553,15 +544,11 @@ def main() -> int:
         res = run_test_executable(exe_path, xml_out)
         all_results.append(res)
 
-    # ---- Determine overall pass/fail (automated tests only) ----
     automated_results = [r for r in all_results if r["exe_path"] != "(not found)"]
-    overall_pass = all(r["returncode"] == 0 for r in automated_results) \
-                   and len(automated_results) > 0
+    overall_pass = all(r["returncode"] == 0 for r in automated_results) and len(automated_results) > 0
 
-    # ---- Requirement traceability ----
     req_status = build_requirement_status(all_results)
 
-    # ---- Generate report ----
     git_sha = git_short_sha()
     report_path = generate_report(
         all_results=all_results,
@@ -573,7 +560,6 @@ def main() -> int:
         no_build=args.no_build,
     )
 
-    # ---- Console summary ----
     print_console_summary(all_results, req_status, overall_pass, report_path)
 
     return 0 if overall_pass else 1

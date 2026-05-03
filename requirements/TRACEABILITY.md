@@ -200,7 +200,7 @@ implementation and test coverage, and every UNS must reach at least one SWR.
 | SWR-ALM-001 | `alarm_limits.c` : `alarm_limits_defaults()`, `alarm_check_*()` | 31 | — | ✓ |
 | SWR-TRD-001 | `trend.c` : `trend_direction()`, `trend_extract_*()` | 18 | — | ✓ |
 
-**Result: 35 / 35 SWRs implemented and tested ✓**
+**Result: 36 / 36 SWRs implemented and tested ✓**
 
 ---
 
@@ -242,18 +242,18 @@ This is recorded as an accepted coverage exclusion with a documented rationale.
 
 | Test File | Tests | SWRs Verified |
 |-----------|-------|---------------|
-| `tests/unit/test_vitals.cpp` | 79 | SWR-VIT-001 – SWR-VIT-008 |
+| `tests/unit/test_vitals.cpp` | 80 | SWR-VIT-001 – SWR-VIT-008 |
 | `tests/unit/test_alerts.cpp` | 11 | SWR-ALT-001 – SWR-ALT-004 |
 | `tests/unit/test_patient.cpp` | 19 | SWR-PAT-001 – SWR-PAT-006 |
-| `tests/unit/test_auth.cpp` | 36 | SWR-GUI-001, SWR-GUI-002, SWR-SEC-001–004, SWR-GUI-007 |
+| `tests/unit/test_auth.cpp` | 41 | SWR-GUI-001, SWR-GUI-002, SWR-SEC-001–004, SWR-GUI-007 |
 | `tests/unit/test_news2.cpp` | 53 | SWR-NEW-001 |
 | `tests/unit/test_alarm_limits.cpp` | 31 | SWR-ALM-001 |
 | `tests/unit/test_trend.cpp` | 18 | SWR-TRD-001 |
-| `tests/unit/test_hal.cpp` | 1 | SWR-GUI-005 |
-| `tests/unit/test_config.cpp` | 27 | SWR-GUI-010 |
+| `tests/unit/test_hal.cpp` | 12 | SWR-GUI-005, SWR-GUI-006 |
+| `tests/unit/test_config.cpp` | 10 | SWR-GUI-010 |
 | `tests/integration/test_patient_monitoring.cpp` | 6 | SWR-PAT-*, SWR-VIT-* |
 | `tests/integration/test_alert_escalation.cpp` | 6 | SWR-VIT-*, SWR-ALT-*, SWR-PAT-004 |
-| **Total** | **287** | **33 SWRs (automated); 2 SWRs by GUI demo** |
+| **Total** | **287** | **36 SWRs covered across automated and GUI-demo evidence** |
 
 ---
 

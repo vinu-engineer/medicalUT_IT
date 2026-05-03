@@ -444,18 +444,18 @@ requirements revision.
 
 | File                                            | Tests  | Requirements                      |
 |-------------------------------------------------|--------|-----------------------------------|
-| `tests/unit/test_vitals.cpp`                    | 79     | SWR-VIT-001 – 008                 |
+| `tests/unit/test_vitals.cpp`                    | 80     | SWR-VIT-001 – 008                 |
 | `tests/unit/test_alerts.cpp`                    | 11     | SWR-ALT-001 – 004                 |
 | `tests/unit/test_patient.cpp`                   | 19     | SWR-PAT-001 – 006                 |
-| `tests/unit/test_auth.cpp`                      | 36     | SWR-GUI-001–002, SWR-SEC-001–004  |
+| `tests/unit/test_auth.cpp`                      | 41     | SWR-GUI-001–002, SWR-SEC-001–004  |
 | `tests/unit/test_news2.cpp`                     | 53     | SWR-NEW-001                       |
 | `tests/unit/test_alarm_limits.cpp`              | 31     | SWR-ALM-001                       |
 | `tests/unit/test_trend.cpp`                     | 18     | SWR-TRD-001                       |
-| `tests/unit/test_hal.cpp`                       | 1      | SWR-GUI-005                       |
-| `tests/unit/test_config.cpp`                    | 27     | SWR-GUI-010                       |
+| `tests/unit/test_hal.cpp`                       | 12     | SWR-GUI-005, SWR-GUI-006          |
+| `tests/unit/test_config.cpp`                    | 10     | SWR-GUI-010                       |
 | `tests/integration/test_patient_monitoring.cpp` | 6      | SWR-PAT-*, SWR-VIT-*              |
 | `tests/integration/test_alert_escalation.cpp`   | 6      | SWR-VIT-*, SWR-ALT-*              |
-| **Total**                                       | **287** | **34 SWRs covered**              |
+| **Total**                                       | **287** | **36 SWRs covered**              |
 
 ### Test techniques applied
 
@@ -583,7 +583,7 @@ Opens `docs\html\index.html` automatically.
 | SWR-GUI-005–006 | `hw_vitals.h`/`sim_vitals.c` | `test_hal.cpp` + GUI demo     |
 | SWR-SEC-001–004 | `gui_users.c`, `pw_hash.c`| `test_auth.cpp`                  |
 | SWR-GUI-007     | `gui_users.c`/`gui_main.c`| `test_auth.cpp` — UserManagement |
-| SWR-GUI-008–010 | `gui_main.c`, `app_config.c`| `test_config.cpp` + visual    |
+| SWR-GUI-008–011 | `gui_main.c`, `app_config.c`| `test_config.cpp` + visual    |
 | SWR-INT-MON     | All modules               | `test_patient_monitoring.cpp`    |
 | SWR-INT-ESC     | All modules               | `test_alert_escalation.cpp`      |
 
@@ -629,15 +629,15 @@ medicalUT_IT/
 ├── tests/
 │   ├── CMakeLists.txt
 │   ├── unit/
-│   │   ├── test_vitals.cpp          # 79 tests — SWR-VIT-001–008
+│   │   ├── test_vitals.cpp          # 80 tests — SWR-VIT-001–008
 │   │   ├── test_alerts.cpp          # 11 tests — SWR-ALT
 │   │   ├── test_patient.cpp         # 19 tests — SWR-PAT
-│   │   ├── test_auth.cpp            # 36 tests — SWR-GUI/SEC
+│   │   ├── test_auth.cpp            # 41 tests — SWR-GUI/SEC
 │   │   ├── test_news2.cpp           # 53 tests — SWR-NEW-001
 │   │   ├── test_alarm_limits.cpp    # 31 tests — SWR-ALM-001
 │   │   ├── test_trend.cpp           # 18 tests — SWR-TRD-001
-│   │   ├── test_hal.cpp             #  1 test  — SWR-GUI-005
-│   │   └── test_config.cpp          # 27 tests — SWR-GUI-010
+│   │   ├── test_hal.cpp             # 12 tests — SWR-GUI-005/006
+│   │   └── test_config.cpp          # 10 tests — SWR-GUI-010
 │   └── integration/
 │       ├── test_patient_monitoring.cpp  # 6 tests — SWR-PAT-*, SWR-VIT-*
 │       └── test_alert_escalation.cpp    # 6 tests — SWR-VIT-*, SWR-ALT-*
@@ -645,8 +645,8 @@ medicalUT_IT/
 ├── requirements/
 │   ├── UNS.md                       # User Needs (15 items)
 │   ├── SYS.md                       # System Requirements (15 items)
-│   ├── SWR.md                       # Software Requirements (34 items)
-│   └── TRACEABILITY.md              # RTM — 16/16 UNS, 34/34 SWR, 287 tests
+│   ├── SWR.md                       # Software Requirements (36 items)
+│   └── TRACEABILITY.md              # RTM — 16/16 UNS, 36/36 SWR, 287 tests
 │
 ├── build.bat                        # Configure + build + launch GUI
 ├── run_tests.bat                    # Run all 144 tests
