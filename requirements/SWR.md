@@ -300,7 +300,7 @@ It shall return `0` for any other input, including empty strings and NULL
 pointers. NULL inputs shall not cause undefined behaviour.
 **Traces to:** SYS-013
 **Implemented in:** `src/gui_auth.c` — `auth_validate()`
-**Verified by:** `tests/unit/test_auth.cpp` — `AuthValidation.*`
+**Verified by:** `tests/unit/test_auth.cpp` — `UsersTest.REQ_GUI_001_*`
 
 ---
 
@@ -318,7 +318,7 @@ pointers. NULL inputs shall not cause undefined behaviour.
 **Traces to:** SYS-013
 **Implemented in:** `src/gui_main.c` — `attempt_login()`, `login_proc()`,
 `dash_proc()` (IDC_BTN_LOGOUT handler)
-**Verified by:** `tests/unit/test_auth.cpp` — `AuthDisplayName.*`
+**Verified by:** `tests/unit/test_auth.cpp` — `UsersTest.REQ_GUI_002_*`
 
 ---
 
@@ -336,8 +336,7 @@ All tiles and the banner shall repaint automatically each time
 **Traces to:** SYS-014, SYS-005, SYS-006
 **Implemented in:** `src/gui_main.c` — `paint_tile()`, `paint_tiles()`,
 `paint_status_banner()`, `update_dashboard()`
-**Verified by:** Verified structurally by `AuthValidation.*`; visual
-verification performed via GUI demonstration.
+**Verified by:** GUI demonstration.
 
 ---
 
@@ -662,3 +661,4 @@ and language selector population; `src/app_config.c` -
 | G   | 2026-04-08 | claude          | Added SWR-GUI-011 (rolling message in simulation mode) — v2.7.0 |
 | H   | 2026-05-03 | codex           | Reconciled SWR-VIT-008 and SWR-NEW-001 to existing alerting and aggregate-risk SYS links; no clinical behavior changes |
 | I   | 2026-05-03 | Codex implementer | Added SWR-GUI-012 (localization selection and persistence) |
+| J   | 2026-05-05 | vinu           | Refreshed SWR-GUI-001..003 verification references |
