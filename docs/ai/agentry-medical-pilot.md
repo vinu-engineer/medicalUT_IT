@@ -35,16 +35,20 @@ researcher
 
 ## Model Policy
 
-All configured roles use `npx.cmd @openai/codex exec` with `gpt-5.4` for the
-full-medical pilot. Later characterization should downshift individual roles
-only after the full path is proven.
+All configured roles use `npx.cmd @openai/codex exec`. Researcher uses
+`gpt-5.4-mini` because discovery refill should be cheap and bounded; the
+implementation and review roles use `gpt-5.4` for the full-medical pilot. Later
+characterization should downshift additional roles only after the full path is
+proven.
 
 ## Safety Rules
 
 - Researcher maintains a two-item pre-design supply for Architect by counting
   open `ready-for-design` plus `needs-risk` issues. It creates at most enough
   new `needs-risk` issues to restore that supply to two, with a hard cap of two
-  new issues per run.
+  new issues per run. Each refill must use a bounded source pass: at most three
+  credible source URLs total, targeted issue/PR dedupe, and no generated
+  `docs/html` crawl.
 - Risk Analyst writes a lightweight risk note under `docs/history/risk/`.
 - Clinical thresholds, diagnosis logic, treatment advice, and real patient-care
   workflow changes require explicit human acceptance criteria.

@@ -21,12 +21,12 @@ context:
 agents:
   researcher:
     cli: npx.cmd
-    args: ["--yes", "@openai/codex", "exec", "-m", "gpt-5.4", "--dangerously-bypass-approvals-and-sandbox"]
+    args: ["--yes", "@openai/codex", "exec", "-m", "gpt-5.4-mini", "--dangerously-bypass-approvals-and-sandbox"]
     run_on_start: true
     interval_min: 10
-    total_min: 45
-    stall_min: 45
-    token_budget: 25000
+    total_min: 20
+    stall_min: 20
+    token_budget: 12000
     prompt: |
       You are the Product Researcher for this medical-software pilot: act like a product owner, not
       a repo janitor. Read docs/ai/roles/researcher.md first. Study competing patient-monitoring
@@ -35,6 +35,9 @@ agents:
       If that combined supply is already 2 or more, exit without web research or new issues.
       If it is below 2, create only enough small, high-confidence feature candidate issues to
       bring the combined supply back to 2, with a hard maximum of 2 new issues per run.
+      Keep the refill cheap: use at most 3 credible source URLs total, prefer official product
+      pages or public manuals, do not crawl generated docs/html, and do not run broad repo scans
+      beyond targeted `gh issue list` / `gh pr list` dedupe plus one focused code search.
       Each issue must cite source URLs with access dates, name the
       user problem, state the product hypothesis, define a small MVP, and explain how we can validate
       it in this repo. Label new issues `needs-risk`, not `ready-for-design`, so Risk Analyst reviews
