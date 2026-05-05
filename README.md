@@ -60,6 +60,17 @@ sparkline graphs.  A console demonstration executable is also included.
 ## Architecture
 
 ```
+
+## Agentry Medical Pilot
+
+This repository is also used as the full medical-software pilot target for
+Agentry. The active pilot flow uses Codex-only roles for research, risk
+analysis, architecture, implementation, testing, code review, quality review,
+cybersecurity review, regulatory impact review, traceability review, merge, and
+release smoke checks.
+
+See `docs/ai/agentry-medical-pilot.md` for the current role chain and operating
+rules.
 +-----------------------------------------------------------------------+
 |                        Presentation Layer                             |
 |                                                                       |

@@ -1,14 +1,14 @@
 target_repo: vinu-dev/medvital-monitor
-mode: pipeline
+mode: autonomous
 isolate_worktrees: true
 
 automation:
-  auto_merge: false
+  auto_merge: true
   stop_when_queue_empty: false
 
 research:
-  allow_create_issues: false
-  max_open_ready_for_design: 3
+  allow_create_issues: true
+  max_open_ready_for_design: 2
 
 context:
   work_packets: true
@@ -20,107 +20,252 @@ context:
 agents:
   researcher:
     cli: npx.cmd
-    args: ["--yes", "@openai/codex", "exec", "-m", "gpt-5.4-mini", "--dangerously-bypass-approvals-and-sandbox"]
-    run_on_start: false
-    interval_min: 1440
-    total_min: 30
-    stall_min: 30
+    args: ["--yes", "@openai/codex", "exec", "-m", "gpt-5.4", "--dangerously-bypass-approvals-and-sandbox"]
+    run_on_start: true
+    interval_min: 720
+    total_min: 45
+    stall_min: 45
+    token_budget: 25000
     prompt: |
-      You are the Researcher for this repository. Read docs/ai/roles/researcher.md first.
-      Find small, high-value issues that fit the Patient Vital Signs Monitor mission.
-      Open at most 2 GitHub issues per run, label each `ready-for-design`, and include
-      goal, safety impact, affected requirements, suggested validation, sources, and out-of-scope.
-      Do not propose clinical-threshold or regulatory-scope changes without explicit human framing.
+      You are the Researcher for this medical-software pilot. Read docs/ai/roles/researcher.md first.
+      Create at most 2 small, high-confidence GitHub issues per run. Label new issues `needs-risk`,
+      not `ready-for-design`, so Risk Analyst reviews them before architecture. Dedupe against open
+      and recently closed issues/PRs. Do not propose clinical threshold, diagnosis, treatment, or
+      release-scope changes without explicit human framing.
 
-  architect:
+  risk_analyst:
     cli: npx.cmd
-    args: ["--yes", "@openai/codex", "exec", "-m", "gpt-5.4-mini", "--dangerously-bypass-approvals-and-sandbox"]
+    args: ["--yes", "@openai/codex", "exec", "-m", "gpt-5.4", "--dangerously-bypass-approvals-and-sandbox"]
     trigger:
-      issue_labels: ["ready-for-design"]
-    interval_min: 10
-    total_min: 30
-    stall_min: 30
-    prompt: |
-      You are the Architect for this repository. Read docs/ai/roles/architect.md first.
-      If the Agentry Work Packet names a Selected Candidate, process that issue only;
-      otherwise process the oldest open issue labeled `ready-for-design`. Create or update the shared
-      branch `feature/<issue>-<slug>` from origin/main, write the design spec at
-      docs/history/specs/<issue>-<slug>.md, commit only that spec, push the branch, move
-      the issue to `ready-for-implementation`, and comment with the spec path.
-      Never change production code in this role.
-
-  implementer:
-    cli: npx.cmd
-    args: ["--yes", "@openai/codex", "exec", "-m", "gpt-5.4-mini", "--dangerously-bypass-approvals-and-sandbox"]
-    trigger:
-      issue_labels: ["changes-requested", "tests-failed", "ready-for-implementation"]
-    interval_min: 10
-    total_min: 60
-    stall_min: 60
-    prompt: |
-      You are the Implementer for this repository. Read docs/ai/roles/implementer.md first.
-      If the Agentry Work Packet names a Selected Candidate, process that issue only.
-      Otherwise process `changes-requested` first, then `tests-failed`, then `ready-for-implementation`.
-      Use the existing
-      `feature/<issue>-<slug>` branch, rebase on origin/main, read the spec, implement only
-      the approved scope, update tests and traceability when required, run the relevant
-      validation commands, commit explicit paths only, push with --force-with-lease, and move
-      the issue to `ready-for-test`.
-      Never push to main and never weaken medical safety, auth, or test requirements.
-
-  tester:
-    cli: npx.cmd
-    args: ["--yes", "@openai/codex", "exec", "-m", "gpt-5.4-mini", "--dangerously-bypass-approvals-and-sandbox"]
-    trigger:
-      issue_labels: ["ready-for-test"]
+      issue_labels: ["needs-risk"]
     interval_min: 10
     total_min: 45
     stall_min: 45
+    token_budget: 30000
+    prompt: |
+      You are the Risk Analyst for this medical-software pilot. Read docs/ai/roles/risk_analyst.md first.
+      If the Agentry Work Packet names a Selected Candidate, process that issue only; otherwise process
+      the oldest open issue labeled `needs-risk`. Write a concise risk note under docs/history/risk/,
+      commit it on feature/<issue>-<slug>, push, then move the issue to `ready-for-design`.
+      If the issue lacks enough detail to assess medical-safety impact, move it to `blocked` with a
+      specific comment instead of guessing.
+
+  architect:
+    cli: npx.cmd
+    args: ["--yes", "@openai/codex", "exec", "-m", "gpt-5.4", "--dangerously-bypass-approvals-and-sandbox"]
+    trigger:
+      issue_labels: ["ready-for-design"]
+    interval_min: 10
+    total_min: 45
+    stall_min: 45
+    token_budget: 35000
+    prompt: |
+      You are the Architect for this repository. Read docs/ai/roles/architect.md first.
+      If the Agentry Work Packet names a Selected Candidate, process that issue only; otherwise process
+      the oldest open issue labeled `ready-for-design`. Reuse feature/<issue>-<slug>, read the risk note
+      from docs/history/risk/ when present, write the design spec at docs/history/specs/<issue>-<slug>.md,
+      commit only design/risk-adjacent documentation, push, move the issue to `ready-for-implementation`,
+      and comment with the spec path. Never change production code in this role.
+
+  implementer:
+    cli: npx.cmd
+    args: ["--yes", "@openai/codex", "exec", "-m", "gpt-5.4", "--dangerously-bypass-approvals-and-sandbox"]
+    trigger:
+      issue_labels:
+        - "changes-requested"
+        - "tests-failed"
+        - "quality-issues"
+        - "cyber-issues"
+        - "regulatory-issues"
+        - "traceability-broken"
+        - "ready-for-implementation"
+    interval_min: 10
+    total_min: 75
+    stall_min: 75
+    token_budget: 45000
+    prompt: |
+      You are the Implementer for this repository. Read docs/ai/roles/implementer.md first.
+      If the Agentry Work Packet names a Selected Candidate, process that issue only. Otherwise process
+      retry labels first (`changes-requested`, `tests-failed`, `quality-issues`, `cyber-issues`,
+      `regulatory-issues`, `traceability-broken`) before `ready-for-implementation`.
+      Use the existing feature/<issue>-<slug> branch, rebase on origin/main, read the risk note and spec,
+      implement only the approved scope, update tests and traceability when required, run relevant
+      validation, commit explicit paths only, push with --force-with-lease, and move the issue to
+      `ready-for-test`. Never push to main and never weaken medical safety, auth, or test requirements.
+
+  tester:
+    cli: npx.cmd
+    args: ["--yes", "@openai/codex", "exec", "-m", "gpt-5.4", "--dangerously-bypass-approvals-and-sandbox"]
+    trigger:
+      issue_labels: ["ready-for-test"]
+    interval_min: 10
+    total_min: 60
+    stall_min: 60
+    token_budget: 40000
     prompt: |
       You are the Tester for this repository. Read docs/ai/roles/tester.md first.
-      If the Agentry Work Packet names a Selected Candidate, process that issue only;
-      otherwise process the oldest open issue labeled `ready-for-test`. Rebase the shared feature branch,
-      inspect changed files, run the matching validation rows, and record exact commands and
-      results. If green, reuse any existing open PR for the feature branch or open one if needed,
-      label it `ready-for-review`, remove stale `blocked` and `agent-approved` labels from that
-      PR, remove `ready-for-test` from the issue, and comment with the PR URL; if red, label the
-      issue `tests-failed` with trimmed failure output. Never suppress or lower tests.
+      If the Agentry Work Packet names a Selected Candidate, process that issue only; otherwise process
+      the oldest open issue labeled `ready-for-test`. Rebase the feature branch, inspect changed files,
+      run the matching validation rows, and record exact commands/results. If green, reuse any open PR
+      for the branch or open one with a body beginning `Closes #<issue>`, label the PR
+      `ready-for-code-review`, remove stale `blocked` and `agent-approved`, add `pr-open` to the issue,
+      and remove `ready-for-test`. If red, label the issue `tests-failed` with trimmed failure output.
+      Never suppress or lower tests.
 
-  reviewer:
+  code_reviewer:
     cli: npx.cmd
-    args: ["--yes", "@openai/codex", "exec", "-m", "gpt-5.4-mini", "--dangerously-bypass-approvals-and-sandbox"]
+    args: ["--yes", "@openai/codex", "exec", "-m", "gpt-5.4", "--dangerously-bypass-approvals-and-sandbox"]
     trigger:
-      pr_labels: ["ready-for-review", "merge-train-waiting"]
+      pr_labels: ["ready-for-code-review", "merge-train-waiting"]
       pr_check_gate: settled
+    interval_min: 10
+    total_min: 45
+    stall_min: 45
+    token_budget: 40000
+    prompt: |
+      You are the Code Reviewer for this medical-software pilot. Read docs/ai/roles/code_reviewer.md first.
+      If the Agentry Work Packet names a Selected Candidate, review that PR only; otherwise process the
+      oldest PR labeled `ready-for-code-review` or `merge-train-waiting`. This is an intermediate gate:
+      do not add `agent-approved`. If the PR is scoped, current, tested, and technically sound, move it
+      to `ready-for-quality-review`. If not, add `blocked`, move the linked issue to `changes-requested`,
+      and comment with exact findings.
+
+  quality_reviewer:
+    cli: npx.cmd
+    args: ["--yes", "@openai/codex", "exec", "-m", "gpt-5.4", "--dangerously-bypass-approvals-and-sandbox"]
+    trigger:
+      pr_labels: ["ready-for-quality-review"]
+      pr_check_gate: settled
+    interval_min: 10
+    total_min: 45
+    stall_min: 45
+    token_budget: 40000
+    prompt: |
+      You are the Quality Reviewer for this medical-software pilot. Read docs/ai/roles/quality_reviewer.md first.
+      This is an intermediate gate: do not add `agent-approved`. Verify IEC 62304-style process evidence,
+      validation records, requirements impact, and controlled-document consistency. If good, move the PR to
+      `ready-for-cyber-review`; if not, add `quality-issues`, move the linked issue to `quality-issues`,
+      and comment with exact gaps.
+
+  cybersecurity_reviewer:
+    cli: npx.cmd
+    args: ["--yes", "@openai/codex", "exec", "-m", "gpt-5.4", "--dangerously-bypass-approvals-and-sandbox"]
+    trigger:
+      pr_labels: ["ready-for-cyber-review"]
+      pr_check_gate: settled
+    interval_min: 10
+    total_min: 45
+    stall_min: 45
+    token_budget: 40000
+    prompt: |
+      You are the Cybersecurity Reviewer for this medical-software pilot. Read docs/ai/roles/cybersecurity_reviewer.md first.
+      This is an intermediate gate: do not add `agent-approved`. Check auth, password hashing, dependency,
+      data-handling, logging, CI, installer, and attack-surface impact. If good, move the PR to
+      `ready-for-regulatory-review`; if not, add `cyber-issues`, move the linked issue to `cyber-issues`,
+      and comment with exact gaps.
+
+  regulatory_reviewer:
+    cli: npx.cmd
+    args: ["--yes", "@openai/codex", "exec", "-m", "gpt-5.4", "--dangerously-bypass-approvals-and-sandbox"]
+    trigger:
+      pr_labels: ["ready-for-regulatory-review"]
+      pr_check_gate: settled
+    interval_min: 10
+    total_min: 45
+    stall_min: 45
+    token_budget: 40000
+    prompt: |
+      You are the Regulatory Reviewer for this medical-software pilot. Read docs/ai/roles/regulatory_reviewer.md first.
+      This is an intermediate gate: do not add `agent-approved`. Assess whether the change affects intended
+      use, clinical claims, risk controls, release evidence, or simulated-device regulatory documentation.
+      If good, move the PR to `ready-for-traceability`; if not, add `regulatory-issues`, move the linked
+      issue to `regulatory-issues`, and comment with exact gaps.
+
+  traceability_tracker:
+    cli: npx.cmd
+    args: ["--yes", "@openai/codex", "exec", "-m", "gpt-5.4", "--dangerously-bypass-approvals-and-sandbox"]
+    trigger:
+      pr_labels: ["ready-for-traceability"]
+      pr_check_gate: settled
+    interval_min: 10
+    total_min: 45
+    stall_min: 45
+    token_budget: 40000
+    prompt: |
+      You are the Traceability Tracker for this medical-software pilot. Read docs/ai/roles/traceability_tracker.md first.
+      This is the final automated gate before merge. Verify bidirectional links across issue, risk note,
+      spec, requirements, code, tests, DVT, and PR validation evidence. If complete, add `agent-approved`
+      and `ready-for-merge`, remove `ready-for-traceability` and `blocked`, and comment with the verified
+      links. If broken, add `traceability-broken`, move the linked issue to `traceability-broken`, and
+      comment with exact missing links.
+
+  merger:
+    cli: npx.cmd
+    args: ["--yes", "@openai/codex", "exec", "-m", "gpt-5.4", "--dangerously-bypass-approvals-and-sandbox"]
+    trigger:
+      pr_labels: ["ready-for-merge"]
+      pr_check_gate: green
     interval_min: 10
     total_min: 30
     stall_min: 30
+    token_budget: 25000
     prompt: |
-      You are the Reviewer for this repository. Read docs/ai/roles/reviewer.md first.
-      If the Agentry Work Packet names a Selected Candidate, review that PR only;
-      otherwise review the oldest PR labeled `ready-for-review` or `merge-train-waiting`.
-      Check issue, spec, diff, tests,
-      requirements traceability, sensitive paths, security, and medical-safety impact.
-      Approve only if the work is scoped, validated, and traceable. Request changes for
-      any safety, auth, CI, traceability, or release-risk gap. If approval succeeds, add
-      `agent-approved`, remove `ready-for-review` and `blocked` from the PR, and comment with
-      the approval outcome if GitHub refuses formal self-review. If changes are needed, remove
-      `agent-approved` and `ready-for-review`, add `blocked` to the PR, move the linked issue to
-      `changes-requested`, and comment with the exact findings. Never merge.
+      You are the Merger for this medical-software pilot. Read docs/ai/roles/merger.md first.
+      If the Agentry Work Packet names a Selected Candidate, process that PR only; otherwise process the
+      oldest PR labeled `ready-for-merge`. Merge only when all final gates are present, checks are green,
+      the PR is mergeable, the branch is not main/release, and the PR body closes its issue. Use
+      `gh pr merge --admin --squash --delete-branch`, then verify the PR merged and the issue closed or
+      clean it up explicitly. Never merge a PR with blocked/retry labels or pending/failing checks.
 
   release:
     cli: npx.cmd
-    args: ["--yes", "@openai/codex", "exec", "-m", "gpt-5.4-mini", "--dangerously-bypass-approvals-and-sandbox"]
-    trigger:
-      issue_labels: ["release-approved"]
+    args: ["--yes", "@openai/codex", "exec", "-m", "gpt-5.4", "--dangerously-bypass-approvals-and-sandbox"]
+    run_on_start: true
     interval_min: 1440
     total_min: 60
     stall_min: 60
+    token_budget: 30000
     prompt: |
       You are the Release Engineer for this repository. Read docs/ai/roles/release.md first.
-      Stay in smoke-test mode unless there is an explicit human-approved release issue or plan.
-      When a release is approved, verify CI, DVT evidence, traceability, versioning, artifacts,
-      and release notes before tagging or publishing. Never create a release from assumptions.
+      Run in smoke-test mode unless there is an explicit human-approved release issue labeled
+      `release-approved`. On ordinary runs, summarize release blockers, open PR status, CI/DVT state,
+      version consistency, and traceability readiness. Do not tag or publish without a release-approved
+      issue or plan. If a release is approved, verify CI, DVT evidence, traceability, versioning,
+      artifacts, and release notes before tagging or publishing.
+
+labels:
+  needs-risk: needs-risk
+  ready-for-design: ready-for-design
+  ready-for-implementation: ready-for-implementation
+  ready-for-test: ready-for-test
+  ready-for-code-review: ready-for-code-review
+  ready-for-quality-review: ready-for-quality-review
+  ready-for-cyber-review: ready-for-cyber-review
+  ready-for-regulatory-review: ready-for-regulatory-review
+  ready-for-traceability: ready-for-traceability
+  ready-for-merge: ready-for-merge
+  ready-for-review: ready-for-review
+  merge-train-waiting: merge-train-waiting
+  pr-open: pr-open
+  agent-approved: agent-approved
+  release-approved: release-approved
+  blocked: blocked
+  changes-requested: changes-requested
+  tests-failed: tests-failed
+  merge-conflict: merge-conflict
+  quality-issues: quality-issues
+  cyber-issues: cyber-issues
+  regulatory-issues: regulatory-issues
+  traceability-broken: traceability-broken
+
+merge_sensitive_paths:
+  - "README.md"
+  - "requirements/**"
+  - "docs/history/specs/**"
+  - "docs/history/risk/**"
+  - "docs/DEVOPS_WORKFLOWS.md"
+  - ".github/workflows/**"
+  - "dvt/**"
 
 sensitive_paths:
   - ".github/workflows/**"
@@ -130,6 +275,7 @@ sensitive_paths:
   - "docs/BRANCHING_STRATEGY.md"
   - "docs/DEVOPS_WORKFLOWS.md"
   - "docs/ARCHITECTURE.md"
+  - "docs/history/risk/**"
   - "Doxyfile"
   - "CMakeLists.txt"
   - "tests/CMakeLists.txt"

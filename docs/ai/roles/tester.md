@@ -32,7 +32,8 @@ issue.
 
 When all applicable checks pass, open the PR with:
 
-- Linked issue
+- `Closes #<issue-number>` as the first issue reference, so GitHub closes the
+  issue automatically after merge
 - Spec path
 - Summary of changes
 - Requirements and traceability impact

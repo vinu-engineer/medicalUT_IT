@@ -48,4 +48,5 @@ Every issue must include:
 - Sources or repo evidence
 - Out of scope
 
-Use `ready-for-design` on new issues. Cap each run at 2 issues.
+Use `needs-risk` on new issues so the Risk Analyst runs before design. Cap each
+run at 2 issues.

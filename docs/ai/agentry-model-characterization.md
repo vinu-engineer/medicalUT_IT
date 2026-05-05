@@ -3,21 +3,25 @@
 This plan is for measuring Agentry model cost/performance on
 `vinu-dev/medvital-monitor` after the low-token pipeline mechanics are proven.
 
-## Baseline
+## Baseline History
 
-The first integration run uses only Codex models and defaults every role to
-`gpt-5.4-mini`. This is the cheapest pilot profile and is intended to validate
+The first integration run used only Codex models and defaulted every role to
+`gpt-5.4-mini`. That cheap pilot profile was intended to validate
 queue movement, selected-candidate work packets, label transitions, PR
 creation, review gating, and wrapper behavior before spending larger-model
 tokens.
 
+The current full medical pilot uses only Codex models and sets every active role
+to `gpt-5.4` so the expanded regulated-style chain can be tested with stronger
+reasoning before model downshifting.
+
 ## Profiles To Compare
 
-| Profile | Researcher | Architect | Implementer | Tester | Reviewer | Release |
-|---------|------------|-----------|-------------|--------|----------|---------|
-| cheap-pilot | gpt-5.4-mini | gpt-5.4-mini | gpt-5.4-mini | gpt-5.4-mini | gpt-5.4-mini | gpt-5.4-mini |
-| balanced | gpt-5.4-mini | gpt-5.4-mini | gpt-5.4 | gpt-5.4-mini | gpt-5.4 | gpt-5.4-mini |
-| review-heavy | gpt-5.4-mini | gpt-5.4 | gpt-5.4 | gpt-5.4-mini | gpt-5.4 | gpt-5.4-mini |
+| Profile | Researcher | Risk | Architect | Implementer | Tester | Review gates | Merger | Release |
+|---------|------------|------|-----------|-------------|--------|--------------|--------|---------|
+| cheap-pilot | gpt-5.4-mini | off | gpt-5.4-mini | gpt-5.4-mini | gpt-5.4-mini | gpt-5.4-mini | manual | off |
+| full-medical | gpt-5.4 | gpt-5.4 | gpt-5.4 | gpt-5.4 | gpt-5.4 | gpt-5.4 | gpt-5.4 | gpt-5.4 |
+| optimized-medical | gpt-5.4-mini | gpt-5.4-mini | gpt-5.4-mini | gpt-5.4 | gpt-5.4-mini | gpt-5.4 | gpt-5.4-mini | gpt-5.4-mini |
 
 Keep the same Agentry version (`v0.1.3` for the current pilot), trigger labels,
 timeout settings, and target
@@ -42,12 +46,14 @@ Collect these for every role session:
 
 1. Start with a low-risk issue that does not touch clinical thresholds,
    authentication, password storage, release artifacts, or workflow files.
-2. Run the cheap-pilot profile through one full path:
+2. Run the cheap-pilot profile through one standard path:
    design -> implementation -> test -> PR -> review.
-3. Save session JSON and relevant log tails before changing profile.
-4. Repeat with the balanced profile on a comparable issue.
-5. Repeat review-heavy only if the balanced profile shows review misses,
-   repeated requested changes, or poor design judgment.
+3. Run the full-medical profile through one expanded path:
+   research -> risk -> design -> implementation -> test -> code review ->
+   quality review -> cybersecurity review -> regulatory review -> traceability
+   review -> merge -> release smoke check.
+4. Save session JSON and relevant log tails before changing profile.
+5. Downshift one role class at a time into optimized-medical and compare.
 6. Compare tokens per accepted PR, time to green PR, and human repair count.
 
 ## Decision Rule

@@ -51,7 +51,9 @@ Approve only if:
 - Safety and traceability impact is explicit.
 - Any clinical-behavior change has human-approved acceptance criteria.
 
-Never merge. Human code-owner approval and merge remain separate.
+Never merge. In the full medical pilot this role is superseded by
+`code_reviewer`, `quality_reviewer`, `cybersecurity_reviewer`,
+`regulatory_reviewer`, `traceability_tracker`, and `merger`.
 
 ## Writeback Rules
 
