@@ -41,11 +41,17 @@ Each spec must include:
 - Problem
 - Goal
 - Non-goals
+- Intended use impact, user population, operating environment, and foreseeable
+  misuse
 - Current behavior
 - Proposed change
 - Files expected to change
 - Requirements and traceability impact
 - Medical-safety, security, and privacy impact
+- AI/ML impact assessment: state whether the change adds, changes, removes, or
+  depends on an AI-enabled device software function. If yes, describe model
+  purpose, input data, output, human-in-the-loop limits, transparency needs,
+  dataset and bias considerations, monitoring expectations, and PCCP impact.
 - Validation plan
 - Rollback or failure handling
 
@@ -55,6 +61,8 @@ Each spec must include:
   persistence, CI, release, requirements, or traceability must call that out.
 - Clinical behavior changes require explicit issue acceptance criteria from the
   human owner.
+- AI/ML behavior changes require explicit risk-note coverage and human-approved
+  acceptance criteria before implementation.
 - If the issue is too broad, comment with the split proposal and leave it in
   `ready-for-design`.
 

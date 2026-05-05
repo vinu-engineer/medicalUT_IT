@@ -24,6 +24,8 @@ researcher
   -> cybersecurity_reviewer
   -> ready-for-regulatory-review
   -> regulatory_reviewer
+  -> ready-for-ai-safety-review
+  -> ai_safety_reviewer
   -> ready-for-traceability
   -> traceability_tracker
   -> ready-for-merge
@@ -46,6 +48,9 @@ only after the full path is proven.
 - Tester PR bodies must start with `Closes #<issue>` so GitHub closes issues on
   merge.
 - Intermediate reviewers do not add `agent-approved`.
+- AI Safety Reviewer explicitly classifies whether AI/ML is affected. AI/ML
+  changes need data/model provenance, bias and subgroup evidence, transparency,
+  monitoring, and PCCP/change-control rationale before traceability review.
 - Traceability Tracker is the final approval gate and adds `agent-approved` plus
   `ready-for-merge`.
 - Merger merges only green, mergeable PRs with `ready-for-merge` and
@@ -61,3 +66,4 @@ only after the full path is proven.
 - GitHub label transitions and PR comments
 - local and GitHub validation results
 - token use per role
+- AI/ML not-applicable rationale or AI safety evidence bundle when applicable

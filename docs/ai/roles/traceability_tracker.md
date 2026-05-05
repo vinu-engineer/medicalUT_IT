@@ -24,6 +24,8 @@ Verify the change links across:
 - changed source/header files
 - changed tests and DVT evidence
 - validation evidence in the PR body and CI
+- Quality, Cybersecurity, Regulatory, and AI Safety review comments
+- AI/ML evidence links or an explicit not-applicable rationale
 
 Use targeted `git grep` or `Select-String` checks for new or modified IDs.
 

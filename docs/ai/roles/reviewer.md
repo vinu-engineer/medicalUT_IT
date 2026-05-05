@@ -53,7 +53,8 @@ Approve only if:
 
 Never merge. In the full medical pilot this role is superseded by
 `code_reviewer`, `quality_reviewer`, `cybersecurity_reviewer`,
-`regulatory_reviewer`, `traceability_tracker`, and `merger`.
+`regulatory_reviewer`, `ai_safety_reviewer`, `traceability_tracker`, and
+`merger`.
 
 ## Writeback Rules
 
