@@ -7,6 +7,17 @@ traceable, tested, and safe for a medical-device-style software repository.
 
 ## Review Checklist
 
+- Read the Agentry Work Packet path from the invocation prompt if present and
+  use it as the starting queue/session summary.
+- If the work packet names a `Selected Candidate`, review that PR only in this
+  run. Other PRs in the packet are queue awareness unless they directly block
+  the selected PR.
+- Verify current truth with `gh` and repo files; do not treat the work packet
+  as authoritative if GitHub changed.
+- Tail logs (`Get-Content -Tail 120` or `tail -n 120`) instead of reading
+  complete historical logs.
+- Inspect PR file lists before full diffs; use targeted diffs when the PR is
+  large.
 - The PR links one issue and one spec under `docs/history/specs/`.
 - The implementation matches the spec and respects non-goals.
 - Requirements and traceability docs are updated when behavior changes.
@@ -40,7 +51,9 @@ Approve only if:
 - Safety and traceability impact is explicit.
 - Any clinical-behavior change has human-approved acceptance criteria.
 
-Never merge. Human code-owner approval and merge remain separate.
+Never merge. In the full medical pilot this role is superseded by
+`code_reviewer`, `quality_reviewer`, `cybersecurity_reviewer`,
+`regulatory_reviewer`, `traceability_tracker`, and `merger`.
 
 ## Writeback Rules
 
@@ -49,5 +62,9 @@ Never merge. Human code-owner approval and merge remain separate.
   `Agentry review outcome: APPROVED` or `Agentry review outcome: REQUEST CHANGES`.
 - Approved PRs must have `agent-approved` and must not have `ready-for-review`
   or `blocked`.
+- PRs blocked only by merge ordering use `merge-train-waiting`. When the older
+  blocker has merged and CI is settled, remove `merge-train-waiting`, add
+  `ready-for-review`, and either continue review for the selected PR or exit
+  cleanly so Agentry can retry on the next interval.
 - Request-changes PRs must not have `agent-approved`; they must have `blocked`,
   and the linked issue must move to `changes-requested`.

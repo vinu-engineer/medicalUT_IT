@@ -12,6 +12,7 @@ release issue. In smoke-test mode:
 
 - Check for release blockers.
 - Summarize current CI and open PR status.
+- Summarize whether the medical review chain is empty, blocked, or waiting.
 - Do not tag.
 - Do not publish a GitHub Release.
 - Do not modify release artifacts.

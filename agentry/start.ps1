@@ -8,7 +8,7 @@
 
     On first run, this script creates a local Python venv at
     <target>/agentry/.venv/ and pip-installs agentry into it. On subsequent
-    runs it just activates the venv and starts the orchestrator.
+    runs it reuses the venv and starts the orchestrator.
 
     Run this script from the target repo root or from inside the agentry/
     folder; both work.
@@ -16,10 +16,16 @@
 .EXAMPLE
     cd C:\projects\medvital-monitor
     .\agentry\start.ps1
+
+.EXAMPLE
+    .\agentry\start.ps1 status --target .
 #>
 
 [CmdletBinding()]
-param()
+param(
+    [Parameter(ValueFromRemainingArguments = $true)]
+    [string[]]$AgentryArgs
+)
 
 $ErrorActionPreference = 'Stop'
 
@@ -28,8 +34,10 @@ $TargetRoot = Split-Path -Parent $ScriptDir
 $Venv = Join-Path $ScriptDir '.venv'
 $InstallRefFile = Join-Path $Venv '.agentry-install-ref'
 $AgentryRepo = 'https://github.com/vinu-dev/agentry.git'
-$AgentryRef = 'f6e9bf6d369cb5dee3b03bf53c3985603c02c289'
+$AgentryRef = 'v0.1.3'
 if ($env:AGENTRY_INSTALL_REF) { $AgentryRef = $env:AGENTRY_INSTALL_REF }
+$AgentryExe = Join-Path $Venv 'Scripts\agentry.exe'
+$ForceInstall = $env:AGENTRY_FORCE_INSTALL -in @('1', 'true', 'TRUE', 'yes', 'YES')
 
 $python = $null
 foreach ($name in @('python', 'py')) {
@@ -58,17 +66,21 @@ if (Test-Path $InstallRefFile) {
     $InstalledRef = (Get-Content $InstallRefFile -Raw).Trim()
 }
 if ($InstalledRef -ne $AgentryRef) {
-    Write-Host "==> Installing agentry from GitHub at $AgentryRef" -ForegroundColor Cyan
-    & (Join-Path $Venv 'Scripts\python.exe') -m pip install --upgrade --force-reinstall "git+$AgentryRepo@$AgentryRef"
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host "agentry install failed" -ForegroundColor Red
-        exit 1
+    if (($AgentryArgs.Count -gt 0) -and (Test-Path $AgentryExe) -and (-not $ForceInstall)) {
+        Write-Host "==> Agentry install ref is missing or different; using existing venv for this CLI command." -ForegroundColor Yellow
+        Write-Host "==> Stop Agentry and set AGENTRY_FORCE_INSTALL=1 to refresh the venv to $AgentryRef." -ForegroundColor Yellow
+    } else {
+        Write-Host "==> Installing agentry from GitHub at $AgentryRef" -ForegroundColor Cyan
+        & (Join-Path $Venv 'Scripts\python.exe') -m pip install --upgrade --force-reinstall "git+$AgentryRepo@$AgentryRef"
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "agentry install failed" -ForegroundColor Red
+            exit 1
+        }
+        Set-Content -Path $InstallRefFile -Value $AgentryRef -Encoding ASCII
+        Write-Host "==> Agentry install complete" -ForegroundColor Green
     }
-    Set-Content -Path $InstallRefFile -Value $AgentryRef -Encoding ASCII
-    Write-Host "==> Agentry install complete" -ForegroundColor Green
 }
 
-$AgentryExe = Join-Path $Venv 'Scripts\agentry.exe'
 if (-not (Test-Path $AgentryExe)) {
     Write-Host "agentry binary not found at $AgentryExe - venv may be corrupted" -ForegroundColor Red
     Write-Host "Delete agentry\.venv and re-run this script." -ForegroundColor Yellow
@@ -76,6 +88,12 @@ if (-not (Test-Path $AgentryExe)) {
 }
 
 Write-Host "==> Starting agentry against $TargetRoot" -ForegroundColor Cyan
+if ($AgentryArgs.Count -gt 0) {
+    Write-Host "==> Running agentry $($AgentryArgs -join ' ')" -ForegroundColor Cyan
+    & $AgentryExe @AgentryArgs
+    exit $LASTEXITCODE
+}
+
 Write-Host "==> Running doctor" -ForegroundColor Cyan
 & $AgentryExe doctor --target $TargetRoot
 if ($LASTEXITCODE -ne 0) {

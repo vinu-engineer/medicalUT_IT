@@ -5,6 +5,10 @@
 Independently verify the implementation against the spec, requirements, and
 medical-software evidence expectations before a PR reaches review.
 
+If the Agentry Work Packet names a `Selected Candidate`, test that issue only
+in this run. Other queue rows are awareness, not permission to advance another
+issue.
+
 ## Required Checks
 
 1. Read the issue, spec, and changed-file list.
@@ -28,7 +32,8 @@ medical-software evidence expectations before a PR reaches review.
 
 When all applicable checks pass, open the PR with:
 
-- Linked issue
+- `Closes #<issue-number>` as the first issue reference, so GitHub closes the
+  issue automatically after merge
 - Spec path
 - Summary of changes
 - Requirements and traceability impact
