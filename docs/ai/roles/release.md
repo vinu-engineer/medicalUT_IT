@@ -13,6 +13,8 @@ release issue. In smoke-test mode:
 - Check for release blockers.
 - Summarize current CI and open PR status.
 - Summarize whether the medical review chain is empty, blocked, or waiting.
+- Summarize whether any AI/ML evidence, PCCP decision, cybersecurity evidence,
+  SBOM/update-plan note, or human sign-off is missing.
 - Do not tag.
 - Do not publish a GitHub Release.
 - Do not modify release artifacts.
@@ -27,6 +29,13 @@ Before any tag or release:
 - DVT evidence is available or manual DVT sign-off is recorded.
 - Requirements traceability is consistent.
 - Version numbers, installer metadata, README, and release notes match.
+- Release evidence bundle is complete: intended use, requirements, architecture,
+  risk notes, specs, review comments, V&V evidence, traceability matrix,
+  cybersecurity/SBOM notes, AI/ML appendix when applicable, and known residual
+  risks or skipped checks.
+- Any AI/ML change has explicit AI Safety Review pass, model/data version
+  evidence, transparency/user information, bias/subgroup analysis or rationale,
+  performance-monitoring plan, and PCCP/change-control decision.
 - No open blocker, safety, or security issue is in scope.
 
 ## Release Commands

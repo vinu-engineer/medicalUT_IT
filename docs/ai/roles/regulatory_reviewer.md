@@ -25,13 +25,19 @@ Packet names a `Selected Candidate`, review only that PR.
   workflow is introduced without human-approved acceptance criteria.
 - Confirm release-sensitive changes explain required CI, DVT, version, and
   artifact evidence.
+- Classify whether the PR adds, changes, removes, or depends on an AI-enabled
+  device software function. If yes, confirm there is enough information for AI
+  Safety Review: intended use, model/data provenance, transparency, bias,
+  performance monitoring, and PCCP/change-control impact.
+- Confirm whether the change could require a new submission, special 510(k),
+  PCCP update, labeling/user-information change, or human regulatory decision.
 
 ## Output
 
 This is an intermediate gate. Do not add `agent-approved`.
 
 - Pass: comment `Regulatory review outcome: PASSED`, remove
-  `ready-for-regulatory-review`, add `ready-for-traceability`, and verify
+  `ready-for-regulatory-review`, add `ready-for-ai-safety-review`, and verify
   labels.
 - Fail: comment `Regulatory review outcome: ISSUES FOUND`, remove
   `ready-for-regulatory-review`, add `regulatory-issues`, move the linked issue

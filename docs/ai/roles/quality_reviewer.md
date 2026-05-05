@@ -18,8 +18,13 @@ names a `Selected Candidate`, review only that PR.
 - Verify implementation evidence matches the spec and PR validation claims.
 - Confirm requirements and traceability files changed when behavior or evidence
   changed.
+- Confirm user requirements, acceptance criteria, objective pass/fail evidence,
+  and validation summary are present for the changed scope.
 - Confirm skipped checks are explicitly justified.
 - Confirm no controlled/generated documentation was edited casually.
+- Confirm risk controls named by the risk note/spec have verification evidence.
+- For AI/ML changes, confirm model/data governance, transparency, bias,
+  monitoring, and PCCP evidence are present before allowing the PR to proceed.
 - Treat this repo as a medical-software training project; do not require
   external QMS documents that are not present, but call out missing evidence if
   the PR itself depends on it.

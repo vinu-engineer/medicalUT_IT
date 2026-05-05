@@ -16,6 +16,10 @@ issue.
 3. Map changed files to the validation matrix below.
 4. Run every applicable command available on the host.
 5. Record exact commands, pass/fail, skipped commands, and reason for skips.
+6. For any AI/ML or algorithmic decision-support change, verify the PR includes
+   model/data version evidence, intended-use limits, bias/subgroup checks,
+   transparency/user information, and performance-monitoring evidence or an
+   explicit not-applicable rationale.
 
 ## Validation Matrix
 
@@ -27,6 +31,7 @@ issue.
 | DVT report | `python dvt/run_dvt.py --no-build --build-dir build` after a successful build |
 | Coverage-sensitive changes | `run_coverage.bat` when GCC coverage and `gcovr` are available |
 | CI/workflow changes | Validate YAML syntax and explain which GitHub-only gates must run remotely |
+| AI/ML or algorithmic decision-support changes | Verify fixed model/version, data provenance, validation dataset or rationale, subgroup/bias checks, transparency text, human-in-the-loop limits, and monitoring/PCCP evidence |
 
 ## PR Body Template
 
@@ -40,6 +45,7 @@ When all applicable checks pass, open the PR with:
 - Commands run
 - Skipped checks and why
 - Medical-safety/security notes
+- AI/ML impact and evidence, or explicit "none"
 
 ## Failure Handling
 

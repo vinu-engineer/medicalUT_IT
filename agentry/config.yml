@@ -82,6 +82,7 @@ agents:
         - "quality-issues"
         - "cyber-issues"
         - "regulatory-issues"
+        - "ai-safety-issues"
         - "traceability-broken"
         - "ready-for-implementation"
     interval_min: 10
@@ -92,7 +93,7 @@ agents:
       You are the Implementer for this repository. Read docs/ai/roles/implementer.md first.
       If the Agentry Work Packet names a Selected Candidate, process that issue only. Otherwise process
       retry labels first (`changes-requested`, `tests-failed`, `quality-issues`, `cyber-issues`,
-      `regulatory-issues`, `traceability-broken`) before `ready-for-implementation`.
+      `regulatory-issues`, `ai-safety-issues`, `traceability-broken`) before `ready-for-implementation`.
       Use the existing feature/<issue>-<slug> branch, rebase on origin/main, read the risk note and spec,
       implement only the approved scope, update tests and traceability when required, run relevant
       validation, commit explicit paths only, push with --force-with-lease, and move the issue to
@@ -183,8 +184,27 @@ agents:
       You are the Regulatory Reviewer for this medical-software pilot. Read docs/ai/roles/regulatory_reviewer.md first.
       This is an intermediate gate: do not add `agent-approved`. Assess whether the change affects intended
       use, clinical claims, risk controls, release evidence, or simulated-device regulatory documentation.
-      If good, move the PR to `ready-for-traceability`; if not, add `regulatory-issues`, move the linked
-      issue to `regulatory-issues`, and comment with exact gaps.
+      If good, move the PR to `ready-for-ai-safety-review`; if not, add `regulatory-issues`, move the
+      linked issue to `regulatory-issues`, and comment with exact gaps.
+
+  ai_safety_reviewer:
+    cli: npx.cmd
+    args: ["--yes", "@openai/codex", "exec", "-m", "gpt-5.4", "--dangerously-bypass-approvals-and-sandbox"]
+    trigger:
+      pr_labels: ["ready-for-ai-safety-review"]
+      pr_check_gate: settled
+    interval_min: 10
+    total_min: 45
+    stall_min: 45
+    token_budget: 40000
+    prompt: |
+      You are the AI Safety Reviewer for this medical-software pilot. Read docs/ai/roles/ai_safety_reviewer.md first.
+      This is an intermediate gate: do not add `agent-approved`. Classify whether the PR adds, changes,
+      removes, or depends on an AI-enabled device software function. For AI/ML changes, require intended
+      use, model/data provenance, dataset split, bias/subgroup analysis, transparency/user information,
+      human-in-the-loop limits, locked model/versioning, performance monitoring, and PCCP impact analysis.
+      If no AI/ML function is affected, say so explicitly. If good, move the PR to `ready-for-traceability`;
+      if not, add `ai-safety-issues`, move the linked issue to `ai-safety-issues`, and comment with exact gaps.
 
   traceability_tracker:
     cli: npx.cmd
@@ -247,6 +267,7 @@ labels:
   ready-for-quality-review: ready-for-quality-review
   ready-for-cyber-review: ready-for-cyber-review
   ready-for-regulatory-review: ready-for-regulatory-review
+  ready-for-ai-safety-review: ready-for-ai-safety-review
   ready-for-traceability: ready-for-traceability
   ready-for-merge: ready-for-merge
   ready-for-review: ready-for-review
@@ -261,6 +282,7 @@ labels:
   quality-issues: quality-issues
   cyber-issues: cyber-issues
   regulatory-issues: regulatory-issues
+  ai-safety-issues: ai-safety-issues
   traceability-broken: traceability-broken
 
 merge_sensitive_paths:
