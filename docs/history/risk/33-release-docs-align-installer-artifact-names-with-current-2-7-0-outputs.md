@@ -31,6 +31,39 @@ is integrity and provenance: mismatched artifact names can weaken confidence
 that the reviewed installer, echoed output path, and published instructions all
 refer to the same signed release payload. Privacy impact is none expected.
 
+## threat-model note
+
+- Attack surface: none added. This issue changes release documentation, helper
+  echo text, and nonfunctional installer comments only; it does not introduce a
+  new executable, network path, installer privilege boundary, dependency,
+  updater, or remote service interaction.
+- Data flow: no product or patient-data flow changes. The only affected flow is
+  release-evidence text derived from the authoritative installer metadata in
+  `installer.iss` (`AppVersion`, `OutputBaseFilename`) and the release asset
+  publication patterns in `.github/workflows/release.yml`.
+- Trust boundaries: the relevant boundary is between repository-controlled
+  release authorities (`installer.iss` and `.github/workflows/release.yml`) and
+  humans consuming README/help text during packaging or release verification.
+  This change reduces ambiguity at that boundary by making secondary documents
+  echo the same artifact names as the authoritative sources.
+- Vulnerability monitoring: existing repository controls remain unchanged. The
+  branch adds no third-party software, binary generation step, or deployment
+  endpoint beyond the already reviewed installer and release workflow; existing
+  CI, static analysis, CodeQL, and release-review practices remain the
+  monitoring path for future release-integrity defects.
+- Coordinated disclosure and patch expectations: if a future naming mismatch
+  could misdirect artifact verification, distribution, or operator download
+  guidance, treat it as a release-integrity defect and correct it through the
+  normal repository patch and release process. No separate emergency disclosure
+  channel is required for this documentation-only correction because no new
+  exploit path or exposed secret is introduced.
+- Privacy impact: none. The change does not create, collect, transmit, log, or
+  expose patient, operator, credential, or telemetry data.
+- Provenance linkage: installer artifact provenance remains anchored to
+  `installer.iss` as the naming authority and `.github/workflows/release.yml`
+  as the asset publication authority. The patch only aligns dependent release
+  guidance to those authorities and does not change installer semantics.
+
 ## affected requirements or "none"
 
 none. The issue does not propose a change to approved UNS, SYS, or SWR
@@ -85,6 +118,10 @@ for an already approved installer version.
 - Run the issue's targeted text searches and confirm the stale `2.6.0`,
   `1.5.0`, and `2.0.0` installer-name references are removed from the scoped
   current-facing files.
+- Confirm the threat-model note explicitly records no new executable attack
+  surface, no new data flow, the installer/release trust boundary, ongoing
+  monitoring expectations, coordinated patch expectations, and no privacy
+  impact for this installer-adjacent documentation change.
 - Inspect the changed file list and diff to verify documentation-only scope and
   confirm that `installer.iss` functional settings such as `AppVersion` and
   `OutputBaseFilename` were not changed unexpectedly.
