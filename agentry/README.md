@@ -13,7 +13,8 @@ This folder is the gtest-style "fetched dependency" for [Agentry](https://github
 | `.env` | Your actual secrets — copied from `.env.example` and filled in by you | **no, gitignored** |
 | `.venv/` | Python venv with Agentry pip-installed; auto-created on first run | **no, gitignored** |
 | `logs/` | Per-role agent stdout, one timestamped file per run | **no, gitignored** |
-| `state/` | Runtime state | **no, gitignored** |
+| `state/` | Runtime sessions and work packets | **no, gitignored** |
+| `worktrees/` | Per-role git worktrees when enabled | **no, gitignored** |
 
 ## Where role rule files live
 
@@ -72,9 +73,36 @@ codex login
 
 Foreground. Ctrl-C to stop. Close the terminal to stop. Reboot kills it. **No service.** Run the script again when you want it running again.
 
+## Token controls in this repo
+
+This repo pins Agentry to `v0.1.1`. That release adds two token-burn controls
+used here:
+
+- `context.work_packets: true` writes a bounded
+  `agentry/state/workpackets/<role>.md` file before a role starts.
+- Reviewer uses `trigger.pr_check_gate: settled`, so it does not launch while
+  all matching `ready-for-review` PR checks are still pending or queued.
+
+Role prompts should read the work packet first, tail logs instead of reading
+full historical logs, inspect PR file lists before full diffs, and use targeted
+diffs for large changes.
+
+For this experiment, every role is routed through Codex and the default model is
+`gpt-5.4-mini`. That keeps the first flow-validation run cheap. After the
+mechanics are proven, compare profiles by changing only `-m` in `config.yml`
+and recording per-session tokens, duration, pass/fail outcome, and whether a
+human had to intervene. The comparison protocol lives in
+`docs/ai/agentry-model-characterization.md`.
+
+Wrapper commands such as `status`, `doctor`, `configure`, and `gui` reuse an
+existing `.venv/` even if the pinned ref changed. To intentionally refresh the
+venv, stop Agentry first and set `AGENTRY_FORCE_INSTALL=1`.
+
 ## To upgrade Agentry
 
-Delete `.venv/` and run `start.ps1` / `start.sh` again. The venv is recreated and pulls the latest from GitHub.
+Update the pinned ref in `start.ps1` and `start.sh`, stop any running Agentry
+process that uses this venv, then rerun with `AGENTRY_FORCE_INSTALL=1`. If the
+venv is corrupted, delete `.venv/` and run `start.ps1` / `start.sh` again.
 
 ## To remove Agentry from this repo
 

@@ -1,5 +1,21 @@
 target_repo: vinu-dev/medvital-monitor
+mode: pipeline
 isolate_worktrees: true
+
+automation:
+  auto_merge: false
+  stop_when_queue_empty: false
+
+research:
+  allow_create_issues: false
+  max_open_ready_for_design: 3
+
+context:
+  work_packets: true
+  candidate_limit: 20
+  max_packet_bytes: 32000
+  log_tail_lines: 120
+  diff_max_lines: 1000
 
 agents:
   researcher:
@@ -18,7 +34,7 @@ agents:
 
   architect:
     cli: npx.cmd
-    args: ["--yes", "@openai/codex", "exec", "-m", "gpt-5.4", "--dangerously-bypass-approvals-and-sandbox"]
+    args: ["--yes", "@openai/codex", "exec", "-m", "gpt-5.4-mini", "--dangerously-bypass-approvals-and-sandbox"]
     trigger:
       issue_labels: ["ready-for-design"]
     interval_min: 10
@@ -34,7 +50,7 @@ agents:
 
   implementer:
     cli: npx.cmd
-    args: ["--yes", "@openai/codex", "exec", "-m", "gpt-5.4", "--dangerously-bypass-approvals-and-sandbox"]
+    args: ["--yes", "@openai/codex", "exec", "-m", "gpt-5.4-mini", "--dangerously-bypass-approvals-and-sandbox"]
     trigger:
       issue_labels: ["changes-requested", "tests-failed", "ready-for-implementation"]
     interval_min: 10
@@ -69,9 +85,10 @@ agents:
 
   reviewer:
     cli: npx.cmd
-    args: ["--yes", "@openai/codex", "exec", "-m", "gpt-5.4", "--dangerously-bypass-approvals-and-sandbox"]
+    args: ["--yes", "@openai/codex", "exec", "-m", "gpt-5.4-mini", "--dangerously-bypass-approvals-and-sandbox"]
     trigger:
       pr_labels: ["ready-for-review"]
+      pr_check_gate: settled
     interval_min: 10
     total_min: 30
     stall_min: 30

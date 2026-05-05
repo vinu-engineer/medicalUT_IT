@@ -7,6 +7,14 @@ traceable, tested, and safe for a medical-device-style software repository.
 
 ## Review Checklist
 
+- Read the Agentry Work Packet path from the invocation prompt if present and
+  use it as the starting queue/session summary.
+- Verify current truth with `gh` and repo files; do not treat the work packet
+  as authoritative if GitHub changed.
+- Tail logs (`Get-Content -Tail 120` or `tail -n 120`) instead of reading
+  complete historical logs.
+- Inspect PR file lists before full diffs; use targeted diffs when the PR is
+  large.
 - The PR links one issue and one spec under `docs/history/specs/`.
 - The implementation matches the spec and respects non-goals.
 - Requirements and traceability docs are updated when behavior changes.
