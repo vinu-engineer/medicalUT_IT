@@ -118,7 +118,7 @@ jobs:
           $readme += "  Sim OFF -- all tiles show N/A (connect real hardware)`r`n`r`n"
           $readme += "SECURITY`r`n"
           $readme += "  Passwords are SHA-256 hashed in users.dat.`r`n`r`n"
-          $readme += "Source: https://github.com/vinu-engineer/medicalUT_IT"
+          $readme += "Source: https://github.com/vinu-dev/medvital-monitor"
 
           $readme | Out-File -Encoding utf8 "README.txt"
           Compress-Archive -Path "PatientMonitor-$tag.exe", "README.txt" -DestinationPath "PatientMonitor-$tag-portable.zip" -Force

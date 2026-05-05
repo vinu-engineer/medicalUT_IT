@@ -1,10 +1,10 @@
 # Patient Vital Signs Monitor
 
-[![CI — Build & Test](https://github.com/vinu-engineer/medicalUT_IT/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/vinu-engineer/medicalUT_IT/actions/workflows/ci.yml)
+[![CI — Build & Test](https://github.com/vinu-dev/medvital-monitor/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/vinu-dev/medvital-monitor/actions/workflows/ci.yml)
 
 Medical device software for real-time patient vital sign monitoring and alert generation.
 Built to **IEC 62304 Class B** and **FDA SW Validation Guidance** standards.
-**Version 2.7.0** — Six vital signs (including respiration rate), NEWS2 early warning score, configurable alarm limits (IEC 60601-1-8), trend sparkline graphs, role-based settings access, rolling status message in simulation mode, 275 unit + 12 integration tests (287 total).
+**Version 2.7.0** — Six vital signs (including respiration rate), NEWS2 early warning score, configurable alarm limits (IEC 60601-1-8), trend sparkline graphs, role-based settings access, rolling status message in simulation mode, 283 unit + 12 integration tests (295 total).
 
 ---
 
@@ -274,7 +274,7 @@ Trend direction detection and sparkline data extraction.
 ### End-user install (no development tools needed)
 
 Download **`PatientMonitor-v2.6.0-portable.exe`** from the
-[Releases](https://github.com/vinu-engineer/medicalUT_IT/releases) page and
+[Releases](https://github.com/vinu-dev/medvital-monitor/releases) page and
 double-click to run the setup wizard.
 
 | Step | What happens |
@@ -323,7 +323,7 @@ from a terminal.
 | Script                 | What it does                                                          |
 |------------------------|-----------------------------------------------------------------------|
 | `build.bat`            | Configure + build everything (first run or incremental). Launches GUI.|
-| `run_tests.bat`        | Rebuild test targets and run all 287 tests. Exits non-zero on failure.|
+| `run_tests.bat`        | Rebuild test targets and run all 295 tests. Exits non-zero on failure.|
 | `run_coverage.bat`     | Build with `--coverage`, run tests, generate HTML + XML reports.      |
 | `generate_docs.bat`    | Run Doxygen to produce HTML + XML design documentation.               |
 | `create_installer.bat` | Build release exe + compile Windows installer (`dist\` folder).       |
@@ -464,9 +464,10 @@ requirements revision.
 | `tests/unit/test_trend.cpp`                     | 18     | SWR-TRD-001                       |
 | `tests/unit/test_hal.cpp`                       | 12     | Supporting HAL / simulator checks only |
 | `tests/unit/test_config.cpp`                    | 10     | Supporting config persistence checks only |
+| `tests/unit/test_localization.cpp`              | 8      | SWR-GUI-012                       |
 | `tests/integration/test_patient_monitoring.cpp` | 6      | SWR-PAT-*, SWR-VIT-*              |
 | `tests/integration/test_alert_escalation.cpp`   | 6      | SWR-VIT-*, SWR-ALT-*              |
-| **Total**                                       | **287** | **36 SWRs covered across automated and manual evidence** |
+| **Total**                                       | **295** | **37 SWRs covered across automated, architecture-review, and GUI-demo/manual evidence** |
 
 ### Test techniques applied
 
@@ -606,7 +607,7 @@ Full traceability matrix: `requirements/TRACEABILITY.md`
 ## Repository Structure
 
 ```
-medicalUT_IT/
+medvital-monitor/
 ├── CMakeLists.txt                   # Root build configuration
 ├── Doxyfile                         # Doxygen documentation configuration
 ├── README.md                        # This file
@@ -649,7 +650,8 @@ medicalUT_IT/
 │   │   ├── test_alarm_limits.cpp    # 31 tests — SWR-ALM-001
 │   │   ├── test_trend.cpp           # 18 tests — SWR-TRD-001
 │   │   ├── test_hal.cpp             # 12 tests — SWR-GUI-005/006
-│   │   └── test_config.cpp          # 10 tests — SWR-GUI-010
+│   │   ├── test_config.cpp          # 10 tests — SWR-GUI-010
+│   │   └── test_localization.cpp    # 8 tests — SWR-GUI-012
 │   └── integration/
 │       ├── test_patient_monitoring.cpp  # 6 tests — SWR-PAT-*, SWR-VIT-*
 │       └── test_alert_escalation.cpp    # 6 tests — SWR-VIT-*, SWR-ALT-*
@@ -657,11 +659,11 @@ medicalUT_IT/
 ├── requirements/
 |   |-- UNS.md                       # User Needs (16 items)
 |   |-- SYS.md                       # System Requirements (17 items)
-│   ├── SWR.md                       # Software Requirements (36 items)
-│   └── TRACEABILITY.md              # RTM — 16/16 UNS, 36/36 SWR, 287 tests
+│   ├── SWR.md                       # Software Requirements (37 items)
+│   └── TRACEABILITY.md              # RTM — 16/16 UNS, 37/37 SWR, 295 tests
 │
 ├── build.bat                        # Configure + build + launch GUI
-|-- run_tests.bat                    # Run all 287 tests
+|-- run_tests.bat                    # Run all 295 tests
 ├── run_coverage.bat                 # GCC coverage report (gcov + gcovr)
 ├── generate_docs.bat                # Doxygen HTML + XML documentation
 ├── create_installer.bat             # Build release + compile Windows installer

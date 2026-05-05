@@ -238,8 +238,8 @@ No additional secrets are required. The project uses no external services.
 ### 7.1 First-Time Setup
 
 ```bash
-git clone https://github.com/vinu-engineer/medicalUT_IT.git
-cd medicalUT_IT
+git clone https://github.com/vinu-dev/medvital-monitor.git
+cd medvital-monitor
 
 # Install Git hooks (enforces branch names, commit messages, basic lint)
 ./scripts/install-hooks.sh
