@@ -93,11 +93,12 @@ Role prompts should read the work packet first, tail logs instead of reading
 full historical logs, inspect PR file lists before full diffs, and use targeted
 diffs for large changes.
 
-For this experiment, every role is routed through Codex and the default model is
-`gpt-5.4-mini`. That keeps the first flow-validation run cheap. After the
-mechanics are proven, compare profiles by changing only `-m` in `config.yml`
-and recording per-session tokens, duration, pass/fail outcome, and whether a
-human had to intervene. The comparison protocol lives in
+For this experiment, every role is routed through Codex. Researcher uses
+`gpt-5.4-mini` with a short refill budget because it is only maintaining queue
+supply; implementation and review roles use the stronger configured Codex
+model. After the mechanics are proven, compare profiles by changing only `-m`
+in `config.yml` and recording per-session tokens, duration, pass/fail outcome,
+and whether a human had to intervene. The comparison protocol lives in
 `docs/ai/agentry-model-characterization.md`.
 
 Wrapper commands such as `status`, `doctor`, `configure`, and `gui` reuse an

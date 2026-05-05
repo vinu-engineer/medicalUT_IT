@@ -19,6 +19,9 @@ Start with a cheap GitHub queue check:
   issues; report that the design supply is already full.
 - If the combined count is below 2, create only enough issues to restore the
   combined supply to 2, with a hard maximum of 2 new issues per run.
+- Keep the refill bounded: use at most three credible source URLs total,
+  perform targeted GitHub issue/PR dedupe, and run no more than one focused code
+  search. Do not crawl generated `docs/html` output.
 
 Read:
 
