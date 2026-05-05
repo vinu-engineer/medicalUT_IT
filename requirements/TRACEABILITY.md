@@ -1,9 +1,9 @@
 # Requirements Traceability Matrix (RTM)
 
-**Document ID:** RTM-001-REV-I
+**Document ID:** RTM-001-REV-J
 **Project:** Patient Vital Signs Monitor
 **Version:** 2.7.0
-**Date:** 2026-05-03
+**Date:** 2026-05-05
 **Status:** Approved
 **Standard:** IEC 62304 §5.7.3 / FDA SW Validation Guidance
 
@@ -57,7 +57,9 @@ implementation and test coverage, and every UNS must reach at least one SWR.
 | UNS-009 | SYS-009 | SWR-PAT-003 | `patient.c` : `patient_latest_reading()` | `PatientLatestReading.*` (2 tests) | `REQ_INT_MON_004` |
 | UNS-010 | SYS-006, SYS-011 | SWR-PAT-004 | `patient.c` : `patient_current_status()` | `PatientStatus.*` (4 tests) | `REQ_INT_MON_002`, `REQ_INT_MON_003`, `REQ_INT_ESC_001`–`REQ_INT_ESC_005` |
 | UNS-011 | SYS-010 | SWR-PAT-005 | `patient.c` : `patient_is_full()` | `PatientIsFull.*` (2 tests) | `REQ_INT_MON_005` |
-| UNS-010 | SYS-011 | SWR-PAT-006 | `patient.c` : `patient_print_summary()` | `PatientPrintSummary.*` (3 tests) | — |
+| UNS-010, UNS-017 | SYS-011, SYS-021 | SWR-PAT-006 | `patient.c` : `patient_print_summary()` | `PatientPrintSummary.*` (4 tests) | — |
+| UNS-017 | SYS-020, SYS-012 | SWR-PAT-007 | `patient.c` : `patient_add_reading()`, alert-event helpers | `PatientAlertEvents.REQ_PAT_007_*` (6 tests) | `REQ_INT_MON_007`, `REQ_INT_ESC_006` |
+| UNS-017 | SYS-020, SYS-021 | SWR-PAT-008 | `patient.c` : `patient_init()`, `patient_alert_event_count()`, `patient_alert_event_at()` | `PatientAlertEvents.REQ_PAT_008_*` (1 test) | — |
 | UNS-013 | SYS-013 | SWR-GUI-001 | `gui_auth.c` : `auth_validate()` | `UsersTest.REQ_GUI_001_*` (10 tests) | — |
 | UNS-013 | SYS-013 | SWR-GUI-002 | `gui_main.c` : `attempt_login()`, `login_proc()`, logout handler | `UsersTest.REQ_GUI_002_*` (5 tests) | — |
 | UNS-014, UNS-005, UNS-006 | SYS-014 | SWR-GUI-003 | `gui_main.c` : `paint_tile()`, `paint_tiles()`, `paint_status_banner()`, `update_dashboard()` | GUI demo | — |
@@ -71,6 +73,7 @@ implementation and test coverage, and every UNS must reach at least one SWR.
 | UNS-016 | SYS-016 | SWR-GUI-007 | `gui_users.c` : `users_add()`, `users_remove()`, `users_count()`, `users_get_by_index()` | `UsersTest.REQ_GUI_007_*` (8 tests) | — |
 | UNS-016 | SYS-017 | SWR-GUI-008 | `gui_main.c` : role-conditional `WM_CREATE`, `draw_pill()`, `IDC_BTN_SETTINGS`, `IDC_BTN_ACCOUNT` | GUI demo (Admin→Settings, Clinical→My Account) | — |
 | UNS-016 | SYS-016, SYS-017 | SWR-GUI-009 | `gui_main.c` : `settings_proc()`, `pwddlg_proc()`, `adduser_proc()` | GUI demo (Settings panel Add/Remove/Set Password) | — |
+| UNS-017, UNS-014 | SYS-021, SYS-014 | SWR-GUI-013 | `gui_main.c` : `create_dash_controls()`, `reposition_dash_controls()`, `update_dashboard()`; `localization.c` : session event label string | Manual GUI review (`GUI-MAN-06`) | — |
 
 ---
 
@@ -99,7 +102,9 @@ implementation and test coverage, and every UNS must reach at least one SWR.
 | `PatientLatestReading` | `REQ_PAT_003_*` | SWR-PAT-003 | SYS-009 | UNS-009 |
 | `PatientStatus` | `REQ_PAT_004_*` | SWR-PAT-004 | SYS-006, SYS-011 | UNS-010 |
 | `PatientIsFull` | `REQ_PAT_005_*` | SWR-PAT-005 | SYS-010 | UNS-011 |
-| `PatientPrintSummary` | `REQ_PAT_006_*` | SWR-PAT-006 | SYS-011 | UNS-010 |
+| `PatientAlertEvents` | `REQ_PAT_007_*` | SWR-PAT-007 | SYS-020, SYS-012 | UNS-017, UNS-011 |
+| `PatientAlertEvents` | `REQ_PAT_008_*` | SWR-PAT-008 | SYS-020, SYS-021 | UNS-017 |
+| `PatientPrintSummary` | `REQ_PAT_006_*` | SWR-PAT-006 | SYS-011, SYS-021 | UNS-010, UNS-017 |
 | `UsersTest` | `REQ_GUI_001_*` | SWR-GUI-001 | SYS-013 | UNS-013 |
 | `UsersTest` | `REQ_GUI_002_*` | SWR-GUI-002 | SYS-013 | UNS-013 |
 | `UsersTest` | `REQ_SEC_001_*` | SWR-SEC-001 | SYS-016 | UNS-016 |
@@ -127,11 +132,13 @@ Supporting implementation checks:
 | `PatientMonitoring` | `REQ_INT_MON_004` | SWR-PAT-003, SWR-PAT-004, SWR-ALT-001 | SYS-005, SYS-006 | UNS-005, UNS-006 |
 | `PatientMonitoring` | `REQ_INT_MON_005` | SWR-PAT-002, SWR-PAT-005 | SYS-010 | UNS-011 |
 | `PatientMonitoring` | `REQ_INT_MON_006` | SWR-PAT-001, SWR-PAT-002, SWR-PAT-004 | SYS-008, SYS-009 | UNS-008, UNS-009 |
+| `PatientMonitoring` | `REQ_INT_MON_007` | SWR-PAT-007, SWR-ALT-002 | SYS-020, SYS-021 | UNS-017, UNS-010 |
 | `AlertEscalation` | `REQ_INT_ESC_001` | SWR-VIT-004, SWR-PAT-004 | SYS-004, SYS-006 | UNS-004, UNS-005, UNS-006 |
 | `AlertEscalation` | `REQ_INT_ESC_002` | SWR-VIT-001, SWR-ALT-001 | SYS-001, SYS-005 | UNS-001, UNS-005, UNS-006 |
 | `AlertEscalation` | `REQ_INT_ESC_003` | SWR-VIT-001–004, SWR-ALT-001 | SYS-001–005 | UNS-001–006 |
 | `AlertEscalation` | `REQ_INT_ESC_004` | SWR-PAT-004, SWR-ALT-002 | SYS-005, SYS-006 | UNS-005, UNS-006 |
 | `AlertEscalation` | `REQ_INT_ESC_005` | SWR-VIT-001, SWR-VIT-004, SWR-PAT-004 | SYS-001, SYS-004, SYS-006 | UNS-001, UNS-004, UNS-005, UNS-006 |
+| `AlertEscalation` | `REQ_INT_ESC_006` | SWR-PAT-007, SWR-ALT-001 | SYS-020, SYS-005 | UNS-017, UNS-005, UNS-006 |
 
 ---
 
@@ -150,15 +157,16 @@ Supporting implementation checks:
 | UNS-007 | BMI display | SYS-007 | SWR-VIT-006 | ✓ |
 | UNS-008 | Patient identification | SYS-008 | SWR-PAT-001 | ✓ |
 | UNS-009 | Vital sign history | SYS-009 | SWR-PAT-002, SWR-PAT-003 | ✓ |
-| UNS-010 | Consolidated summary | SYS-011, SYS-019 | SWR-PAT-004, SWR-PAT-006, SWR-VIT-007, SWR-NEW-001 | ✓ |
+| UNS-010 | Consolidated summary | SYS-011, SYS-019, SYS-021 | SWR-PAT-004, SWR-PAT-006, SWR-VIT-007, SWR-NEW-001 | ✓ |
 | UNS-011 | Data integrity | SYS-010, SYS-012 | SWR-PAT-002, SWR-PAT-005, SWR-ALT-003, SWR-PAT-001 | ✓ |
 | UNS-012 | Platform compatibility | SYS-012 | SWR-PAT-001, SWR-ALT-003 | ✓ |
 | UNS-013 | User authentication | SYS-013 | SWR-GUI-001, SWR-GUI-002 | ✓ |
-| UNS-014 | Graphical dashboard | SYS-014, SYS-018, SYS-019 | SWR-GUI-003, SWR-GUI-004, SWR-GUI-012, SWR-VIT-008, SWR-NEW-001 | ✓ |
+| UNS-014 | Graphical dashboard | SYS-014, SYS-018, SYS-019, SYS-021 | SWR-GUI-003, SWR-GUI-004, SWR-GUI-012, SWR-GUI-013, SWR-VIT-008, SWR-NEW-001 | ✓ |
 | UNS-015 | Live monitoring feed | SYS-015, SYS-018 | SWR-GUI-005, SWR-GUI-006, SWR-GUI-010, SWR-GUI-011, SWR-VIT-008 | ✓ |
 | UNS-016 | Role-based access / multi-user | SYS-016, SYS-017 | SWR-SEC-001, SWR-SEC-002, SWR-SEC-003, SWR-GUI-007, SWR-GUI-008, SWR-GUI-009 | ✓ |
+| UNS-017 | Session alarm event review | SYS-020, SYS-021 | SWR-PAT-006, SWR-PAT-007, SWR-PAT-008, SWR-GUI-013 | ✓ |
 
-**Result: 16 / 16 User Needs covered ✓**
+**Result: 17 / 17 User Needs covered ✓**
 
 ---
 
@@ -184,7 +192,9 @@ Supporting implementation checks:
 | SWR-PAT-003 | `patient_latest_reading()` | 2 | 1 | ✓ |
 | SWR-PAT-004 | `patient_current_status()` | 4 | 7 | ✓ |
 | SWR-PAT-005 | `patient_is_full()` | 2 | 1 | ✓ |
-| SWR-PAT-006 | `patient_print_summary()` | 3 | — | ✓ |
+| SWR-PAT-006 | `patient_print_summary()` | 4 | — | ✓ |
+| SWR-PAT-007 | `patient_add_reading()`, alert-event helpers | 6 | 2 | ✓ |
+| SWR-PAT-008 | `patient_init()`, `patient_alert_event_count()`, `patient_alert_event_at()` | 1 | — | ✓ |
 | SWR-GUI-001 | `auth_validate()` | 10 | — | ✓ |
 | SWR-GUI-002 | `attempt_login()`, `login_proc()`, logout | 5 | — | ✓ |
 | SWR-GUI-003 | `paint_tile()`, `paint_tiles()`, `paint_status_banner()` | GUI demo | — | ✓ |
@@ -201,12 +211,13 @@ Supporting implementation checks:
 | SWR-GUI-010 | `gui_main.c`, `app_config.c` : mode toggle + persistence | Manual GUI review + `ConfigTest.*` support (10) | — | ✓ |
 | SWR-GUI-011 | `gui_main.c` : `paint_status_banner()`, scroll offset | Manual visual review | — | ✓ |
 | SWR-GUI-012 | `gui_main.c`, `localization.c`, `app_config.c` : selector strings, persistence/load | `LocalizationTest.*` (8) + supplemental `DVT-GUI-16` | — | ✓ |
+| SWR-GUI-013 | `create_dash_controls()`, `reposition_dash_controls()`, `update_dashboard()` | Manual GUI review (`GUI-MAN-06`) | — | ✓ |
 | SWR-VIT-008 | `vitals.c` : `check_respiration_rate()` | 15 | — | ✓ |
 | SWR-NEW-001 | `news2.c` : `news2_calculate()` | 53 | — | ✓ |
 | SWR-ALM-001 | `alarm_limits.c` : `alarm_limits_defaults()`, `alarm_check_*()` | 31 | — | ✓ |
 | SWR-TRD-001 | `trend.c` : `trend_direction()`, `trend_extract_*()` | 18 | — | ✓ |
 
-**Result: 37 / 37 SWRs implemented and tested ✓**
+**Result: 40 / 40 SWRs implemented and tested ✓**
 
 ---
 
@@ -250,7 +261,7 @@ This is recorded as an accepted coverage exclusion with a documented rationale.
 |-----------|-------|---------------|
 | `tests/unit/test_vitals.cpp` | 80 | SWR-VIT-001 – SWR-VIT-008 |
 | `tests/unit/test_alerts.cpp` | 11 | SWR-ALT-001 – SWR-ALT-004 |
-| `tests/unit/test_patient.cpp` | 19 | SWR-PAT-001 – SWR-PAT-006 |
+| `tests/unit/test_patient.cpp` | 27 | SWR-PAT-001 – SWR-PAT-008 |
 | `tests/unit/test_auth.cpp` | 41 | SWR-GUI-001, SWR-GUI-002, SWR-SEC-001–004, SWR-GUI-007 |
 | `tests/unit/test_news2.cpp` | 53 | SWR-NEW-001 |
 | `tests/unit/test_alarm_limits.cpp` | 31 | SWR-ALM-001 |
@@ -258,9 +269,9 @@ This is recorded as an accepted coverage exclusion with a documented rationale.
 | `tests/unit/test_hal.cpp` | 12 | Supporting HAL / simulator checks only; no direct SWR verification claim |
 | `tests/unit/test_config.cpp` | 10 | Supporting config persistence checks only; no direct SWR verification claim |
 | `tests/unit/test_localization.cpp` | 8 | SWR-GUI-012 |
-| `tests/integration/test_patient_monitoring.cpp` | 6 | SWR-PAT-*, SWR-VIT-* |
-| `tests/integration/test_alert_escalation.cpp` | 6 | SWR-VIT-*, SWR-ALT-*, SWR-PAT-004 |
-| **Total** | **295** | **37 SWRs covered across automated, architecture-review, and GUI-demo/manual evidence** |
+| `tests/integration/test_patient_monitoring.cpp` | 7 | SWR-PAT-*, SWR-VIT-*, SWR-ALT-* |
+| `tests/integration/test_alert_escalation.cpp` | 7 | SWR-VIT-*, SWR-ALT-*, SWR-PAT-004, SWR-PAT-007 |
+| **Total** | **305** | **40 SWRs covered across automated, architecture-review, and GUI-demo/manual evidence** |
 
 ---
 
@@ -278,3 +289,4 @@ This is recorded as an accepted coverage exclusion with a documented rationale.
 | H   | 2026-05-03 | codex           | Reconciled v2.7.0 SWR counts and existing SYS mappings; 36/36 SWR, 287 tests |
 | I   | 2026-05-03 | Codex implementer | Added SWR-GUI-012 localization traceability and 8 automated localization tests; 37/37 SWR, 295 tests |
 | J   | 2026-05-05 | Codex implementer | Restored defensible SYS-level traceability for RR and NEWS2 requirements; 37/37 SWR, 295 tests |
+| K   | 2026-05-05 | Codex implementer | Added session alarm event review traceability: UNS-017, SYS-020/021, SWR-PAT-007/008, SWR-GUI-013; 40/40 SWR, 305 tests |

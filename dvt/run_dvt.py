@@ -85,13 +85,16 @@ REQUIREMENT_MAP = {
     "SWR-ALT-004": ("test_unit", "GenerateAlerts.REQ_ALT_005_MessageNonEmpty",
                     "generated alert records populate human-readable fields"),
     # Patient record - GTest suites: PatientInit, PatientAddReading, PatientLatestReading,
-    # PatientStatus, PatientIsFull, PatientPrintSummary
+    # PatientStatus, PatientIsFull, PatientAlertEvents, PatientPrintSummary
     "SWR-PAT-001": ("test_unit", "PatientInit", "patient_init() - all fields set"),
     "SWR-PAT-002": ("test_unit", "PatientAddReading", "patient_add_reading() stores readings and rejects overflow"),
     "SWR-PAT-003": ("test_unit", "PatientLatestReading", "patient_latest_reading() - returns last"),
     "SWR-PAT-004": ("test_unit", "PatientStatus", "patient_current_status() - worst alert"),
     "SWR-PAT-005": ("test_unit", "PatientIsFull", "patient_is_full() - ring-buffer full"),
-    "SWR-PAT-006": ("test_unit", "PatientPrintSummary", "patient_print_summary() - no crash"),
+    "SWR-PAT-006": ("test_unit", "PatientPrintSummary", "patient_print_summary() - session event summary output"),
+    "SWR-PAT-007": ("test_unit", "PatientAlertEvents", "patient_add_reading() captures session alarm event transitions"),
+    "SWR-PAT-008": ("test_unit", "PatientAlertEvents.REQ_PAT_008_EventAccessAndReset",
+                    "patient alert-event accessors and reset behavior"),
     # Security - GTest suite: UsersTest
     "SWR-SEC-001": ("test_unit", "UsersTest", "users_authenticate() valid/invalid creds"),
     "SWR-SEC-002": ("test_unit", "UsersTest.REQ_SEC_004_StoredValueIsNotPlaintext",
@@ -105,6 +108,7 @@ REQUIREMENT_MAP = {
     "SWR-GUI-010": (None, "MANUAL", "GUI review: sim/device mode toggle behavior, N/A tiles, banners, and relaunch state"),
     "SWR-GUI-011": (None, "MANUAL", "Rolling simulation banner verified by manual visual check"),
     "SWR-GUI-012": ("test_unit", "LocalizationTest", "Localization API, selector list, and monitor.cfg persistence"),
+    "SWR-GUI-013": (None, "MANUAL", "GUI review: dedicated session alarm events list remains distinct from active alerts"),
     # GUI requirements verified via manual checklist only (GUI rendering and workflow review)
     "SWR-GUI-001": (None, "MANUAL", "Login screen: auth, error message, role detection"),
     "SWR-GUI-002": (None, "MANUAL", "Dashboard: colour-coded vital tiles update every 2 s"),

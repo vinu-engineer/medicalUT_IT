@@ -1,6 +1,6 @@
 // =============================================================
 // TEST SUITE : Alert Escalation (Integration)
-// REQUIREMENT: REQ-INT-ESC-001 to REQ-INT-ESC-005
+// REQUIREMENT: REQ-INT-ESC-001 to REQ-INT-ESC-006
 //
 // Validates that the alert pipeline responds correctly to
 // clinical alarm scenarios: single-parameter escalation,
@@ -13,6 +13,7 @@ extern "C" {
 #include "patient.h"
 }
 #include <gtest/gtest.h>
+#include <string>
 
 // =============================================================
 // REQ-INT-ESC-001  Single parameter crosses critical threshold
@@ -162,4 +163,31 @@ TEST(AlertEscalation, REQ_INT_ESC_005_BoundaryTransitions_SpO2) {
             << "SpO2 " << c.spo2 << "% should be "
             << alert_level_str(c.expected);
     }
+}
+
+// =============================================================
+// REQ-INT-ESC-006  Historical event log tracks parameter-set changes
+//   Distinct warning sources should create distinct review events
+// =============================================================
+
+TEST(AlertEscalation, REQ_INT_ESC_006_ParameterSetChangeCreatesDistinctEvents) {
+    PatientRecord rec;
+    patient_init(&rec, 3007, "Parameter Change Test", 50, 72.0f, 1.74f);
+
+    VitalSigns hr_warning   = {108, 120, 80, 36.6f, 98, 0};
+    VitalSigns spo2_warning = {72, 120, 80, 36.6f, 93, 0};
+
+    ASSERT_EQ(patient_add_reading(&rec, &hr_warning), 1);
+    ASSERT_EQ(patient_add_reading(&rec, &spo2_warning), 1);
+    EXPECT_EQ(patient_current_status(&rec), ALERT_WARNING);
+
+    ASSERT_EQ(patient_alert_event_count(&rec), 2);
+    const AlertEvent *first = patient_alert_event_at(&rec, 0);
+    const AlertEvent *second = patient_alert_event_at(&rec, 1);
+    ASSERT_NE(first, nullptr);
+    ASSERT_NE(second, nullptr);
+
+    EXPECT_NE(std::string(first->summary).find("Heart Rate"), std::string::npos);
+    EXPECT_NE(std::string(second->summary).find("SpO2"), std::string::npos);
+    EXPECT_EQ(second->level, ALERT_WARNING);
 }

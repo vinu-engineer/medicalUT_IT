@@ -4,7 +4,7 @@
 
 Medical device software for real-time patient vital sign monitoring and alert generation.
 Built to **IEC 62304 Class B** and **FDA SW Validation Guidance** standards.
-**Version 2.7.0** — Six vital signs (including respiration rate), NEWS2 early warning score, configurable alarm limits (IEC 60601-1-8), trend sparkline graphs, role-based settings access, rolling status message in simulation mode, 283 unit + 12 integration tests (295 total).
+**Version 2.7.0** — Six vital signs (including respiration rate), NEWS2 early warning score, configurable alarm limits (IEC 60601-1-8), trend sparkline graphs, a session alarm event review log, role-based settings access, rolling status message in simulation mode, 291 unit + 14 integration tests (305 total).
 
 ---
 
@@ -327,7 +327,7 @@ from a terminal.
 | Script                 | What it does                                                          |
 |------------------------|-----------------------------------------------------------------------|
 | `build.bat`            | Configure + build everything (first run or incremental). Launches GUI.|
-| `run_tests.bat`        | Rebuild test targets and run all 295 tests. Exits non-zero on failure.|
+| `run_tests.bat`        | Rebuild test targets and run all 305 tests. Exits non-zero on failure.|
 | `run_coverage.bat`     | Build with `--coverage`, run tests, generate HTML + XML reports.      |
 | `generate_docs.bat`    | Run Doxygen to produce HTML + XML design documentation.               |
 | `create_installer.bat` | Build release exe + compile Windows installer (`dist\` folder).       |
@@ -657,17 +657,17 @@ medvital-monitor/
 │   │   ├── test_config.cpp          # 10 tests — SWR-GUI-010
 │   │   └── test_localization.cpp    # 8 tests — SWR-GUI-012
 │   └── integration/
-│       ├── test_patient_monitoring.cpp  # 6 tests — SWR-PAT-*, SWR-VIT-*
-│       └── test_alert_escalation.cpp    # 6 tests — SWR-VIT-*, SWR-ALT-*
+│       ├── test_patient_monitoring.cpp  # 7 tests — SWR-PAT-*, SWR-VIT-*, SWR-ALT-*
+│       └── test_alert_escalation.cpp    # 7 tests — SWR-VIT-*, SWR-ALT-*, SWR-PAT-007
 │
 ├── requirements/
-|   |-- UNS.md                       # User Needs (16 items)
-|   |-- SYS.md                       # System Requirements (17 items)
-│   ├── SWR.md                       # Software Requirements (37 items)
-│   └── TRACEABILITY.md              # RTM — 16/16 UNS, 37/37 SWR, 295 tests
+|   |-- UNS.md                       # User Needs (17 items)
+|   |-- SYS.md                       # System Requirements (19 items)
+│   ├── SWR.md                       # Software Requirements (40 items)
+│   └── TRACEABILITY.md              # RTM — 17/17 UNS, 40/40 SWR, 305 tests
 │
 ├── build.bat                        # Configure + build + launch GUI
-|-- run_tests.bat                    # Run all 295 tests
+|-- run_tests.bat                    # Run all 305 tests
 ├── run_coverage.bat                 # GCC coverage report (gcov + gcovr)
 ├── generate_docs.bat                # Doxygen HTML + XML documentation
 ├── create_installer.bat             # Build release + compile Windows installer

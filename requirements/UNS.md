@@ -188,6 +188,17 @@ access control settings.
 
 ---
 
+### UNS-017 — Session Alarm Event Review
+**Need:** The system shall retain a session-scoped review log of alert-state
+changes so clinicians and testers can review transient warning or critical
+episodes after the latest reading has improved.
+**Rationale:** Current-only alert views can hide recent deterioration before
+handoff or design-verification review; a bounded event log reduces manual
+reconstruction from raw reading history.
+**Priority:** High
+
+---
+
 ## Revision History
 
 | Rev | Date       | Author          | Description          |
@@ -196,3 +207,4 @@ access control settings.
 | B   | 2026-04-07 | vinu-engineer   | Added UNS-013, UNS-014 (GUI) |
 | C   | 2026-04-07 | vinu-engineer   | Added UNS-015 (live monitoring feed / HAL) |
 | D   | 2026-04-07 | vinu-engineer   | Added UNS-016 (role-based access / multi-user) |
+| E   | 2026-05-05 | Codex implementer | Added UNS-017 (session alarm event review) |

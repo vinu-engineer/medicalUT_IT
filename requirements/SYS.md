@@ -234,6 +234,28 @@ inflate the NEWS2 score.
 
 ---
 
+### SYS-020 — Session Alarm Event Review Storage
+**Requirement:** The system shall derive and retain a sequential session-scoped
+history of alert-state transition events from successfully recorded vital sign
+readings. At most one event shall be appended per successful reading when the
+aggregate alert level or abnormal parameter set changes. Each event shall store
+the reading index, resulting alert level, and a deterministic summary derived
+from the existing alert semantics. The retained event history shall clear
+whenever patient session data is reinitialized.
+**Traces to:** UNS-017, UNS-011
+
+---
+
+### SYS-021 — Session Alarm Event Review Presentation
+**Requirement:** The system shall present the session alarm event history
+distinctly from current active alerts in both the graphical dashboard and the
+formatted patient summary. Both surfaces shall use the same stored event
+records, preserve reading order, and indicate explicitly when no session alarm
+events have been recorded.
+**Traces to:** UNS-017, UNS-010
+
+---
+
 ## Revision History
 
 | Rev | Date       | Author          | Description          |
@@ -243,3 +265,4 @@ inflate the NEWS2 score.
 | C   | 2026-04-07 | vinu-engineer   | Added SYS-015 (HAL) |
 | D   | 2026-04-07 | vinu-engineer   | Added SYS-016 (multi-user accounts), SYS-017 (RBAC) |
 | E   | 2026-05-05 | Codex implementer | Added SYS-018 (RR) and SYS-019 (NEWS2) to restore defensible traceability for existing clinical requirements |
+| F   | 2026-05-05 | Codex implementer | Added SYS-020 and SYS-021 for session alarm event review |

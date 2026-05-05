@@ -9,6 +9,7 @@ extern "C" {
 }
 #include <gtest/gtest.h>
 #include <cstring>
+#include <string>
 
 // Helper fixtures
 static VitalSigns make_normal_vitals() {
@@ -30,6 +31,18 @@ static VitalSigns make_critical_vitals() {
     v.temperature     = 40.0f;
     v.spo2            = 85;
     v.respiration_rate = 0; /* 0 = not measured */
+    return v;
+}
+
+static VitalSigns make_warning_hr_vitals() {
+    VitalSigns v = make_normal_vitals();
+    v.heart_rate = 108;
+    return v;
+}
+
+static VitalSigns make_warning_spo2_vitals() {
+    VitalSigns v = make_normal_vitals();
+    v.spo2 = 93;
     return v;
 }
 
@@ -192,9 +205,120 @@ TEST(PatientIsFull, REQ_PAT_005_Full) {
 }
 
 // =============================================================
-// REQ-PAT-006  patient_print_summary() — executes without crash
-//   Verifies the display path for normal, warning, and critical
-//   patients including the no-readings edge case.
+// REQ-PAT-007 / REQ-PAT-008  session alert-event review log
+// =============================================================
+
+TEST(PatientAlertEvents, REQ_PAT_007_FirstNormalReading_NoEvent) {
+    PatientRecord rec;
+    patient_init(&rec, 1, "Test", 25, 70.0f, 1.75f);
+
+    VitalSigns normal = make_normal_vitals();
+    ASSERT_EQ(patient_add_reading(&rec, &normal), 1);
+    EXPECT_EQ(patient_alert_event_count(&rec), 0);
+}
+
+TEST(PatientAlertEvents, REQ_PAT_007_FirstAbnormalReading_CreatesEvent) {
+    PatientRecord rec;
+    patient_init(&rec, 1, "Test", 25, 70.0f, 1.75f);
+
+    VitalSigns warning = make_warning_hr_vitals();
+    ASSERT_EQ(patient_add_reading(&rec, &warning), 1);
+
+    ASSERT_EQ(patient_alert_event_count(&rec), 1);
+    const AlertEvent *event = patient_alert_event_at(&rec, 0);
+    ASSERT_NE(event, nullptr);
+    EXPECT_EQ(event->reading_index, 1);
+    EXPECT_EQ(event->level, ALERT_WARNING);
+    EXPECT_NE(std::string(event->summary).find("Heart Rate"), std::string::npos);
+}
+
+TEST(PatientAlertEvents, REQ_PAT_007_RepeatedSignature_NoDuplicateEvent) {
+    PatientRecord rec;
+    patient_init(&rec, 1, "Test", 25, 70.0f, 1.75f);
+
+    VitalSigns warning1 = make_warning_hr_vitals();
+    VitalSigns warning2 = make_warning_hr_vitals();
+    warning2.heart_rate = 112;
+
+    ASSERT_EQ(patient_add_reading(&rec, &warning1), 1);
+    ASSERT_EQ(patient_add_reading(&rec, &warning2), 1);
+    EXPECT_EQ(patient_alert_event_count(&rec), 1);
+}
+
+TEST(PatientAlertEvents, REQ_PAT_007_SeverityEscalation_CreatesNewEvent) {
+    PatientRecord rec;
+    patient_init(&rec, 1, "Test", 25, 70.0f, 1.75f);
+
+    VitalSigns warning = make_warning_hr_vitals();
+    VitalSigns critical = make_critical_vitals();
+
+    ASSERT_EQ(patient_add_reading(&rec, &warning), 1);
+    ASSERT_EQ(patient_add_reading(&rec, &critical), 1);
+
+    ASSERT_EQ(patient_alert_event_count(&rec), 2);
+    const AlertEvent *event = patient_alert_event_at(&rec, 1);
+    ASSERT_NE(event, nullptr);
+    EXPECT_EQ(event->reading_index, 2);
+    EXPECT_EQ(event->level, ALERT_CRITICAL);
+}
+
+TEST(PatientAlertEvents, REQ_PAT_007_ParameterSetChangeSameSeverity_CreatesNewEvent) {
+    PatientRecord rec;
+    patient_init(&rec, 1, "Test", 25, 70.0f, 1.75f);
+
+    VitalSigns hr_warning = make_warning_hr_vitals();
+    VitalSigns spo2_warning = make_warning_spo2_vitals();
+
+    ASSERT_EQ(patient_add_reading(&rec, &hr_warning), 1);
+    ASSERT_EQ(patient_add_reading(&rec, &spo2_warning), 1);
+
+    ASSERT_EQ(patient_alert_event_count(&rec), 2);
+    const AlertEvent *first = patient_alert_event_at(&rec, 0);
+    const AlertEvent *second = patient_alert_event_at(&rec, 1);
+    ASSERT_NE(first, nullptr);
+    ASSERT_NE(second, nullptr);
+    EXPECT_NE(std::string(first->summary).find("Heart Rate"), std::string::npos);
+    EXPECT_NE(std::string(second->summary).find("SpO2"), std::string::npos);
+}
+
+TEST(PatientAlertEvents, REQ_PAT_007_RecoveryToNormal_CreatesClearEvent) {
+    PatientRecord rec;
+    patient_init(&rec, 1, "Test", 25, 70.0f, 1.75f);
+
+    VitalSigns critical = make_critical_vitals();
+    VitalSigns normal = make_normal_vitals();
+
+    ASSERT_EQ(patient_add_reading(&rec, &critical), 1);
+    ASSERT_EQ(patient_add_reading(&rec, &normal), 1);
+
+    ASSERT_EQ(patient_alert_event_count(&rec), 2);
+    const AlertEvent *recovery = patient_alert_event_at(&rec, 1);
+    ASSERT_NE(recovery, nullptr);
+    EXPECT_EQ(recovery->level, ALERT_NORMAL);
+    EXPECT_EQ(recovery->abnormal_mask, 0u);
+    EXPECT_NE(std::string(recovery->summary).find("Recovered to normal"), std::string::npos);
+}
+
+TEST(PatientAlertEvents, REQ_PAT_008_EventAccessAndReset) {
+    PatientRecord rec;
+    patient_init(&rec, 1, "Test", 25, 70.0f, 1.75f);
+
+    VitalSigns warning = make_warning_hr_vitals();
+    ASSERT_EQ(patient_add_reading(&rec, &warning), 1);
+
+    ASSERT_EQ(patient_alert_event_count(&rec), 1);
+    EXPECT_EQ(patient_alert_event_at(&rec, -1), nullptr);
+    EXPECT_EQ(patient_alert_event_at(&rec, 1), nullptr);
+
+    patient_init(&rec, 2, "Reset Patient", 40, 80.0f, 1.80f);
+    EXPECT_EQ(patient_alert_event_count(&rec), 0);
+    EXPECT_EQ(patient_alert_event_at(&rec, 0), nullptr);
+}
+
+// =============================================================
+// REQ-PAT-006  patient_print_summary()
+//   Verifies the display path for normal, warning, critical, and
+//   session-event review output including the no-readings edge case.
 // =============================================================
 
 static void run_print_summary(const PatientRecord *rec) {
@@ -225,4 +349,22 @@ TEST(PatientPrintSummary, REQ_PAT_006_CriticalVitals_ActiveAlerts) {
     VitalSigns v = make_critical_vitals();
     patient_add_reading(&rec, &v);
     EXPECT_NO_FATAL_FAILURE(run_print_summary(&rec));
+}
+
+TEST(PatientPrintSummary, REQ_PAT_006_SessionAlarmEventsIncluded) {
+    PatientRecord rec;
+    patient_init(&rec, 12, "Review Patient", 47, 76.0f, 1.74f);
+
+    VitalSigns warning = make_warning_hr_vitals();
+    VitalSigns normal = make_normal_vitals();
+    ASSERT_EQ(patient_add_reading(&rec, &warning), 1);
+    ASSERT_EQ(patient_add_reading(&rec, &normal), 1);
+
+    testing::internal::CaptureStdout();
+    patient_print_summary(&rec);
+    std::string output = testing::internal::GetCapturedStdout();
+
+    EXPECT_NE(output.find("Session Alarm Events:"), std::string::npos);
+    EXPECT_NE(output.find("#1 [WARNING]"), std::string::npos);
+    EXPECT_NE(output.find("#2 [NORMAL] Recovered to normal"), std::string::npos);
 }

@@ -28,6 +28,131 @@
 #include <stdio.h>
 #include <string.h>
 
+typedef struct {
+    AlertLevel  level;
+    unsigned int abnormal_mask;
+    Alert       alerts[MAX_ALERTS];
+    int         alert_count;
+} AlertSignature;
+
+enum {
+    ALERT_MASK_HEART_RATE     = 1u << 0,
+    ALERT_MASK_BLOOD_PRESSURE = 1u << 1,
+    ALERT_MASK_TEMPERATURE    = 1u << 2,
+    ALERT_MASK_SPO2           = 1u << 3,
+    ALERT_MASK_RESP_RATE      = 1u << 4
+};
+
+static unsigned int alert_parameter_mask(const char *parameter)
+{
+    if (strcmp(parameter, "Heart Rate") == 0) {
+        return ALERT_MASK_HEART_RATE;
+    }
+    if (strcmp(parameter, "Blood Pressure") == 0) {
+        return ALERT_MASK_BLOOD_PRESSURE;
+    }
+    if (strcmp(parameter, "Temperature") == 0) {
+        return ALERT_MASK_TEMPERATURE;
+    }
+    if (strcmp(parameter, "SpO2") == 0) {
+        return ALERT_MASK_SPO2;
+    }
+    if (strcmp(parameter, "Resp Rate") == 0) {
+        return ALERT_MASK_RESP_RATE;
+    }
+    return 0u;
+}
+
+static void build_alert_signature(const VitalSigns *v, AlertSignature *sig)
+{
+    int i;
+
+    memset(sig, 0, sizeof(*sig));
+    sig->level = overall_alert_level(v);
+    sig->alert_count = generate_alerts(v, sig->alerts, MAX_ALERTS);
+
+    for (i = 0; i < sig->alert_count; ++i) {
+        sig->abnormal_mask |= alert_parameter_mask(sig->alerts[i].parameter);
+    }
+}
+
+static int should_record_alert_event(int had_previous,
+                                     const AlertSignature *previous,
+                                     const AlertSignature *current)
+{
+    if (!had_previous) {
+        return current->alert_count > 0;
+    }
+    if (previous->alert_count == 0 && current->alert_count == 0) {
+        return 0;
+    }
+    if (previous->alert_count == 0 || current->alert_count == 0) {
+        return 1;
+    }
+    return previous->level != current->level
+        || previous->abnormal_mask != current->abnormal_mask;
+}
+
+static void format_alert_event_summary(const AlertSignature *sig,
+                                       char *out,
+                                       size_t out_size)
+{
+    size_t used = 0;
+    int i;
+
+    if (sig->alert_count == 0) {
+        snprintf(out, out_size,
+                 "Recovered to normal; active abnormalities cleared");
+        return;
+    }
+
+    used = (size_t)snprintf(out, out_size, "Abnormal parameters: ");
+    if (used >= out_size) {
+        out[out_size - 1] = '\0';
+        return;
+    }
+
+    for (i = 0; i < sig->alert_count; ++i) {
+        int written = snprintf(out + used, out_size - used, "%s%s",
+                               (i == 0) ? "" : ", ",
+                               sig->alerts[i].parameter);
+        if (written < 0) {
+            out[used] = '\0';
+            return;
+        }
+        if ((size_t)written >= out_size - used) {
+            out[out_size - 1] = '\0';
+            return;
+        }
+        used += (size_t)written;
+    }
+}
+
+static void append_alert_event(PatientRecord *rec, const AlertSignature *sig)
+{
+    AlertEvent *event;
+
+    if (rec->alert_event_count >= MAX_ALERT_EVENTS) {
+        return;
+    }
+
+    event = &rec->alert_events[rec->alert_event_count++];
+    event->reading_index = rec->reading_count;
+    event->level = sig->level;
+    event->abnormal_mask = sig->abnormal_mask;
+    format_alert_event_summary(sig, event->summary, sizeof(event->summary));
+}
+
+static void format_alert_event_line(const AlertEvent *event,
+                                    char *out,
+                                    size_t out_size)
+{
+    snprintf(out, out_size, "#%d [%s] %s",
+             event->reading_index,
+             alert_level_str(event->level),
+             event->summary);
+}
+
 /**
  * @brief Initialise a PatientRecord, zeroing all fields before populating.
  * @details memset(0) ensures that any unused readings array slots contain
@@ -55,8 +180,23 @@ void patient_init(PatientRecord *rec, int id, const char *name,
  */
 int patient_add_reading(PatientRecord *rec, const VitalSigns *v)
 {
+    AlertSignature previous = {0};
+    AlertSignature current;
+    int had_previous = rec->reading_count > 0;
+
     if (rec->reading_count >= MAX_READINGS) return 0;
+
+    if (had_previous) {
+        build_alert_signature(&rec->readings[rec->reading_count - 1], &previous);
+    }
+
     rec->readings[rec->reading_count++] = *v;
+
+    build_alert_signature(v, &current);
+    if (should_record_alert_event(had_previous, &previous, &current)) {
+        append_alert_event(rec, &current);
+    }
+
     return 1;
 }
 
@@ -90,6 +230,19 @@ int patient_is_full(const PatientRecord *rec)
     return rec->reading_count >= MAX_READINGS;
 }
 
+int patient_alert_event_count(const PatientRecord *rec)
+{
+    return rec->alert_event_count;
+}
+
+const AlertEvent *patient_alert_event_at(const PatientRecord *rec, int index)
+{
+    if (index < 0 || index >= rec->alert_event_count) {
+        return NULL;
+    }
+    return &rec->alert_events[index];
+}
+
 /**
  * @brief Print a formatted patient summary including vitals and active alerts.
  * @details Generates alerts inline for the latest reading using generate_alerts().
@@ -102,6 +255,8 @@ void patient_print_summary(const PatientRecord *rec)
     AlertLevel status = patient_current_status(rec);
     Alert alerts[MAX_ALERTS];
     int alert_count = 0;
+    int i;
+    char event_line[256];
 
     printf("+--------------------------------------------------+\n");
     printf("| PATIENT SUMMARY                                  |\n");
@@ -135,11 +290,26 @@ void patient_print_summary(const PatientRecord *rec)
 
     if (alert_count > 0) {
         printf("\n  Active Alerts:\n");
-        for (int i = 0; i < alert_count; i++) {
+        for (i = 0; i < alert_count; i++) {
             const char *pfx = (alerts[i].level == ALERT_CRITICAL)
                               ? "  !! CRITICAL" : "  !  WARNING ";
             printf("%s  %s\n", pfx, alerts[i].message);
         }
     }
+
+    printf("\n  Session Alarm Events:\n");
+    if (patient_alert_event_count(rec) == 0) {
+        printf("    None recorded in current session.\n");
+    } else {
+        for (i = 0; i < patient_alert_event_count(rec); ++i) {
+            const AlertEvent *event = patient_alert_event_at(rec, i);
+            if (event == NULL) {
+                continue;
+            }
+            format_alert_event_line(event, event_line, sizeof(event_line));
+            printf("    %s\n", event_line);
+        }
+    }
+
     printf("+--------------------------------------------------+\n");
 }

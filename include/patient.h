@@ -1,6 +1,7 @@
 /**
  * @file patient.h
- * @brief Patient record management — demographic data and vital sign history.
+ * @brief Patient record management — demographics, vital sign history, and
+ *        session alert-event review data.
  *
  * @details
  * This module provides the top-level data structure for a monitored patient
@@ -46,8 +47,14 @@
 /** @brief Maximum number of vital sign readings stored per patient. */
 #define MAX_READINGS 10
 
+/** @brief Maximum number of alert-event records stored per patient session. */
+#define MAX_ALERT_EVENTS MAX_READINGS
+
 /** @brief Maximum length of a patient name string (including null terminator). */
 #define MAX_NAME_LEN 64
+
+/** @brief Maximum length of a stored alert-event summary string. */
+#define ALERT_EVENT_SUMMARY_LEN 160
 
 /* =========================================================================
  * Data Structures
@@ -69,19 +76,50 @@ typedef struct {
 } PatientInfo;
 
 /**
+ * @brief One historical alert-state transition recorded within the session.
+ *
+ * @details
+ * Each event is derived from the validated alert engine for a successfully
+ * appended reading. The event captures the 1-based reading index where the
+ * change occurred, the resulting aggregate alert severity, a compact abnormal
+ * parameter signature, and a summary string reused by review surfaces.
+ */
+typedef struct {
+    int         reading_index;                        /**< 1-based reading index. */
+    AlertLevel  level;                                /**< Resulting aggregate
+                                                           level after the
+                                                           transition.        */
+    unsigned int abnormal_mask;                       /**< Bitmask of abnormal
+                                                           parameters. Zero
+                                                           indicates recovery
+                                                           to normal.         */
+    char        summary[ALERT_EVENT_SUMMARY_LEN];     /**< Human-readable,
+                                                           session-scoped
+                                                           event summary.     */
+} AlertEvent;
+
+/**
  * @brief Complete patient record including demographics and vital sign history.
  *
  * @details The readings array acts as a sequential log: index 0 holds the
- * first reading, index reading_count-1 holds the most recent. The record
- * is considered full when reading_count == MAX_READINGS.
+ * first reading, index reading_count-1 holds the most recent. The alert_events
+ * array stores the derived alert-state transitions for the same session.
+ * The record is considered full when reading_count == MAX_READINGS.
  *
  * @note No dynamic memory is used. All storage is stack/static allocated.
  */
 typedef struct {
-    PatientInfo info;                   /**< Demographic data.                 */
-    VitalSigns  readings[MAX_READINGS]; /**< Historical vital sign readings.   */
-    int         reading_count;          /**< Number of valid entries in
-                                             readings[]. Range: 0–MAX_READINGS. */
+    PatientInfo info;                            /**< Demographic data.              */
+    VitalSigns  readings[MAX_READINGS];          /**< Historical vital sign
+                                                      readings.                    */
+    int         reading_count;                   /**< Number of valid entries in
+                                                      readings[]. Range:
+                                                      0-MAX_READINGS.             */
+    AlertEvent  alert_events[MAX_ALERT_EVENTS];  /**< Derived alert-state review
+                                                      events for this session.    */
+    int         alert_event_count;               /**< Number of valid entries in
+                                                      alert_events[]. Range:
+                                                      0-MAX_ALERT_EVENTS.         */
 } PatientRecord;
 
 /* =========================================================================
@@ -135,7 +173,7 @@ void patient_init(PatientRecord *rec, int id, const char *name,
  * @post On failure: rec is unchanged.
  *
  * @par Requirement
- * SWR-PAT-002
+ * SWR-PAT-002, SWR-PAT-007
  */
 int patient_add_reading(PatientRecord *rec, const VitalSigns *v);
 
@@ -185,6 +223,30 @@ AlertLevel patient_current_status(const PatientRecord *rec);
  */
 int patient_is_full(const PatientRecord *rec);
 
+/**
+ * @brief Return the number of stored session alert events.
+ *
+ * @param[in] rec Pointer to an initialised PatientRecord. Must not be NULL.
+ * @return Number of valid entries in alert_events[].
+ *
+ * @par Requirement
+ * SWR-PAT-008
+ */
+int patient_alert_event_count(const PatientRecord *rec);
+
+/**
+ * @brief Return a pointer to one stored session alert event.
+ *
+ * @param[in] rec   Pointer to an initialised PatientRecord. Must not be NULL.
+ * @param[in] index Zero-based event index into alert_events[].
+ *
+ * @return Pointer to alert_events[index], or NULL if @p index is out of range.
+ *
+ * @par Requirement
+ * SWR-PAT-008
+ */
+const AlertEvent *patient_alert_event_at(const PatientRecord *rec, int index);
+
 /* =========================================================================
  * Display
  * ========================================================================= */
@@ -193,8 +255,8 @@ int patient_is_full(const PatientRecord *rec);
  * @brief Print a formatted patient summary to stdout.
  *
  * @details Outputs demographic data, BMI, the latest vital signs with
- * individual classifications, the overall status, and any active alerts.
- * Output is suitable for a 80-column terminal.
+ * individual classifications, the overall status, any active alerts, and the
+ * session alert-event review log. Output is suitable for a 80-column terminal.
  *
  * @param[in] rec Pointer to an initialised PatientRecord. Must not be NULL.
  *
@@ -202,7 +264,7 @@ int patient_is_full(const PatientRecord *rec);
  *       before calling to keep test output clean.
  *
  * @par Requirement
- * SWR-PAT-006
+ * SWR-PAT-006, SWR-PAT-008
  */
 void patient_print_summary(const PatientRecord *rec);
 

@@ -1,9 +1,9 @@
 # Design Verification Test (DVT) Protocol
 
-**Document ID:** DVT-001-REV-C
+**Document ID:** DVT-001-REV-D
 **Project:** Patient Vital Signs Monitor  
 **Version Under Test:** 2.7.0  
-**Date:** 2026-05-03  
+**Date:** 2026-05-05
 **Standard:** IEC 62304 §5.7, §5.8  
 **Author:** vinu-engineer  
 **Status:** Approved  
@@ -72,6 +72,7 @@ Automated GUI checks supplement but do not replace the GTest evidence used by
 | `SWR-GUI-010` | Manual GUI review + supplemental automation | `ConfigTest` covers persistence and GUI automation checks control presence, but full mode-switch behavior remains manual GUI verification |
 | `SWR-GUI-011` | Manual visual review | Rolling status message content/motion is not asserted by current automation |
 | `SWR-GUI-012` | Unit tests + supplemental automation | `LocalizationTest.*` covers API and persistence; `DVT-GUI-16` confirms selector presence with four options |
+| `SWR-GUI-013` | Manual GUI review | Dedicated session alarm event list must stay distinct from current active alerts |
 
 ### 4.3 Residual Manual GUI Checklist
 
@@ -85,6 +86,7 @@ layout behavior, or animated presentation rather than stable control state.
 | GUI-MAN-03 | `SWR-GUI-011` | Enable simulation mode and observe banner | Rolling message scrolls continuously on current alert background | |
 | GUI-MAN-04 | Layout robustness | Resize dashboard window | Controls repaint and scale without clipping/overlap | |
 | GUI-MAN-05 | Layout robustness | Maximize dashboard window | Full layout remains legible and anchored correctly | |
+| GUI-MAN-06 | `SWR-GUI-013` | Drive a warning, critical, then recovery sequence | Session Alarm Events retains the historical rows while Active Alerts returns to latest-only state | |
 
 ---
 
@@ -96,7 +98,7 @@ layout behavior, or animated presentation rather than stable control state.
 |---|---:|---|
 | `tests/unit/test_vitals.cpp` (`HeartRate`, `BloodPressure`, `Temperature`, `SpO2`, `RespRate`, `OverallAlert`, `BMI`, `AlertStr`) | 80 | `SWR-VIT-001` .. `SWR-VIT-008` |
 | `tests/unit/test_alerts.cpp` (`GenerateAlerts`) | 11 | `SWR-ALT-001` .. `SWR-ALT-004` |
-| `tests/unit/test_patient.cpp` (`PatientInit`, `PatientAddReading`, `PatientLatestReading`, `PatientStatus`, `PatientIsFull`, `PatientPrintSummary`) | 19 | `SWR-PAT-001` .. `SWR-PAT-006` |
+| `tests/unit/test_patient.cpp` (`PatientInit`, `PatientAddReading`, `PatientLatestReading`, `PatientStatus`, `PatientIsFull`, `PatientAlertEvents`, `PatientPrintSummary`) | 27 | `SWR-PAT-001` .. `SWR-PAT-008` |
 | `tests/unit/test_auth.cpp` (`UsersTest`) | 41 | `SWR-GUI-001`, `SWR-GUI-002`, `SWR-GUI-007`, `SWR-SEC-001` .. `SWR-SEC-004` |
 | `tests/unit/test_news2.cpp` (`News2*`) | 53 | `SWR-NEW-001` |
 | `tests/unit/test_alarm_limits.cpp` (`AlarmLimitsTest`) | 31 | `SWR-ALM-001` |
@@ -104,15 +106,15 @@ layout behavior, or animated presentation rather than stable control state.
 | `tests/unit/test_hal.cpp` (`HALTest`, `HALTestNoInit`, `SimSequenceTest`) | 12 | Supporting checks for HAL safety and simulator sequence behavior; not an approved automated DVT claim for `SWR-GUI-005` / `SWR-GUI-006` |
 | `tests/unit/test_config.cpp` (`ConfigTest`) | 10 | Supporting persistence checks for `monitor.cfg`; not a full approved automated DVT claim for `SWR-GUI-010` |
 | `tests/unit/test_localization.cpp` (`LocalizationTest`) | 8 | `SWR-GUI-012` |
-| **Total** | **283** | |
+| **Total** | **291** | |
 
 ### 5.2 Integration Tests (`test_integration.exe`)
 
 | Test file / suites | Count | Primary approved requirements |
 |---|---:|---|
-| `tests/integration/test_patient_monitoring.cpp` (`PatientMonitoring`) | 6 | `SWR-PAT-001` .. `SWR-PAT-005`, `SWR-VIT-005`, `SWR-VIT-006`, `SWR-ALT-001` |
-| `tests/integration/test_alert_escalation.cpp` (`AlertEscalation`) | 6 | `SWR-VIT-001` .. `SWR-VIT-004`, `SWR-PAT-004`, `SWR-ALT-001`, `SWR-ALT-002` |
-| **Total** | **12** | |
+| `tests/integration/test_patient_monitoring.cpp` (`PatientMonitoring`) | 7 | `SWR-PAT-001` .. `SWR-PAT-005`, `SWR-PAT-007`, `SWR-VIT-005`, `SWR-VIT-006`, `SWR-ALT-001`, `SWR-ALT-002` |
+| `tests/integration/test_alert_escalation.cpp` (`AlertEscalation`) | 7 | `SWR-VIT-001` .. `SWR-VIT-004`, `SWR-PAT-004`, `SWR-PAT-007`, `SWR-ALT-001`, `SWR-ALT-002` |
+| **Total** | **14** | |
 
 ---
 
@@ -120,9 +122,9 @@ layout behavior, or animated presentation rather than stable control state.
 
 | Criterion | Threshold |
 |---|---|
-| Unit test pass rate | 100% (`283 / 283`) |
-| Integration test pass rate | 100% (`12 / 12`) |
-| Automated GTest total | 100% (`295 / 295`) |
+| Unit test pass rate | 100% (`291 / 291`) |
+| Integration test pass rate | 100% (`14 / 14`) |
+| Automated GTest total | 100% (`305 / 305`) |
 | Automated GUI checks for approved IDs | All executed approved-ID checks pass |
 | Manual GUI checklist | All applicable manual items marked Pass |
 
@@ -161,3 +163,4 @@ may execute during validation, but they do not convert `SWR-GUI-005`,
 | A | 2026-04-07 | vinu-engineer | Initial DVT protocol for v2.0.0 evidence set |
 | B | 2026-05-03 | Codex implementer | Aligned protocol with v2.7.0 test counts, approved SWR IDs, GUI automation split, and pending localization traceability note |
 | C | 2026-05-03 | Codex implementer | Approved SWR-GUI-012 localization evidence and updated automated totals |
+| D | 2026-05-05 | Codex implementer | Added session alarm event review evidence, GUI-MAN-06, and updated automated totals to 305 tests |
