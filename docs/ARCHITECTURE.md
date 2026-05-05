@@ -215,7 +215,7 @@ patient-vital-signs-monitor/
 │   ├── gui_main.c        # Presentation: Win32 dashboard
 │   └── main.c            # CLI entry point
 ├── tests/
-│   ├── unit/             # 136 unit tests
+│   ├── unit/             # 283 unit tests
 │   └── integration/      # 12 integration tests
 ├── dvt/                  # Design Verification Testing
 │   ├── DVT_Protocol.md   # DVT-001-REV-A
