@@ -74,7 +74,7 @@ Open `TRACEABILITY.md` and:
 git add requirements/ src/ tests/
 git commit -m "Add SWR-VIT-008: <description>
 
-Traces: UNS-005 -> SYS-005 -> SWR-VIT-008
+Traces: UNS-005 -> SYS-018 -> SWR-VIT-008
 Implemented in: src/vitals.c
 Verified by: tests/unit/test_vitals.cpp"
 ```
@@ -132,3 +132,4 @@ Before submitting for regulatory review, verify:
 |-----|------------|-----------------|----------------------|
 | A   | 2026-04-06 | vinu-engineer   | Initial release      |
 | B   | 2026-04-07 | vinu-engineer   | Updated for v1.3 GUI additions |
+| C   | 2026-05-05 | codex           | Updated RR example trace for SYS-018 / SWR-VIT-008 repair |

@@ -130,7 +130,7 @@ realistic RR values (12–20 in the normal phase, 21–24 in deterioration, 26�
 in the critical phase, recovering to 14–19).
 
 **Threshold source:** Royal College of Physicians NEWS2 / NICE guidelines.
-**Traces to:** SYS-003 (IEC 80601-2-49 multifunction patient monitor requirements)
+**Traces to:** SYS-018
 **Implemented in:** `src/vitals.c` — `check_respiration_rate()`, `overall_alert_level()`;
 `src/sim_vitals.c` — respiration_rate in all 20 SIM_SEQUENCE entries;
 `src/gui_main.c` — RESP RATE tile, IDC_VIT_RR field;
@@ -172,7 +172,7 @@ as defined by the Royal College of Physicians (2017). `news2_calculate()` shall:
 The dashboard shall display the NEWS2 score in the 6th tile (3rd column, 2nd row)
 colour-coded: green (LOW/LOW_M), amber (MEDIUM), red (HIGH).
 
-**Traces to:** SYS-018 (NEWS2 clinical decision support — RCP 2017 standard)
+**Traces to:** SYS-019
 **Implemented in:** `src/news2.c` — `news2_score_hr()`, `news2_score_rr()`,
 `news2_score_spo2()`, `news2_score_sbp()`, `news2_score_temp()`, `news2_calculate()`;
 `src/gui_main.c` — 6th tile (NEWS2 SCORE)
@@ -662,3 +662,4 @@ and language selector population; `src/app_config.c` -
 | H   | 2026-05-03 | codex           | Reconciled SWR-VIT-008 and SWR-NEW-001 to existing alerting and aggregate-risk SYS links; no clinical behavior changes |
 | I   | 2026-05-03 | Codex implementer | Added SWR-GUI-012 (localization selection and persistence) |
 | J   | 2026-05-05 | vinu           | Refreshed SWR-GUI-001..003 verification references |
+| K   | 2026-05-05 | Codex implementer | Restored defensible SYS-level traceability for SWR-VIT-008 and SWR-NEW-001; no clinical behavior changes |

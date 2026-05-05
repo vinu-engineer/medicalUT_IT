@@ -207,6 +207,33 @@ account storage shall use only static memory.
 
 ---
 
+### SYS-018 — Respiration Rate Monitoring and Classification
+**Requirement:** The system shall support respiration rate as a monitored vital
+sign in the live monitoring dashboard. It shall classify adult
+respiration-rate readings as:
+- NORMAL for `12–20 br/min`
+- WARNING for `9–11 br/min` or `21–24 br/min`
+- CRITICAL for `≤ 8 br/min` or `≥ 25 br/min`
+
+When a respiration-rate reading is not available for a monitoring cycle, the
+system shall preserve that "not measured" state and shall not raise a spurious
+respiration-rate alert or aggregate alert escalation from the missing value.
+**Traces to:** UNS-005, UNS-006, UNS-014, UNS-015
+
+---
+
+### SYS-019 — NEWS2 Aggregate Clinical Risk Scoring
+**Requirement:** The system shall compute and display a NEWS2 aggregate
+clinical risk score from respiration rate, SpO2, systolic blood pressure,
+heart rate, temperature, and AVPU using the approved Royal College of
+Physicians NEWS2 tables. The system shall classify the resulting score into the
+implemented `LOW`, `LOW_M`, `MEDIUM`, and `HIGH` response bands. When
+respiration rate is not measured for a cycle, the missing value shall not
+inflate the NEWS2 score.
+**Traces to:** UNS-005, UNS-006, UNS-010, UNS-014
+
+---
+
 ## Revision History
 
 | Rev | Date       | Author          | Description          |
@@ -215,3 +242,4 @@ account storage shall use only static memory.
 | B   | 2026-04-07 | vinu-engineer   | Added SYS-013, SYS-014 (GUI) |
 | C   | 2026-04-07 | vinu-engineer   | Added SYS-015 (HAL) |
 | D   | 2026-04-07 | vinu-engineer   | Added SYS-016 (multi-user accounts), SYS-017 (RBAC) |
+| E   | 2026-05-05 | Codex implementer | Added SYS-018 (RR) and SYS-019 (NEWS2) to restore defensible traceability for existing clinical requirements |

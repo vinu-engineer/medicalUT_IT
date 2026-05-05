@@ -41,8 +41,8 @@ implementation and test coverage, and every UNS must reach at least one SWR.
 | UNS-005, UNS-006 | SYS-006 | SWR-VIT-005 | `vitals.c` : `overall_alert_level()` | `OverallAlert.*` (5 tests) | `REQ_INT_MON_002`, `REQ_INT_MON_003`, `REQ_INT_MON_004` |
 | UNS-007 | SYS-007 | SWR-VIT-006 | `vitals.c` : `calculate_bmi()`, `bmi_category()` | `BMI.*` (12 tests) | `REQ_INT_MON_001` |
 | UNS-005, UNS-006, UNS-010 | SYS-005, SYS-011 | SWR-VIT-007 | `vitals.c` : `alert_level_str()` | `AlertStr.*` (4 tests) | All integration tests |
-| UNS-005, UNS-006 | SYS-005, SYS-006 | SWR-VIT-008 | `vitals.c` : `check_respiration_rate()` | `RespRate.*` (12 tests), `OverallAlert.SWR_VIT_008_*` (3 tests) | — |
-| UNS-005, UNS-006 | SYS-005, SYS-006 | SWR-NEW-001 | `news2.c` : `news2_calculate()` | `News2HR.*`, `News2RR.*`, `News2SpO2.*`, `News2SBP.*`, `News2Temp.*`, `News2Calc.*` (53 tests) | — |
+| UNS-005, UNS-006, UNS-014, UNS-015 | SYS-018 | SWR-VIT-008 | `vitals.c` : `check_respiration_rate()` | `RespRate.*` (12 tests), `OverallAlert.SWR_VIT_008_*` (3 tests) | — |
+| UNS-005, UNS-006, UNS-010, UNS-014 | SYS-019 | SWR-NEW-001 | `news2.c` : `news2_calculate()` | `News2HR.*`, `News2RR.*`, `News2SpO2.*`, `News2SBP.*`, `News2Temp.*`, `News2Calc.*` (53 tests) | — |
 | UNS-005, UNS-006 | SYS-002, SYS-003 | SWR-ALM-001 | `alarm_limits.c` : `alarm_limits_defaults()`, `alarm_check_*()` | `AlarmLimitsTest.*` (31 tests) | — |
 | UNS-001, UNS-009 | SYS-001, SYS-002 | SWR-TRD-001 | `trend.c` : `trend_direction()`, `trend_extract_*()` | `TrendDirection.*`, `TrendExtract.*` (18 tests) | — |
 | UNS-015 | SYS-015 | SWR-GUI-010 | `gui_main.c`, `app_config.c` : sim toggle + persistence | Manual GUI review + `ConfigTest.*` support (10 persistence checks) | — |
@@ -108,8 +108,8 @@ implementation and test coverage, and every UNS must reach at least one SWR.
 | `UsersTest` | `REQ_SEC_004_*` | SWR-SEC-004 | SYS-017 | UNS-016 |
 | `UsersTest` | `REQ_GUI_007_*` | SWR-GUI-007 | SYS-016 | UNS-016 |
 | `LocalizationTest` | `LocalizationTest.*` | SWR-GUI-012 | SYS-014 | UNS-014 |
-| `RespRate` | `REQ_VIT_008_*` | SWR-VIT-008 | SYS-005, SYS-006 | UNS-005, UNS-006 |
-| `News2HR`, `News2RR`, etc. | `News2*.*` | SWR-NEW-001 | SYS-005, SYS-006 | UNS-005, UNS-006 |
+| `RespRate` | `REQ_VIT_008_*` | SWR-VIT-008 | SYS-018 | UNS-005, UNS-006, UNS-014, UNS-015 |
+| `News2HR`, `News2RR`, etc. | `News2*.*` | SWR-NEW-001 | SYS-019 | UNS-005, UNS-006, UNS-010, UNS-014 |
 | `AlarmLimitsTest` | `AlarmLimitsTest.*` | SWR-ALM-001 | SYS-002, SYS-003 | UNS-005, UNS-006 |
 | `TrendDirection`, `TrendExtract` | `Trend*.*` | SWR-TRD-001 | SYS-001, SYS-002 | UNS-001, UNS-009 |
 
@@ -145,17 +145,17 @@ Supporting implementation checks:
 | UNS-002 | Blood pressure monitoring | SYS-002 | SWR-VIT-002 | ✓ |
 | UNS-003 | Temperature monitoring | SYS-003 | SWR-VIT-003 | ✓ |
 | UNS-004 | SpO2 monitoring | SYS-004 | SWR-VIT-004 | ✓ |
-| UNS-005 | Automatic alerting | SYS-005, SYS-006 | SWR-VIT-005, SWR-VIT-007, SWR-ALT-001, SWR-ALT-002 | ✓ |
-| UNS-006 | Alert severity differentiation | SYS-005, SYS-006 | SWR-VIT-005, SWR-VIT-007, SWR-ALT-001, SWR-ALT-004 | ✓ |
+| UNS-005 | Automatic alerting | SYS-005, SYS-006, SYS-018, SYS-019 | SWR-VIT-005, SWR-VIT-007, SWR-VIT-008, SWR-NEW-001, SWR-ALT-001, SWR-ALT-002 | ✓ |
+| UNS-006 | Alert severity differentiation | SYS-005, SYS-006, SYS-018, SYS-019 | SWR-VIT-005, SWR-VIT-007, SWR-VIT-008, SWR-NEW-001, SWR-ALT-001, SWR-ALT-004 | ✓ |
 | UNS-007 | BMI display | SYS-007 | SWR-VIT-006 | ✓ |
 | UNS-008 | Patient identification | SYS-008 | SWR-PAT-001 | ✓ |
 | UNS-009 | Vital sign history | SYS-009 | SWR-PAT-002, SWR-PAT-003 | ✓ |
-| UNS-010 | Consolidated summary | SYS-011 | SWR-PAT-004, SWR-PAT-006, SWR-VIT-007 | ✓ |
+| UNS-010 | Consolidated summary | SYS-011, SYS-019 | SWR-PAT-004, SWR-PAT-006, SWR-VIT-007, SWR-NEW-001 | ✓ |
 | UNS-011 | Data integrity | SYS-010, SYS-012 | SWR-PAT-002, SWR-PAT-005, SWR-ALT-003, SWR-PAT-001 | ✓ |
 | UNS-012 | Platform compatibility | SYS-012 | SWR-PAT-001, SWR-ALT-003 | ✓ |
 | UNS-013 | User authentication | SYS-013 | SWR-GUI-001, SWR-GUI-002 | ✓ |
-| UNS-014 | Graphical dashboard | SYS-014 | SWR-GUI-003, SWR-GUI-004, SWR-GUI-012 | ✓ |
-| UNS-015 | Live monitoring feed | SYS-015 | SWR-GUI-005, SWR-GUI-006, SWR-GUI-010, SWR-GUI-011 | ✓ |
+| UNS-014 | Graphical dashboard | SYS-014, SYS-018, SYS-019 | SWR-GUI-003, SWR-GUI-004, SWR-GUI-012, SWR-VIT-008, SWR-NEW-001 | ✓ |
+| UNS-015 | Live monitoring feed | SYS-015, SYS-018 | SWR-GUI-005, SWR-GUI-006, SWR-GUI-010, SWR-GUI-011, SWR-VIT-008 | ✓ |
 | UNS-016 | Role-based access / multi-user | SYS-016, SYS-017 | SWR-SEC-001, SWR-SEC-002, SWR-SEC-003, SWR-GUI-007, SWR-GUI-008, SWR-GUI-009 | ✓ |
 
 **Result: 16 / 16 User Needs covered ✓**
@@ -277,3 +277,4 @@ This is recorded as an accepted coverage exclusion with a documented rationale.
 | G   | 2026-04-08 | claude          | v2.7.0: added SWR-GUI-011 (rolling message in simulation mode); 36/36 SWR, 287 tests |
 | H   | 2026-05-03 | codex           | Reconciled v2.7.0 SWR counts and existing SYS mappings; 36/36 SWR, 287 tests |
 | I   | 2026-05-03 | Codex implementer | Added SWR-GUI-012 localization traceability and 8 automated localization tests; 37/37 SWR, 295 tests |
+| J   | 2026-05-05 | Codex implementer | Restored defensible SYS-level traceability for RR and NEWS2 requirements; 37/37 SWR, 295 tests |
