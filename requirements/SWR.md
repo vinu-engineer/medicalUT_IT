@@ -1,9 +1,9 @@
 # Software Requirements Specification (SWR)
 
-**Document ID:** SWR-001-REV-I
+**Document ID:** SWR-001-REV-M
 **Project:** Patient Vital Signs Monitor
 **Version:** 2.7.0
-**Date:** 2026-05-03
+**Date:** 2026-05-06
 **Status:** Approved
 **Standard:** IEC 62304 §5.2
 
@@ -283,11 +283,58 @@ returns `NULL` (no readings), the function shall return `ALERT_NORMAL`.
 **Requirement:** `patient_print_summary()` shall write to `stdout` a formatted
 block containing: patient name, ID, age, BMI with WHO category, reading count,
 the latest vital signs with per-parameter classifications, the aggregate alert
-level, and the text of all active alert messages. If no readings exist, the
-vitals and alerts sections shall be omitted.
-**Traces to:** SYS-011
+level, the text of all active alert messages, and a `Session Alarm Events`
+section rendered from the stored session event log in reading order. If no
+readings exist, the vitals and active-alert sections shall be omitted. If no
+session alarm events exist, the session event section shall state that none are
+recorded in the current session. If a reset disclosure is recorded for the
+current patient session, the session event section shall print that notice
+before any current-session rows or placeholders.
+**Traces to:** SYS-011, SYS-021
 **Implemented in:** `src/patient.c` — `patient_print_summary()`
 **Verified by:** `tests/unit/test_patient.cpp` — `PatientPrintSummary.*`
+
+---
+
+### SWR-PAT-007 — Session Alarm Event Capture
+**Requirement:** `patient_add_reading()` shall derive the alert signature for
+the newly appended reading using the existing alert semantics
+(`overall_alert_level()` and `generate_alerts()`) and append at most one
+`AlertEvent` to `alert_events[]` when any of the following occurs:
+
+1. The first abnormal reading in the current session is added.
+2. The aggregate alert severity changes between adjacent readings.
+3. The abnormal-parameter set changes between adjacent abnormal readings.
+4. The patient recovers from an abnormal state to `ALERT_NORMAL`.
+
+`patient_add_reading()` shall not append a session alarm event for the first
+normal reading of a session or for repeated adjacent readings with the same
+aggregate severity and abnormal-parameter set. Each stored event shall record
+the 1-based reading index, resulting aggregate alert level, abnormal parameter
+signature, and summary text. `MAX_ALERT_EVENTS` shall equal `MAX_READINGS`.
+**Traces to:** SYS-020, SYS-012
+**Implemented in:** `src/patient.c` — `patient_add_reading()`, alert-event helpers
+**Verified by:** `tests/unit/test_patient.cpp` — `PatientAlertEvents.REQ_PAT_007_*`;
+`tests/integration/test_patient_monitoring.cpp` — `REQ_INT_MON_007`;
+`tests/integration/test_alert_escalation.cpp` — `REQ_INT_ESC_006`
+
+---
+
+### SWR-PAT-008 — Session Alarm Event Access and Reset
+**Requirement:** `patient_alert_event_count()` shall return the number of valid
+session alarm events stored in `alert_events[]`. `patient_alert_event_at()`
+shall return a pointer to `alert_events[index]` for valid zero-based indices
+and `NULL` otherwise. `patient_init()` shall clear all stored session alarm
+events by resetting the count to zero whenever a patient session is
+reinitialized. `patient_note_session_reset()` shall record a bounded disclosure
+string when a caller reinitializes the session after a retention boundary, and
+`patient_session_reset_notice()` shall return that disclosure string or `NULL`
+when no reset notice is pending.
+**Traces to:** SYS-020, SYS-021
+**Implemented in:** `src/patient.c` — `patient_init()`,
+`patient_alert_event_count()`, `patient_alert_event_at()`,
+`patient_note_session_reset()`, `patient_session_reset_notice()`
+**Verified by:** `tests/unit/test_patient.cpp` — `PatientAlertEvents.REQ_PAT_008_*`
 
 ---
 
@@ -648,6 +695,28 @@ and language selector population; `src/app_config.c` -
 
 ---
 
+### SWR-GUI-013 — Session Alarm Event Review List
+
+**Requirement:** The dashboard shall display a dedicated read-only list labeled
+`Session Alarm Events`, separate from both `Active Alerts` and `Reading
+History`. `update_dashboard()` shall repopulate this list from
+`patient_alert_event_count()` and `patient_alert_event_at()` and render each
+stored event with its reading index, resulting severity, and summary text. If
+`patient_session_reset_notice()` reports that the previous bounded session was
+cleared, the list shall show that reset/retention disclosure before any
+current-session rows. If no session alarm events exist for the current session,
+the list shall show an explicit placeholder rather than remaining blank.
+`IDC_LIST_ALERTS` shall continue to show only active alerts from the latest
+reading.
+
+**Traces to:** SYS-014, SYS-021
+**Implemented in:** `src/gui_main.c` — `create_dash_controls()`,
+`reposition_dash_controls()`, `update_dashboard()`; `src/localization.c` —
+session event label string
+**Verified by:** Manual GUI review (`GUI-MAN-06`)
+
+---
+
 ## Revision History
 
 | Rev | Date       | Author          | Description          |
@@ -663,3 +732,5 @@ and language selector population; `src/app_config.c` -
 | I   | 2026-05-03 | Codex implementer | Added SWR-GUI-012 (localization selection and persistence) |
 | J   | 2026-05-05 | vinu           | Refreshed SWR-GUI-001..003 verification references |
 | K   | 2026-05-05 | Codex implementer | Restored defensible SYS-level traceability for SWR-VIT-008 and SWR-NEW-001; no clinical behavior changes |
+| L   | 2026-05-05 | Codex implementer | Added SWR-PAT-007/008 and SWR-GUI-013 for session alarm event review |
+| M   | 2026-05-06 | Codex implementer | Added explicit session-reset disclosure expectations for session review surfaces |

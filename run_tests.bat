@@ -3,7 +3,7 @@ setlocal enabledelayedexpansion
 
 echo =====================================================
 echo   Patient Vital Signs Monitor -- Test Runner
-echo   121 tests: Unit (109) + Integration (12)
+echo   307 tests: Unit (293) + Integration (14)
 echo   Standard : IEC 62304 Class B
 echo =====================================================
 echo.
@@ -28,6 +28,12 @@ if not exist "build" (
     pause
     exit /b 1
 )
+
+set "TEST_TEMP_DIR=%CD%\build\test_tmp"
+if not exist "%TEST_TEMP_DIR%" mkdir "%TEST_TEMP_DIR%"
+set "TMP=%TEST_TEMP_DIR%"
+set "TEMP=%TEST_TEMP_DIR%"
+set "TMPDIR=%TEST_TEMP_DIR%"
 
 :: -------------------------------------------------------
 :: Rebuild test targets (fast -- only recompiles changed files)
@@ -81,7 +87,7 @@ echo.
 :: Summary and exit code
 :: -------------------------------------------------------
 if !UNIT_RESULT! EQU 0 if !INT_RESULT! EQU 0 (
-    echo [PASS] All 121 tests passed.
+    echo [PASS] All 307 tests passed.
     echo.
     pause
     exit /b 0

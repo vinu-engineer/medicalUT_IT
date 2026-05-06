@@ -1,6 +1,6 @@
 // =============================================================
 // TEST SUITE : Patient Monitoring (Integration)
-// REQUIREMENT: REQ-INT-MON-001 to REQ-INT-MON-005
+// REQUIREMENT: REQ-INT-MON-001 to REQ-INT-MON-007
 //
 // Validates end-to-end patient admission and monitoring
 // workflows combining vitals, alerts, and patient record
@@ -12,6 +12,7 @@ extern "C" {
 #include "patient.h"
 }
 #include <gtest/gtest.h>
+#include <string>
 
 // =============================================================
 // REQ-INT-MON-001  Full admission workflow
@@ -159,4 +160,46 @@ TEST(PatientMonitoring, REQ_INT_MON_006_TwoPatientsIndependent) {
     EXPECT_EQ(patient_current_status(&recB), ALERT_NORMAL);
     EXPECT_EQ(recA.reading_count, 1);
     EXPECT_EQ(recB.reading_count, 1);
+}
+
+// =============================================================
+// REQ-INT-MON-007  Transient critical episode remains reviewable
+//   Historical events persist after the latest reading returns to normal
+// =============================================================
+
+TEST(PatientMonitoring, REQ_INT_MON_007_TransientCriticalRetainedInEventLog) {
+    PatientRecord rec;
+    patient_init(&rec, 1006, "Reviewable Recovery", 46, 74.0f, 1.73f);
+
+    VitalSigns normal1  = {72, 120, 80, 36.6f, 98, 0};
+    VitalSigns warning  = {108, 148, 94, 37.9f, 93, 0};
+    VitalSigns critical = {35, 60, 35, 40.1f, 85, 0};
+    VitalSigns normal2  = {74, 118, 78, 36.7f, 97, 0};
+
+    ASSERT_EQ(patient_add_reading(&rec, &normal1), 1);
+    ASSERT_EQ(patient_add_reading(&rec, &warning), 1);
+    ASSERT_EQ(patient_add_reading(&rec, &critical), 1);
+    ASSERT_EQ(patient_add_reading(&rec, &normal2), 1);
+
+    EXPECT_EQ(patient_current_status(&rec), ALERT_NORMAL);
+
+    const VitalSigns *latest = patient_latest_reading(&rec);
+    ASSERT_NE(latest, nullptr);
+    Alert active_alerts[MAX_ALERTS];
+    EXPECT_EQ(generate_alerts(latest, active_alerts, MAX_ALERTS), 0);
+
+    ASSERT_EQ(patient_alert_event_count(&rec), 3);
+    const AlertEvent *warning_event = patient_alert_event_at(&rec, 0);
+    const AlertEvent *critical_event = patient_alert_event_at(&rec, 1);
+    const AlertEvent *recovery_event = patient_alert_event_at(&rec, 2);
+    ASSERT_NE(warning_event, nullptr);
+    ASSERT_NE(critical_event, nullptr);
+    ASSERT_NE(recovery_event, nullptr);
+
+    EXPECT_EQ(warning_event->reading_index, 2);
+    EXPECT_EQ(critical_event->reading_index, 3);
+    EXPECT_EQ(recovery_event->reading_index, 4);
+    EXPECT_EQ(critical_event->level, ALERT_CRITICAL);
+    EXPECT_EQ(recovery_event->level, ALERT_NORMAL);
+    EXPECT_NE(std::string(critical_event->summary).find("Heart Rate"), std::string::npos);
 }

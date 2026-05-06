@@ -97,6 +97,7 @@
 #define IDC_BTN_ACCOUNT  1205
 #define IDC_LIST_ALERTS  1300
 #define IDC_LIST_HISTORY 1301
+#define IDC_LIST_EVENTS  1302
 #define TIMER_SIM        1
 
 /* ===================================================================
@@ -158,7 +159,7 @@
  * Layout
  * =================================================================== */
 #define WIN_CW  920
-#define WIN_CH  850
+#define WIN_CH  940
 #define HDR_H    56
 #define PBAR_H   38
 #define TILE_Y   (HDR_H + PBAR_H)
@@ -647,12 +648,17 @@ static void create_dash_controls(HWND w)
     make_label(w,localization_get_string(STR_ACTIVE_ALERTS),20,CY+162,160,18);
     CreateWindowExA(WS_EX_CLIENTEDGE,"LISTBOX","",
                     WS_CHILD|WS_VISIBLE|WS_VSCROLL|LBS_NOINTEGRALHEIGHT,
-                    20,CY+182,872,88,w,(HMENU)(INT_PTR)IDC_LIST_ALERTS,g_app.inst,NULL);
+                    20,CY+182,872,72,w,(HMENU)(INT_PTR)IDC_LIST_ALERTS,g_app.inst,NULL);
 
-    make_label(w,localization_get_string(STR_READING_HISTORY),20,CY+282,160,18);
+    make_label(w,localization_get_string(STR_SESSION_ALARM_EVENTS),20,CY+266,220,18);
     CreateWindowExA(WS_EX_CLIENTEDGE,"LISTBOX","",
                     WS_CHILD|WS_VISIBLE|WS_VSCROLL|LBS_NOINTEGRALHEIGHT,
-                    20,CY+302,872,130,w,(HMENU)(INT_PTR)IDC_LIST_HISTORY,g_app.inst,NULL);
+                    20,CY+286,872,104,w,(HMENU)(INT_PTR)IDC_LIST_EVENTS,g_app.inst,NULL);
+
+    make_label(w,localization_get_string(STR_READING_HISTORY),20,CY+402,160,18);
+    CreateWindowExA(WS_EX_CLIENTEDGE,"LISTBOX","",
+                    WS_CHILD|WS_VISIBLE|WS_VSCROLL|LBS_NOINTEGRALHEIGHT,
+                    20,CY+422,872,132,w,(HMENU)(INT_PTR)IDC_LIST_HISTORY,g_app.inst,NULL);
 }
 
 /* ===================================================================
@@ -670,8 +676,9 @@ static void reposition_dash_controls(HWND w, int cw)
     if (btn)  SetWindowPos(btn, NULL, cw - 272, 14, 86, 28, SWP_NOZORDER|SWP_NOACTIVATE);
 
     /* Wide list boxes — stretch horizontally */
-    SetWindowPos(GetDlgItem(w, IDC_LIST_ALERTS),  NULL, 20, CY+182, cw - 40, 88,  SWP_NOZORDER|SWP_NOACTIVATE);
-    SetWindowPos(GetDlgItem(w, IDC_LIST_HISTORY), NULL, 20, CY+302, cw - 40, 130, SWP_NOZORDER|SWP_NOACTIVATE);
+    SetWindowPos(GetDlgItem(w, IDC_LIST_ALERTS),  NULL, 20, CY+182, cw - 40, 72,  SWP_NOZORDER|SWP_NOACTIVATE);
+    SetWindowPos(GetDlgItem(w, IDC_LIST_EVENTS),  NULL, 20, CY+286, cw - 40, 104, SWP_NOZORDER|SWP_NOACTIVATE);
+    SetWindowPos(GetDlgItem(w, IDC_LIST_HISTORY), NULL, 20, CY+422, cw - 40, 132, SWP_NOZORDER|SWP_NOACTIVATE);
 }
 
 /* ===================================================================
@@ -681,15 +688,18 @@ static void update_dashboard(HWND w)
 {
     char buf[256];
     const VitalSigns *latest = NULL;
+    const char *reset_notice = NULL;
     Alert alerts[MAX_ALERTS];
-    int   ac = 0, i;
+    int   ac = 0, ec = 0, i;
 
     SendMessageA(GetDlgItem(w,IDC_LIST_HISTORY),LB_RESETCONTENT,0,0);
     SendMessageA(GetDlgItem(w,IDC_LIST_ALERTS), LB_RESETCONTENT,0,0);
+    SendMessageA(GetDlgItem(w,IDC_LIST_EVENTS), LB_RESETCONTENT,0,0);
     InvalidateRect(w, NULL, FALSE);
 
     if (!g_app.has_patient) {
         SendMessageA(GetDlgItem(w,IDC_LIST_ALERTS),LB_ADDSTRING,0,(LPARAM)"No patient admitted yet.");
+        SendMessageA(GetDlgItem(w,IDC_LIST_EVENTS),LB_ADDSTRING,0,(LPARAM)"No patient admitted yet.");
         return;
     }
     for (i = 0; i < g_app.patient.reading_count; ++i) {
@@ -718,6 +728,27 @@ static void update_dashboard(HWND w)
             const char *sev = (alerts[i].level==ALERT_CRITICAL)?"CRITICAL":"WARNING ";
             snprintf(buf, sizeof(buf), "[%s]  %s", sev, alerts[i].message);
             SendMessageA(GetDlgItem(w,IDC_LIST_ALERTS),LB_ADDSTRING,0,(LPARAM)buf);
+        }
+    }
+
+    ec = patient_alert_event_count(&g_app.patient);
+    reset_notice = patient_session_reset_notice(&g_app.patient);
+    if (reset_notice != NULL) {
+        snprintf(buf, sizeof(buf), "[SESSION RESET] %s", reset_notice);
+        SendMessageA(GetDlgItem(w,IDC_LIST_EVENTS),LB_ADDSTRING,0,(LPARAM)buf);
+    }
+    if (ec == 0) {
+        SendMessageA(GetDlgItem(w,IDC_LIST_EVENTS),LB_ADDSTRING,0,
+                     (LPARAM)"No session alarm events recorded in current session.");
+    } else {
+        for (i = 0; i < ec; ++i) {
+            const AlertEvent *event = patient_alert_event_at(&g_app.patient, i);
+            if (event == NULL) continue;
+            snprintf(buf, sizeof(buf), "#%d [%s] %s",
+                     event->reading_index,
+                     alert_level_str(event->level),
+                     event->summary);
+            SendMessageA(GetDlgItem(w,IDC_LIST_EVENTS),LB_ADDSTRING,0,(LPARAM)buf);
         }
     }
 }
@@ -1732,8 +1763,12 @@ static LRESULT CALLBACK dash_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
 
     case WM_GETMINMAXINFO: {
         MINMAXINFO *mmi = (MINMAXINFO *)lp;
+        RECT min_wr = {0, 0, WIN_CW, WIN_CH};
+        DWORD style = (DWORD)GetWindowLongPtrA(w, GWL_STYLE);
+
+        AdjustWindowRect(&min_wr, style, FALSE);
         mmi->ptMinTrackSize.x = 760;
-        mmi->ptMinTrackSize.y = 640;
+        mmi->ptMinTrackSize.y = min_wr.bottom - min_wr.top;
         return 0;
     }
 
@@ -1749,10 +1784,12 @@ static LRESULT CALLBACK dash_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
         if (wp == TIMER_SIM && g_app.sim_enabled && !g_app.sim_paused) {
             VitalSigns v;
             if (g_app.has_patient && patient_is_full(&g_app.patient)) {
+                int previous_reading_count = g_app.patient.reading_count;
                 patient_init(&g_app.patient,
                              g_app.patient.info.id, g_app.patient.info.name,
                              g_app.patient.info.age, g_app.patient.info.weight_kg,
                              g_app.patient.info.height_m);
+                patient_note_session_reset(&g_app.patient, previous_reading_count);
             }
             hw_get_next_reading(&v);
             patient_add_reading(&g_app.patient, &v);

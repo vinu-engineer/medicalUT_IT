@@ -57,7 +57,8 @@ def bold(t):   return _colour(t, ANSI_BOLD)
 # ---------------------------------------------------------------------------
 # Requirement-to-test mapping
 # ---------------------------------------------------------------------------
-# Format: "SWR-ID": ("test_executable_stem", "SuiteName[.CaseName]", "description")
+# Format: "SWR-ID": ("test_executable_stem", "SuiteName[.CaseName]" or
+#                     ("SuiteName.CaseName", "..."), "description")
 REQUIREMENT_MAP = {
     # Vital signs validation - GTest suites: HeartRate, BloodPressure, Temperature,
     # SpO2, RespRate, OverallAlert, BMI, AlertStr
@@ -85,13 +86,18 @@ REQUIREMENT_MAP = {
     "SWR-ALT-004": ("test_unit", "GenerateAlerts.REQ_ALT_005_MessageNonEmpty",
                     "generated alert records populate human-readable fields"),
     # Patient record - GTest suites: PatientInit, PatientAddReading, PatientLatestReading,
-    # PatientStatus, PatientIsFull, PatientPrintSummary
+    # PatientStatus, PatientIsFull, PatientAlertEvents, PatientPrintSummary
     "SWR-PAT-001": ("test_unit", "PatientInit", "patient_init() - all fields set"),
     "SWR-PAT-002": ("test_unit", "PatientAddReading", "patient_add_reading() stores readings and rejects overflow"),
     "SWR-PAT-003": ("test_unit", "PatientLatestReading", "patient_latest_reading() - returns last"),
     "SWR-PAT-004": ("test_unit", "PatientStatus", "patient_current_status() - worst alert"),
     "SWR-PAT-005": ("test_unit", "PatientIsFull", "patient_is_full() - ring-buffer full"),
-    "SWR-PAT-006": ("test_unit", "PatientPrintSummary", "patient_print_summary() - no crash"),
+    "SWR-PAT-006": ("test_unit", "PatientPrintSummary", "patient_print_summary() - session event summary output"),
+    "SWR-PAT-007": ("test_unit", "PatientAlertEvents", "patient_add_reading() captures session alarm event transitions"),
+    "SWR-PAT-008": ("test_unit", (
+        "PatientAlertEvents.REQ_PAT_008_EventAccessAndReset",
+        "PatientAlertEvents.REQ_PAT_008_SessionResetNoticeLifecycle",
+    ), "patient alert-event accessors and reset behavior"),
     # Security - GTest suite: UsersTest
     "SWR-SEC-001": ("test_unit", "UsersTest", "users_authenticate() valid/invalid creds"),
     "SWR-SEC-002": ("test_unit", "UsersTest.REQ_SEC_004_StoredValueIsNotPlaintext",
@@ -105,6 +111,7 @@ REQUIREMENT_MAP = {
     "SWR-GUI-010": (None, "MANUAL", "GUI review: sim/device mode toggle behavior, N/A tiles, banners, and relaunch state"),
     "SWR-GUI-011": (None, "MANUAL", "Rolling simulation banner verified by manual visual check"),
     "SWR-GUI-012": ("test_unit", "LocalizationTest", "Localization API, selector list, and monitor.cfg persistence"),
+    "SWR-GUI-013": (None, "MANUAL", "GUI review: dedicated session alarm events list remains distinct from active alerts"),
     # GUI requirements verified via manual checklist only (GUI rendering and workflow review)
     "SWR-GUI-001": (None, "MANUAL", "Login screen: auth, error message, role detection"),
     "SWR-GUI-002": (None, "MANUAL", "Dashboard: colour-coded vital tiles update every 2 s"),
@@ -191,7 +198,11 @@ def run_test_executable(exe_path: str, xml_output: str) -> dict:
 
     cmd = [exe_path, f"--gtest_output=xml:{xml_output}"]
     print("Command:", " ".join(cmd))
-    result = subprocess.run(cmd, capture_output=False)
+    result = subprocess.run(
+        cmd,
+        capture_output=False,
+        env=_isolated_test_env(xml_output),
+    )
 
     info = {
         "stem": stem,
@@ -239,6 +250,17 @@ def run_test_executable(exe_path: str, xml_output: str) -> dict:
 
     return info
 
+def _isolated_test_env(xml_output: str) -> dict[str, str]:
+    """Run each DVT executable with a temp root scoped to this report file."""
+    env = os.environ.copy()
+    temp_stem = os.path.splitext(os.path.basename(xml_output))[0]
+    temp_dir = os.path.join(os.path.dirname(xml_output), "tmp", temp_stem)
+    os.makedirs(temp_dir, exist_ok=True)
+    env["TMP"] = temp_dir
+    env["TEMP"] = temp_dir
+    env["TMPDIR"] = temp_dir
+    return env
+
 # ---------------------------------------------------------------------------
 # Git helper
 # ---------------------------------------------------------------------------
@@ -281,22 +303,41 @@ def build_requirement_status(all_results: list[dict]) -> dict[str, str]:
             status[swr_id] = "MANUAL"
             continue
 
-        if ":" in test_ref:
-            _exe_part, suite_case = test_ref.split(":", 1)
-        else:
-            suite_case = test_ref
+        ref_statuses: list[str] = []
+        for ref in _requirement_test_refs(test_ref):
+            if ":" in ref:
+                _exe_part, suite_case = ref.split(":", 1)
+            else:
+                suite_case = ref
 
-        key_suite = (exe_stem, suite_case.split(".")[0])
-        key_full = (exe_stem, suite_case)
+            key_suite = (exe_stem, suite_case.split(".")[0])
+            key_full = (exe_stem, suite_case)
 
-        if key_full in test_outcomes:
-            status[swr_id] = _pass_fail(test_outcomes[key_full])
-        elif key_suite in test_outcomes:
-            status[swr_id] = _pass_fail(test_outcomes[key_suite])
-        else:
-            status[swr_id] = "NOT_RUN"
+            if key_full in test_outcomes:
+                ref_statuses.append(_pass_fail(test_outcomes[key_full]))
+            elif "." not in suite_case and key_suite in test_outcomes:
+                ref_statuses.append(_pass_fail(test_outcomes[key_suite]))
+            else:
+                ref_statuses.append("NOT_RUN")
+
+        status[swr_id] = _combine_requirement_ref_statuses(ref_statuses)
 
     return status
+
+def _requirement_test_refs(test_ref) -> list[str]:
+    if isinstance(test_ref, (list, tuple)):
+        return [str(ref) for ref in test_ref]
+    return [str(test_ref)]
+
+def _combine_requirement_ref_statuses(ref_statuses: list[str]) -> str:
+    if any(stat == "FAIL" for stat in ref_statuses):
+        return "FAIL"
+    if any(stat == "NOT_RUN" for stat in ref_statuses):
+        return "NOT_RUN"
+    return "PASS"
+
+def _format_requirement_test_ref(test_ref) -> str:
+    return " + ".join(_requirement_test_refs(test_ref))
 
 def generate_report(
     all_results: list[dict],
@@ -394,7 +435,7 @@ def generate_report(
     for swr_id in sorted(REQUIREMENT_MAP.keys()):
         exe_stem, test_ref, desc = REQUIREMENT_MAP[swr_id]
         stat = req_status.get(swr_id, "UNKNOWN")
-        test_label = test_ref if test_ref else "-"
+        test_label = _format_requirement_test_ref(test_ref) if test_ref else "-"
         covered_by = f"{exe_stem}/{test_label}" if exe_stem else test_label
         ln(
             f"  {swr_id:<{col_w_id}}"

@@ -62,6 +62,7 @@ static const char* g_strings_english[STR_COUNT] = {
 
     "Active Alerts",                /* STR_ACTIVE_ALERTS */
     "Reading History",              /* STR_READING_HISTORY */
+    "Session Alarm Events",         /* STR_SESSION_ALARM_EVENTS */
     "NORMAL",                       /* STR_ALERT_NORMAL */
     "WARNING",                      /* STR_ALERT_WARNING */
     "CRITICAL",                     /* STR_ALERT_CRITICAL */
@@ -134,6 +135,7 @@ static const char* g_strings_spanish[STR_COUNT] = {
 
     "Alertas Activas",
     "Historial de Lecturas",
+    "Eventos de Alarma de Sesion",
     "NORMAL",
     "ADVERTENCIA",
     "CRÍTICO",
@@ -206,6 +208,7 @@ static const char* g_strings_french[STR_COUNT] = {
 
     "Alertes Actives",
     "Historique des Lectures",
+    "Evenements d'Alarme de Session",
     "NORMAL",
     "AVERTISSEMENT",
     "CRITIQUE",
@@ -278,6 +281,7 @@ static const char* g_strings_german[STR_COUNT] = {
 
     "Aktive Warnmeldungen",
     "Messverlauf",
+    "Sitzungsalarmereignisse",
     "NORMAL",
     "WARNUNG",
     "KRITISCH",

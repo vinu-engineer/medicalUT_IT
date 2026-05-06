@@ -27,7 +27,7 @@ dispatch.
  │  ┌───────────┐    ┌──────────────────┐    ┌───────────────────────┐     │
  │  │ 1. BUILD  │───▸│ 2a. CPPCHECK     │───▸│ 3. UNIT & INTEGRATION │     │
  │  │   ALL     │    │    (ubuntu)       │    │    TESTS              │     │
- │  │ (windows) │    ├──────────────────┤    │    295 GTest cases    │     │
+ │  │ (windows) │    ├──────────────────┤    │    307 GTest cases    │     │
  │  └───────────┘    │ 2b. CODEQL       │───▸│    (windows)          │     │
  │                   │    (windows)      │    └───────────┬───────────┘     │
  │                   └──────────────────┘                │                 │
@@ -129,8 +129,8 @@ activity for Class B software.
 |-------------|-----------------------------------------------|
 | Runner      | `windows-latest`                              |
 | Framework   | Google Test (release-1.10.0)                   |
-| Unit tests  | 283 tests across 30 suites                     |
-| Integration | 12 tests across 2 suites                       |
+| Unit tests  | 293 tests across 30 suites                     |
+| Integration | 14 tests across 2 suites                       |
 | Output      | JUnit XML → artefact (90-day retention)        |
 | Summary     | Pass/fail table in Actions job summary         |
 
@@ -140,7 +140,7 @@ activity for Class B software.
 |--------------------------|------:|----------------------------------|
 | `test_vitals.cpp`        | 80    | SWR-VIT-001..008                 |
 | `test_alerts.cpp`        | 11    | SWR-ALT-001..004                 |
-| `test_patient.cpp`       | 19    | SWR-PAT-001..006                 |
+| `test_patient.cpp`       | 29    | SWR-PAT-001..008                 |
 | `test_news2.cpp`         | 53    | SWR-NEW-001                      |
 | `test_alarm_limits.cpp`  | 31    | SWR-ALM-001                      |
 | `test_trend.cpp`         | 18    | SWR-TRD-001                      |
@@ -148,8 +148,8 @@ activity for Class B software.
 | `test_hal.cpp`           | 12    | Supporting HAL / simulator checks |
 | `test_config.cpp`        | 10    | Supporting config persistence checks |
 | `test_localization.cpp`  | 8     | SWR-GUI-012                      |
-| `test_patient_monitoring.cpp` | 6 | End-to-end vital to alert flow  |
-| `test_alert_escalation.cpp` | 6  | Alert to NEWS2 to alarm escalation |
+| `test_patient_monitoring.cpp` | 7 | End-to-end vital to alert flow plus historical event retention |
+| `test_alert_escalation.cpp` | 7  | Alert to NEWS2 to alarm escalation plus parameter-set review transitions |
 
 **Gate:** 100% pass rate required. Any failure blocks downstream stages.
 
