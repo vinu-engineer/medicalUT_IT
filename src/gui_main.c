@@ -271,6 +271,20 @@ static void draw_text_ex(HDC hdc, const char *txt,
     HFONT old = (HFONT)SelectObject(hdc, font);
     SetTextColor(hdc, fg);
     SetBkMode(hdc, TRANSPARENT);
+#if defined(_WIN32)
+    if (txt != NULL) {
+        WCHAR wide_text[1024];
+        int wide_len = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS,
+                                           txt, -1,
+                                           wide_text,
+                                           (int)(sizeof(wide_text) / sizeof(wide_text[0])));
+        if (wide_len > 0) {
+            DrawTextW(hdc, wide_text, -1, &r, fmt);
+            SelectObject(hdc, old);
+            return;
+        }
+    }
+#endif
     DrawTextA(hdc, txt, -1, &r, fmt);
     SelectObject(hdc, old);
 }
@@ -610,6 +624,38 @@ static int get_txt(HWND p, int id, char *out, int len)
     GetWindowTextA(GetDlgItem(p,id), out, len);
     return (int)strlen(out);
 }
+static int get_txt_utf8(HWND p, int id, char *out, int len)
+{
+#if defined(_WIN32)
+    HWND ctrl = GetDlgItem(p, id);
+    WCHAR wide_text[MAX_NAME_LEN * 2];
+    int wide_len;
+    int count;
+
+    if (len <= 0) return 0;
+    out[0] = '\0';
+    if (ctrl == NULL) return 0;
+
+    wide_len = GetWindowTextW(ctrl, wide_text,
+                              (int)(sizeof(wide_text) / sizeof(wide_text[0])));
+    if (wide_len <= 0) return 0;
+
+    for (count = wide_len; count > 0; --count) {
+        int written = WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS,
+                                          wide_text, count,
+                                          out, len - 1,
+                                          NULL, NULL);
+        if (written > 0) {
+            out[written] = '\0';
+            return written;
+        }
+    }
+
+    return 0;
+#else
+    return get_txt(p, id, out, len);
+#endif
+}
 static void set_txt(HWND p, int id, const char *s) { SetWindowTextA(GetDlgItem(p,id),s); }
 
 /* ===================================================================
@@ -792,7 +838,7 @@ static int do_admit(HWND w)
     if (!parse_int_field(w,IDC_PAT_AGE,   "Age",        &age)) return 0;
     if (!parse_flt_field(w,IDC_PAT_WEIGHT,"Weight (kg)",&wt))  return 0;
     if (!parse_flt_field(w,IDC_PAT_HEIGHT,"Height (m)", &ht))  return 0;
-    if (!get_txt(w,IDC_PAT_NAME,name,(int)sizeof(name))) {
+    if (!get_txt_utf8(w,IDC_PAT_NAME,name,(int)sizeof(name))) {
         MessageBoxA(w,"Patient name is required.",APP_TITLE,MB_OK|MB_ICONWARNING);
         SetFocus(GetDlgItem(w,IDC_PAT_NAME)); return 0;
     }

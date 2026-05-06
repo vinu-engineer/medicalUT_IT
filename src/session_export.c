@@ -84,19 +84,6 @@ static int copy_path(const char *src, char *dst, size_t dst_len)
     return 1;
 }
 
-static int file_exists(const char *path)
-{
-    if (path == NULL || path[0] == '\0') {
-        return 0;
-    }
-
-#if defined(_WIN32)
-    return _access(path, 0) == 0;
-#else
-    return access(path, F_OK) == 0;
-#endif
-}
-
 static int format_timestamp_utc(char *out_text, size_t out_text_len)
 {
     time_t now;
@@ -133,6 +120,29 @@ static int format_timestamp_utc(char *out_text, size_t out_text_len)
     return written > 0 && (size_t)written < out_text_len;
 }
 
+#if defined(_WIN32)
+static int utf8_or_ansi_to_wide(const char *src, WCHAR *dst, size_t dst_len)
+{
+    int written;
+
+    if (src == NULL || dst == NULL || dst_len == 0u) {
+        return 0;
+    }
+
+    written = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS,
+                                  src, -1,
+                                  dst, (int)dst_len);
+    if (written > 0) {
+        return 1;
+    }
+
+    written = MultiByteToWideChar(CP_ACP, 0,
+                                  src, -1,
+                                  dst, (int)dst_len);
+    return written > 0;
+}
+#endif
+
 static FILE *open_write_restricted(const char *path, int allow_overwrite)
 {
 #if defined(_WIN32)
@@ -149,12 +159,15 @@ static FILE *open_write_restricted(const char *path, int allow_overwrite)
     DWORD acl_len;
     SECURITY_ATTRIBUTES security_attributes;
     SECURITY_DESCRIPTOR security_descriptor;
+    WCHAR wide_path[SESSION_EXPORT_PATH_MAX];
     int fd = -1;
     DWORD disposition = allow_overwrite ? CREATE_ALWAYS : CREATE_NEW;
     FILE *fp;
     PACL restricted_acl = (PACL)acl_buffer;
 
-    if (path == NULL || path[0] == '\0') {
+    if (path == NULL || path[0] == '\0' ||
+        !utf8_or_ansi_to_wide(path, wide_path,
+                              sizeof(wide_path) / sizeof(wide_path[0]))) {
         return NULL;
     }
 
@@ -211,7 +224,7 @@ static FILE *open_write_restricted(const char *path, int allow_overwrite)
     security_attributes.lpSecurityDescriptor = &security_descriptor;
     security_attributes.bInheritHandle = FALSE;
 
-    file_handle = CreateFileA(path,
+    file_handle = CreateFileW(wide_path,
                               GENERIC_WRITE,
                               0,
                               &security_attributes,
@@ -229,7 +242,7 @@ static FILE *open_write_restricted(const char *path, int allow_overwrite)
         return NULL;
     }
 
-    fp = _fdopen(fd, "w");
+    fp = _fdopen(fd, "wb");
     if (fp == NULL) {
         _close(fd);
         return NULL;
@@ -248,7 +261,7 @@ static FILE *open_write_restricted(const char *path, int allow_overwrite)
         return NULL;
     }
 
-    fp = fdopen(fd, "w");
+    fp = fdopen(fd, "wb");
     if (fp == NULL) {
         close(fd);
         return NULL;
@@ -256,6 +269,195 @@ static FILE *open_write_restricted(const char *path, int allow_overwrite)
 
     return fp;
 #endif
+}
+
+static int file_exists(const char *path)
+{
+    if (path == NULL || path[0] == '\0') {
+        return 0;
+    }
+
+#if defined(_WIN32)
+    {
+        WCHAR wide_path[SESSION_EXPORT_PATH_MAX];
+        DWORD attrs;
+
+        if (!utf8_or_ansi_to_wide(path, wide_path,
+                                  sizeof(wide_path) / sizeof(wide_path[0]))) {
+            return 0;
+        }
+
+        attrs = GetFileAttributesW(wide_path);
+        return attrs != INVALID_FILE_ATTRIBUTES &&
+               (attrs & FILE_ATTRIBUTE_DIRECTORY) == 0;
+    }
+#else
+    return access(path, F_OK) == 0;
+#endif
+}
+
+static void remove_file_if_present(const char *path)
+{
+    if (path == NULL || path[0] == '\0') {
+        return;
+    }
+
+#if defined(_WIN32)
+    {
+        WCHAR wide_path[SESSION_EXPORT_PATH_MAX];
+
+        if (utf8_or_ansi_to_wide(path, wide_path,
+                                 sizeof(wide_path) / sizeof(wide_path[0]))) {
+            DeleteFileW(wide_path);
+        }
+    }
+#else
+    remove(path);
+#endif
+}
+
+static AlertLevel max_alert_level(AlertLevel left, AlertLevel right)
+{
+    return (left > right) ? left : right;
+}
+
+static AlertLevel export_overall_status(const VitalSigns *reading,
+                                        const AlarmLimits *alarm_limits)
+{
+    AlertLevel status = ALERT_NORMAL;
+
+    if (reading == NULL || alarm_limits == NULL) {
+        return ALERT_NORMAL;
+    }
+
+    status = max_alert_level(status,
+                             alarm_check_hr(alarm_limits, reading->heart_rate));
+    status = max_alert_level(status,
+                             alarm_check_bp(alarm_limits,
+                                            reading->systolic_bp,
+                                            reading->diastolic_bp));
+    status = max_alert_level(status,
+                             alarm_check_temp(alarm_limits,
+                                              reading->temperature));
+    status = max_alert_level(status,
+                             alarm_check_spo2(alarm_limits, reading->spo2));
+
+    if (reading->respiration_rate != 0) {
+        status = max_alert_level(status,
+                                 alarm_check_rr(alarm_limits,
+                                                reading->respiration_rate));
+    }
+
+    return status;
+}
+
+static int export_generate_alerts(const VitalSigns *reading,
+                                  const AlarmLimits *alarm_limits,
+                                  Alert *out,
+                                  int max_out)
+{
+    int count = 0;
+    AlertLevel level;
+
+    if (reading == NULL || alarm_limits == NULL ||
+        (out == NULL && max_out > 0) || max_out < 0) {
+        return 0;
+    }
+
+#define PUSH_EXPORT_ALERT(_level, _param, _fmt, ...)                          \
+    do {                                                                      \
+        if ((_level) != ALERT_NORMAL && count < max_out) {                    \
+            out[count].level = (_level);                                      \
+            strncpy(out[count].parameter, (_param),                           \
+                    sizeof(out[count].parameter) - 1u);                       \
+            out[count].parameter[sizeof(out[count].parameter) - 1u] = '\0';   \
+            snprintf(out[count].message, ALERT_MSG_LEN,                       \
+                     _fmt, __VA_ARGS__);                                      \
+            out[count].message[ALERT_MSG_LEN - 1] = '\0';                     \
+            count++;                                                          \
+        }                                                                     \
+    } while (0)
+
+    level = alarm_check_hr(alarm_limits, reading->heart_rate);
+    PUSH_EXPORT_ALERT(level, "Heart Rate",
+                      "Heart rate %d bpm outside configured range %d-%d bpm",
+                      reading->heart_rate,
+                      alarm_limits->hr_low, alarm_limits->hr_high);
+
+    level = alarm_check_bp(alarm_limits,
+                           reading->systolic_bp, reading->diastolic_bp);
+    PUSH_EXPORT_ALERT(level, "Blood Pressure",
+                      "BP %d/%d mmHg outside configured limits (SBP %d-%d, DBP %d-%d)",
+                      reading->systolic_bp, reading->diastolic_bp,
+                      alarm_limits->sbp_low, alarm_limits->sbp_high,
+                      alarm_limits->dbp_low, alarm_limits->dbp_high);
+
+    level = alarm_check_temp(alarm_limits, reading->temperature);
+    PUSH_EXPORT_ALERT(level, "Temperature",
+                      "Temp %.1f C outside configured range %.1f-%.1f C",
+                      (double)reading->temperature,
+                      (double)alarm_limits->temp_low,
+                      (double)alarm_limits->temp_high);
+
+    level = alarm_check_spo2(alarm_limits, reading->spo2);
+    PUSH_EXPORT_ALERT(level, "SpO2",
+                      "SpO2 %d%% below configured minimum %d%%",
+                      reading->spo2, alarm_limits->spo2_low);
+
+    if (reading->respiration_rate != 0) {
+        level = alarm_check_rr(alarm_limits, reading->respiration_rate);
+        PUSH_EXPORT_ALERT(level, "Resp Rate",
+                          "RR %d br/min outside configured range %d-%d br/min",
+                          reading->respiration_rate,
+                          alarm_limits->rr_low, alarm_limits->rr_high);
+    }
+
+#undef PUSH_EXPORT_ALERT
+    return count;
+}
+
+static int format_history_row_internal(const VitalSigns *reading,
+                                       int sequence_number,
+                                       const AlarmLimits *alarm_limits,
+                                       char *out_text,
+                                       size_t out_text_len)
+{
+    AlertLevel status;
+    int written;
+
+    if (reading == NULL || out_text == NULL || out_text_len == 0u ||
+        sequence_number <= 0) {
+        return 0;
+    }
+
+    status = (alarm_limits != NULL)
+        ? export_overall_status(reading, alarm_limits)
+        : overall_alert_level(reading);
+
+    if (reading->respiration_rate != 0) {
+        written = snprintf(out_text, out_text_len,
+                           "#%d  HR %d | BP %d/%d | Temp %.1f C | SpO2 %d%% | RR %d br/min  [%s]",
+                           sequence_number,
+                           reading->heart_rate,
+                           reading->systolic_bp,
+                           reading->diastolic_bp,
+                           reading->temperature,
+                           reading->spo2,
+                           reading->respiration_rate,
+                           alert_level_str(status));
+    } else {
+        written = snprintf(out_text, out_text_len,
+                           "#%d  HR %d | BP %d/%d | Temp %.1f C | SpO2 %d%%  [%s]",
+                           sequence_number,
+                           reading->heart_rate,
+                           reading->systolic_bp,
+                           reading->diastolic_bp,
+                           reading->temperature,
+                           reading->spo2,
+                           alert_level_str(status));
+    }
+
+    return written > 0 && (size_t)written < out_text_len;
 }
 
 static SessionExportResult write_snapshot_body(FILE *fp,
@@ -283,8 +485,9 @@ static SessionExportResult write_snapshot_body(FILE *fp,
     }
 
     bmi = calculate_bmi(patient->info.weight_kg, patient->info.height_m);
-    status = patient_current_status(patient);
-    alert_count = generate_alerts(latest, alerts, MAX_ALERTS);
+    status = export_overall_status(latest, alarm_limits);
+    alert_count = export_generate_alerts(latest, alarm_limits,
+                                         alerts, MAX_ALERTS);
 
     if (fprintf(fp, "Session Review Snapshot\n") < 0 ||
         fprintf(fp, "Format Version: %s\n", SESSION_EXPORT_FORMAT_VERSION) < 0 ||
@@ -330,25 +533,30 @@ static SessionExportResult write_snapshot_body(FILE *fp,
     if (fprintf(fp, "Latest Vital Signs\n") < 0 ||
         fprintf(fp, "  Heart Rate     : %d bpm [%s]\n",
                 latest->heart_rate,
-                alert_level_str(check_heart_rate(latest->heart_rate))) < 0 ||
+                alert_level_str(alarm_check_hr(alarm_limits,
+                                               latest->heart_rate))) < 0 ||
         fprintf(fp, "  Blood Pressure : %d/%d mmHg [%s]\n",
                 latest->systolic_bp,
                 latest->diastolic_bp,
-                alert_level_str(check_blood_pressure(latest->systolic_bp,
-                                                     latest->diastolic_bp))) < 0 ||
+                alert_level_str(alarm_check_bp(alarm_limits,
+                                               latest->systolic_bp,
+                                               latest->diastolic_bp))) < 0 ||
         fprintf(fp, "  Temperature    : %.1f C [%s]\n",
                 latest->temperature,
-                alert_level_str(check_temperature(latest->temperature))) < 0 ||
+                alert_level_str(alarm_check_temp(alarm_limits,
+                                                 latest->temperature))) < 0 ||
         fprintf(fp, "  SpO2           : %d%% [%s]\n",
                 latest->spo2,
-                alert_level_str(check_spo2(latest->spo2))) < 0) {
+                alert_level_str(alarm_check_spo2(alarm_limits,
+                                                 latest->spo2))) < 0) {
         return SESSION_EXPORT_RESULT_IO_ERROR;
     }
 
     if (latest->respiration_rate != 0) {
         if (fprintf(fp, "  Respiration    : %d br/min [%s]\n",
                     latest->respiration_rate,
-                    alert_level_str(check_respiration_rate(latest->respiration_rate))) < 0) {
+                    alert_level_str(alarm_check_rr(alarm_limits,
+                                                   latest->respiration_rate))) < 0) {
             return SESSION_EXPORT_RESULT_IO_ERROR;
         }
     } else if (fprintf(fp, "  Respiration    : Not recorded\n") < 0) {
@@ -384,8 +592,9 @@ static SessionExportResult write_snapshot_body(FILE *fp,
     }
 
     for (i = 0; i < patient->reading_count; ++i) {
-        if (!session_export_format_history_row(&patient->readings[i], i + 1,
-                                               line, sizeof(line)) ||
+        if (!format_history_row_internal(&patient->readings[i], i + 1,
+                                         alarm_limits,
+                                         line, sizeof(line)) ||
             fprintf(fp, "  %s\n", line) < 0) {
             return SESSION_EXPORT_RESULT_IO_ERROR;
         }
@@ -465,37 +674,8 @@ int session_export_format_history_row(const VitalSigns *reading,
                                       char *out_text,
                                       size_t out_text_len)
 {
-    int written;
-
-    if (reading == NULL || out_text == NULL || out_text_len == 0u ||
-        sequence_number <= 0) {
-        return 0;
-    }
-
-    if (reading->respiration_rate != 0) {
-        written = snprintf(out_text, out_text_len,
-                           "#%d  HR %d | BP %d/%d | Temp %.1f C | SpO2 %d%% | RR %d br/min  [%s]",
-                           sequence_number,
-                           reading->heart_rate,
-                           reading->systolic_bp,
-                           reading->diastolic_bp,
-                           reading->temperature,
-                           reading->spo2,
-                           reading->respiration_rate,
-                           alert_level_str(overall_alert_level(reading)));
-    } else {
-        written = snprintf(out_text, out_text_len,
-                           "#%d  HR %d | BP %d/%d | Temp %.1f C | SpO2 %d%%  [%s]",
-                           sequence_number,
-                           reading->heart_rate,
-                           reading->systolic_bp,
-                           reading->diastolic_bp,
-                           reading->temperature,
-                           reading->spo2,
-                           alert_level_str(overall_alert_level(reading)));
-    }
-
-    return written > 0 && (size_t)written < out_text_len;
+    return format_history_row_internal(reading, sequence_number, NULL,
+                                       out_text, out_text_len);
 }
 
 int session_export_format_alert_row(const Alert *alert,
@@ -571,7 +751,7 @@ SessionExportResult session_export_write_snapshot(const PatientRecord *patient,
     }
 
     if (result != SESSION_EXPORT_RESULT_OK) {
-        remove(target_path);
+        remove_file_if_present(target_path);
     }
 
     return result;

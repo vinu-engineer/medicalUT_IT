@@ -263,8 +263,21 @@ TEST_F(SessionExportTest, SWR_EXP_002_WritesRequiredSnapshotSections)
 {
     std::string content;
     VitalSigns reading = make_warning_reading();
+    const char *patient_name = "Ren\xC3\xA9""e Alvarez";
 
-    patient_init(&patient_, 1001, "Sarah Johnson", 52, 72.5f, 1.66f);
+    limits_.hr_low = 60;
+    limits_.hr_high = 100;
+    limits_.sbp_low = 90;
+    limits_.sbp_high = 140;
+    limits_.dbp_low = 60;
+    limits_.dbp_high = 90;
+    limits_.temp_low = 36.1f;
+    limits_.temp_high = 37.2f;
+    limits_.spo2_low = 95;
+    limits_.rr_low = 12;
+    limits_.rr_high = 20;
+
+    patient_init(&patient_, 1001, patient_name, 52, 72.5f, 1.66f);
     ASSERT_EQ(1, patient_add_reading(&patient_, &reading));
 
     ASSERT_EQ(SESSION_EXPORT_RESULT_OK,
@@ -276,11 +289,24 @@ TEST_F(SessionExportTest, SWR_EXP_002_WritesRequiredSnapshotSections)
     EXPECT_NE(std::string::npos, content.find("Session Review Snapshot"));
     EXPECT_NE(std::string::npos, content.find("Format Version: 1.0"));
     EXPECT_NE(std::string::npos, content.find("Patient Demographics"));
+    EXPECT_NE(std::string::npos,
+              content.find("Name           : " + std::string(patient_name)));
     EXPECT_NE(std::string::npos, content.find("Mode Context"));
     EXPECT_NE(std::string::npos, content.find("Alarm Limit Context"));
     EXPECT_NE(std::string::npos, content.find("Latest Vital Signs"));
+    EXPECT_NE(std::string::npos, content.find("Heart Rate     : 108 bpm [WARNING]"));
     EXPECT_NE(std::string::npos, content.find("Overall Status : WARNING"));
     EXPECT_NE(std::string::npos, content.find("Active Alerts"));
+    EXPECT_NE(std::string::npos,
+              content.find("[WARNING]  Heart rate 108 bpm outside configured range 60-100 bpm"));
+    EXPECT_NE(std::string::npos,
+              content.find("[WARNING]  BP 148/94 mmHg outside configured limits (SBP 90-140, DBP 60-90)"));
+    EXPECT_NE(std::string::npos,
+              content.find("[WARNING]  Temp 37.9 C outside configured range 36.1-37.2 C"));
+    EXPECT_NE(std::string::npos,
+              content.find("[WARNING]  SpO2 93% below configured minimum 95%"));
+    EXPECT_NE(std::string::npos,
+              content.find("[WARNING]  RR 23 br/min outside configured range 12-20 br/min"));
     EXPECT_NE(std::string::npos, content.find("Reading History"));
     EXPECT_NE(std::string::npos,
               content.find("#1  HR 108 | BP 148/94 | Temp 37.9 C | SpO2 93% | RR 23 br/min  [WARNING]"));
