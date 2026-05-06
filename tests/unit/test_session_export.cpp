@@ -5,9 +5,11 @@
 #include <fstream>
 #include <iterator>
 #include <string>
+#include <sys/stat.h>
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
+#include <aclapi.h>
 #include <windows.h>
 #endif
 
@@ -44,6 +46,136 @@ static std::string read_text_file(const std::string &path)
                        std::istreambuf_iterator<char>());
 }
 
+static int read_file_mode_bits(const std::string &path, int *mode_bits_out)
+{
+    struct stat file_info;
+
+    if (mode_bits_out == nullptr) {
+        return 0;
+    }
+
+    if (::stat(path.c_str(), &file_info) != 0) {
+        return 0;
+    }
+
+    *mode_bits_out = file_info.st_mode & 0777;
+    return 1;
+}
+
+#ifdef _WIN32
+static int init_well_known_sid(WELL_KNOWN_SID_TYPE sid_type,
+                               BYTE *sid_buffer,
+                               DWORD sid_buffer_len,
+                               PSID *sid_out)
+{
+    DWORD sid_len = sid_buffer_len;
+
+    if (sid_buffer == nullptr || sid_out == nullptr) {
+        return 0;
+    }
+
+    *sid_out = sid_buffer;
+    return CreateWellKnownSid(sid_type, nullptr, *sid_out, &sid_len) != 0;
+}
+
+static int file_has_restricted_windows_acl(const std::string &path)
+{
+    BYTE everyone_sid_buffer[SECURITY_MAX_SID_SIZE];
+    BYTE users_sid_buffer[SECURITY_MAX_SID_SIZE];
+    BYTE auth_users_sid_buffer[SECURITY_MAX_SID_SIZE];
+    BYTE admin_sid_buffer[SECURITY_MAX_SID_SIZE];
+    BYTE system_sid_buffer[SECURITY_MAX_SID_SIZE];
+    PACL dacl = nullptr;
+    PSECURITY_DESCRIPTOR security_descriptor = nullptr;
+    PSID owner_sid = nullptr;
+    PSID everyone_sid = nullptr;
+    PSID users_sid = nullptr;
+    PSID auth_users_sid = nullptr;
+    PSID admin_sid = nullptr;
+    PSID system_sid = nullptr;
+    SECURITY_DESCRIPTOR_CONTROL control = 0;
+    DWORD revision = 0;
+    int owner_has_rw = 0;
+    DWORD i;
+
+    if (!init_well_known_sid(WinWorldSid,
+                             everyone_sid_buffer, sizeof(everyone_sid_buffer),
+                             &everyone_sid) ||
+        !init_well_known_sid(WinBuiltinUsersSid,
+                             users_sid_buffer, sizeof(users_sid_buffer),
+                             &users_sid) ||
+        !init_well_known_sid(WinAuthenticatedUserSid,
+                             auth_users_sid_buffer, sizeof(auth_users_sid_buffer),
+                             &auth_users_sid) ||
+        !init_well_known_sid(WinBuiltinAdministratorsSid,
+                             admin_sid_buffer, sizeof(admin_sid_buffer),
+                             &admin_sid) ||
+        !init_well_known_sid(WinLocalSystemSid,
+                             system_sid_buffer, sizeof(system_sid_buffer),
+                             &system_sid)) {
+        return 0;
+    }
+
+    if (GetNamedSecurityInfoA(path.c_str(), SE_FILE_OBJECT,
+                              DACL_SECURITY_INFORMATION |
+                                  OWNER_SECURITY_INFORMATION,
+                              &owner_sid, nullptr, &dacl, nullptr,
+                              &security_descriptor) != ERROR_SUCCESS ||
+        dacl == nullptr ||
+        !GetSecurityDescriptorControl(security_descriptor, &control,
+                                      &revision) ||
+        (control & SE_DACL_PROTECTED) == 0) {
+        if (security_descriptor != nullptr) {
+            LocalFree(security_descriptor);
+        }
+        return 0;
+    }
+
+    for (i = 0; i < dacl->AceCount; ++i) {
+        void *ace = nullptr;
+        ACCESS_ALLOWED_ACE *allowed_ace;
+        PSID ace_sid;
+
+        if (!GetAce(dacl, i, &ace)) {
+            LocalFree(security_descriptor);
+            return 0;
+        }
+
+        if (((ACE_HEADER *)ace)->AceType != ACCESS_ALLOWED_ACE_TYPE) {
+            continue;
+        }
+
+        allowed_ace = (ACCESS_ALLOWED_ACE *)ace;
+        ace_sid = (PSID)&allowed_ace->SidStart;
+
+        if (EqualSid(ace_sid, everyone_sid) ||
+            EqualSid(ace_sid, users_sid) ||
+            EqualSid(ace_sid, auth_users_sid)) {
+            LocalFree(security_descriptor);
+            return 0;
+        }
+
+        if (EqualSid(ace_sid, owner_sid)) {
+            if ((allowed_ace->Mask & (FILE_GENERIC_READ | FILE_GENERIC_WRITE)) ==
+                (FILE_GENERIC_READ | FILE_GENERIC_WRITE)) {
+                owner_has_rw = 1;
+            }
+            continue;
+        }
+
+        if (EqualSid(ace_sid, admin_sid) || EqualSid(ace_sid, system_sid)) {
+            continue;
+        }
+
+        LocalFree(security_descriptor);
+        return 0;
+    }
+
+    LocalFree(security_descriptor);
+    return owner_has_rw;
+}
+#endif
+
 static VitalSigns make_warning_reading()
 {
     VitalSigns reading = {108, 148, 94, 37.9f, 93, 23};
@@ -79,6 +211,28 @@ TEST_F(SessionExportTest, SWR_EXP_001_BuildPathUsesDeterministicFilename)
     ASSERT_EQ(1, session_export_build_path(1001, nullptr, path, sizeof(path)));
     EXPECT_NE(std::string::npos,
               std::string(path).find("session-review-patient-1001.txt"));
+}
+
+TEST_F(SessionExportTest, SWR_EXP_001_CreatesSnapshotWithRestrictedPermissions)
+{
+    VitalSigns reading = make_warning_reading();
+
+    patient_init(&patient_, 1001, "Sarah Johnson", 52, 72.5f, 1.66f);
+    ASSERT_EQ(1, patient_add_reading(&patient_, &reading));
+
+    ASSERT_EQ(SESSION_EXPORT_RESULT_OK,
+              session_export_write_snapshot(&patient_, 1, &limits_,
+                                            1, 0, temp_path_.c_str(), 0,
+                                            nullptr, 0));
+#ifdef _WIN32
+    EXPECT_EQ(1, file_has_restricted_windows_acl(temp_path_));
+#else
+    {
+        int mode_bits = 0;
+        ASSERT_EQ(1, read_file_mode_bits(temp_path_, &mode_bits));
+        EXPECT_EQ(0600, mode_bits);
+    }
+#endif
 }
 
 TEST_F(SessionExportTest, SWR_EXP_003_RefusesWhenNoPatientIsAdmitted)

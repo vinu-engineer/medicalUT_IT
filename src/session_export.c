@@ -19,12 +19,14 @@
 #include "session_export.h"
 
 #include <stdio.h>
+#include <stdint.h>
 #include <string.h>
 #include <time.h>
 
 #if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <aclapi.h>
 #include <fcntl.h>
 #include <io.h>
 #include <share.h>
@@ -41,6 +43,29 @@
 
 #define SESSION_EXPORT_FILENAME_PREFIX "session-review-patient-"
 #define SESSION_EXPORT_FILENAME_SUFFIX ".txt"
+
+static int init_well_known_sid(WELL_KNOWN_SID_TYPE sid_type,
+                               BYTE *sid_buffer,
+                               DWORD sid_buffer_len,
+                               PSID *sid_out)
+{
+#if defined(_WIN32)
+    DWORD sid_len = sid_buffer_len;
+
+    if (sid_buffer == NULL || sid_out == NULL) {
+        return 0;
+    }
+
+    *sid_out = sid_buffer;
+    return CreateWellKnownSid(sid_type, NULL, *sid_out, &sid_len) != 0;
+#else
+    (void)sid_type;
+    (void)sid_buffer;
+    (void)sid_buffer_len;
+    (void)sid_out;
+    return 0;
+#endif
+}
 
 static int copy_path(const char *src, char *dst, size_t dst_len)
 {
@@ -111,14 +136,96 @@ static int format_timestamp_utc(char *out_text, size_t out_text_len)
 static FILE *open_write_restricted(const char *path, int allow_overwrite)
 {
 #if defined(_WIN32)
+    BYTE token_user_buffer[512];
+    BYTE admin_sid_buffer[SECURITY_MAX_SID_SIZE];
+    BYTE system_sid_buffer[SECURITY_MAX_SID_SIZE];
+    BYTE acl_buffer[512];
+    HANDLE token = NULL;
+    HANDLE file_handle = INVALID_HANDLE_VALUE;
+    PTOKEN_USER token_user = (PTOKEN_USER)token_user_buffer;
+    PSID admin_sid = NULL;
+    PSID system_sid = NULL;
+    DWORD token_user_len = 0;
+    DWORD acl_len;
+    SECURITY_ATTRIBUTES security_attributes;
+    SECURITY_DESCRIPTOR security_descriptor;
     int fd = -1;
-    int oflag = allow_overwrite
-        ? (_O_CREAT | _O_WRONLY | _O_TRUNC)
-        : (_O_CREAT | _O_WRONLY | _O_EXCL);
+    DWORD disposition = allow_overwrite ? CREATE_ALWAYS : CREATE_NEW;
     FILE *fp;
+    PACL restricted_acl = (PACL)acl_buffer;
 
-    if (_sopen_s(&fd, path, oflag, _SH_DENYRW,
-                 _S_IREAD | _S_IWRITE) != 0 || fd == -1) {
+    if (path == NULL || path[0] == '\0') {
+        return NULL;
+    }
+
+    if (!OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &token)) {
+        return NULL;
+    }
+
+    if (!GetTokenInformation(token, TokenUser,
+                             token_user, sizeof(token_user_buffer),
+                             &token_user_len)) {
+        CloseHandle(token);
+        return NULL;
+    }
+
+    if (!init_well_known_sid(WinBuiltinAdministratorsSid,
+                             admin_sid_buffer, sizeof(admin_sid_buffer),
+                             &admin_sid) ||
+        !init_well_known_sid(WinLocalSystemSid,
+                             system_sid_buffer, sizeof(system_sid_buffer),
+                             &system_sid)) {
+        CloseHandle(token);
+        return NULL;
+    }
+
+    acl_len = (DWORD)sizeof(ACL) +
+              (DWORD)(sizeof(ACCESS_ALLOWED_ACE) + GetLengthSid(token_user->User.Sid) - sizeof(DWORD)) +
+              (DWORD)(sizeof(ACCESS_ALLOWED_ACE) + GetLengthSid(admin_sid) - sizeof(DWORD)) +
+              (DWORD)(sizeof(ACCESS_ALLOWED_ACE) + GetLengthSid(system_sid) - sizeof(DWORD));
+    if (acl_len > sizeof(acl_buffer)) {
+        CloseHandle(token);
+        return NULL;
+    }
+
+    if (!InitializeAcl(restricted_acl, acl_len, ACL_REVISION) ||
+        !AddAccessAllowedAce(restricted_acl, ACL_REVISION,
+                             FILE_GENERIC_READ | FILE_GENERIC_WRITE | DELETE,
+                             token_user->User.Sid) ||
+        !AddAccessAllowedAce(restricted_acl, ACL_REVISION,
+                             FILE_ALL_ACCESS, admin_sid) ||
+        !AddAccessAllowedAce(restricted_acl, ACL_REVISION,
+                             FILE_ALL_ACCESS, system_sid) ||
+        !InitializeSecurityDescriptor(&security_descriptor,
+                                      SECURITY_DESCRIPTOR_REVISION) ||
+        !SetSecurityDescriptorDacl(&security_descriptor, TRUE,
+                                   restricted_acl, FALSE) ||
+        !SetSecurityDescriptorControl(&security_descriptor,
+                                      SE_DACL_PROTECTED,
+                                      SE_DACL_PROTECTED)) {
+        CloseHandle(token);
+        return NULL;
+    }
+
+    security_attributes.nLength = sizeof(security_attributes);
+    security_attributes.lpSecurityDescriptor = &security_descriptor;
+    security_attributes.bInheritHandle = FALSE;
+
+    file_handle = CreateFileA(path,
+                              GENERIC_WRITE,
+                              0,
+                              &security_attributes,
+                              disposition,
+                              FILE_ATTRIBUTE_NORMAL,
+                              NULL);
+    CloseHandle(token);
+    if (file_handle == INVALID_HANDLE_VALUE) {
+        return NULL;
+    }
+
+    fd = _open_osfhandle((intptr_t)file_handle, _O_WRONLY);
+    if (fd == -1) {
+        CloseHandle(file_handle);
         return NULL;
     }
 

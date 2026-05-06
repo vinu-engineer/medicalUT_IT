@@ -46,6 +46,10 @@ target_compile_options(monitor_lib PRIVATE
     $<$<C_COMPILER_ID:MSVC>:/W4 /FS>
 )
 
+if(WIN32)
+    target_link_libraries(monitor_lib PUBLIC advapi32)
+endif()
+
 if(ENABLE_COVERAGE AND NOT MSVC)
     target_compile_options(monitor_lib PRIVATE --coverage -O0 -g)
     target_link_options(monitor_lib PUBLIC --coverage)
