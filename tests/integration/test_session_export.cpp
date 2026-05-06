@@ -67,21 +67,12 @@ protected:
 TEST_F(SessionExportIntegrationTest, REQ_INT_EXP_001_StatusAndAlertsMatchPatientState)
 {
     PatientRecord patient;
+    Alert alerts[MAX_ALERTS];
     VitalSigns reading = {108, 148, 94, 37.9f, 93, 23};
+    char alert_line[256];
     std::string content;
+    int alert_count;
     const VitalSigns *latest;
-
-    limits_.hr_low = 60;
-    limits_.hr_high = 100;
-    limits_.sbp_low = 90;
-    limits_.sbp_high = 140;
-    limits_.dbp_low = 60;
-    limits_.dbp_high = 90;
-    limits_.temp_low = 36.1f;
-    limits_.temp_high = 37.2f;
-    limits_.spo2_low = 95;
-    limits_.rr_low = 12;
-    limits_.rr_high = 20;
 
     patient_init(&patient, 2001, "Critical Patient", 55, 90.0f, 1.72f);
     ASSERT_EQ(1, patient_add_reading(&patient, &reading));
@@ -95,24 +86,28 @@ TEST_F(SessionExportIntegrationTest, REQ_INT_EXP_001_StatusAndAlertsMatchPatient
 
     latest = patient_latest_reading(&patient);
     ASSERT_NE(nullptr, latest);
-    EXPECT_EQ(ALERT_WARNING, alarm_check_hr(&limits_, latest->heart_rate));
-    EXPECT_EQ(ALERT_WARNING, alarm_check_bp(&limits_,
-                                           latest->systolic_bp,
-                                           latest->diastolic_bp));
-    EXPECT_EQ(ALERT_WARNING, alarm_check_temp(&limits_, latest->temperature));
-    EXPECT_EQ(ALERT_WARNING, alarm_check_spo2(&limits_, latest->spo2));
-    EXPECT_EQ(ALERT_WARNING, alarm_check_rr(&limits_, latest->respiration_rate));
+    EXPECT_EQ(ALERT_WARNING, overall_alert_level(latest));
+    EXPECT_EQ(ALERT_NORMAL, alarm_check_hr(&limits_, latest->heart_rate));
+    EXPECT_EQ(ALERT_NORMAL, alarm_check_bp(&limits_,
+                                          latest->systolic_bp,
+                                          latest->diastolic_bp));
+    EXPECT_EQ(ALERT_NORMAL, alarm_check_temp(&limits_, latest->temperature));
+    EXPECT_EQ(ALERT_NORMAL, alarm_check_spo2(&limits_, latest->spo2));
+    EXPECT_EQ(ALERT_NORMAL, alarm_check_rr(&limits_, latest->respiration_rate));
+    EXPECT_NE(std::string::npos,
+              content.find("Heart Rate     : low 40 bpm / high 150 bpm"));
+    EXPECT_NE(std::string::npos,
+              content.find("Status Basis   : Live dashboard clinical thresholds; configured alarm limits are listed above for session context."));
 
-    EXPECT_NE(std::string::npos,
-              content.find("[WARNING]  Heart rate 108 bpm outside configured range 60-100 bpm"));
-    EXPECT_NE(std::string::npos,
-              content.find("[WARNING]  BP 148/94 mmHg outside configured limits (SBP 90-140, DBP 60-90)"));
-    EXPECT_NE(std::string::npos,
-              content.find("[WARNING]  Temp 37.9 C outside configured range 36.1-37.2 C"));
-    EXPECT_NE(std::string::npos,
-              content.find("[WARNING]  SpO2 93% below configured minimum 95%"));
-    EXPECT_NE(std::string::npos,
-              content.find("[WARNING]  RR 23 br/min outside configured range 12-20 br/min"));
+    alert_count = generate_alerts(latest, alerts, MAX_ALERTS);
+    ASSERT_EQ(5, alert_count);
+
+    for (int i = 0; i < alert_count; ++i) {
+        ASSERT_EQ(1, session_export_format_alert_row(&alerts[i],
+                                                     alert_line,
+                                                     sizeof(alert_line)));
+        EXPECT_NE(std::string::npos, content.find(alert_line));
+    }
 }
 
 TEST_F(SessionExportIntegrationTest, REQ_INT_EXP_002_ReAdmitResetsPriorSessionIdentity)

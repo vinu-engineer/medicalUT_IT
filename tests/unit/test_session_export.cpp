@@ -176,6 +176,67 @@ static int file_has_restricted_windows_acl(const std::string &path)
 }
 #endif
 
+static int make_file_permissions_permissive(const std::string &path)
+{
+#ifdef _WIN32
+    BYTE everyone_sid_buffer[SECURITY_MAX_SID_SIZE];
+    EXPLICIT_ACCESSA entries[2];
+    PACL acl = nullptr;
+    PSECURITY_DESCRIPTOR security_descriptor = nullptr;
+    PSID owner_sid = nullptr;
+    PSID everyone_sid = nullptr;
+    DWORD result;
+
+    if (!init_well_known_sid(WinWorldSid,
+                             everyone_sid_buffer, sizeof(everyone_sid_buffer),
+                             &everyone_sid)) {
+        return 0;
+    }
+
+    result = GetNamedSecurityInfoA(path.c_str(), SE_FILE_OBJECT,
+                                   OWNER_SECURITY_INFORMATION,
+                                   &owner_sid, nullptr, nullptr, nullptr,
+                                   &security_descriptor);
+    if (result != ERROR_SUCCESS || owner_sid == nullptr) {
+        if (security_descriptor != nullptr) {
+            LocalFree(security_descriptor);
+        }
+        return 0;
+    }
+
+    std::memset(entries, 0, sizeof(entries));
+    entries[0].grfAccessPermissions = FILE_GENERIC_READ | FILE_GENERIC_WRITE | DELETE;
+    entries[0].grfAccessMode = SET_ACCESS;
+    entries[0].grfInheritance = NO_INHERITANCE;
+    BuildTrusteeWithSidA(&entries[0].Trustee, owner_sid);
+
+    entries[1].grfAccessPermissions = FILE_GENERIC_READ | FILE_GENERIC_WRITE;
+    entries[1].grfAccessMode = SET_ACCESS;
+    entries[1].grfInheritance = NO_INHERITANCE;
+    BuildTrusteeWithSidA(&entries[1].Trustee, everyone_sid);
+
+    result = SetEntriesInAclA(2, entries, nullptr, &acl);
+    if (result == ERROR_SUCCESS) {
+        result = SetNamedSecurityInfoA(const_cast<LPSTR>(path.c_str()),
+                                       SE_FILE_OBJECT,
+                                       DACL_SECURITY_INFORMATION |
+                                           PROTECTED_DACL_SECURITY_INFORMATION,
+                                       nullptr, nullptr, acl, nullptr);
+    }
+
+    if (acl != nullptr) {
+        LocalFree(acl);
+    }
+    if (security_descriptor != nullptr) {
+        LocalFree(security_descriptor);
+    }
+
+    return result == ERROR_SUCCESS;
+#else
+    return chmod(path.c_str(), 0666) == 0;
+#endif
+}
+
 static VitalSigns make_warning_reading()
 {
     VitalSigns reading = {108, 148, 94, 37.9f, 93, 23};
@@ -265,18 +326,6 @@ TEST_F(SessionExportTest, SWR_EXP_002_WritesRequiredSnapshotSections)
     VitalSigns reading = make_warning_reading();
     const char *patient_name = "Ren\xC3\xA9""e Alvarez";
 
-    limits_.hr_low = 60;
-    limits_.hr_high = 100;
-    limits_.sbp_low = 90;
-    limits_.sbp_high = 140;
-    limits_.dbp_low = 60;
-    limits_.dbp_high = 90;
-    limits_.temp_low = 36.1f;
-    limits_.temp_high = 37.2f;
-    limits_.spo2_low = 95;
-    limits_.rr_low = 12;
-    limits_.rr_high = 20;
-
     patient_init(&patient_, 1001, patient_name, 52, 72.5f, 1.66f);
     ASSERT_EQ(1, patient_add_reading(&patient_, &reading));
 
@@ -293,20 +342,24 @@ TEST_F(SessionExportTest, SWR_EXP_002_WritesRequiredSnapshotSections)
               content.find("Name           : " + std::string(patient_name)));
     EXPECT_NE(std::string::npos, content.find("Mode Context"));
     EXPECT_NE(std::string::npos, content.find("Alarm Limit Context"));
+    EXPECT_NE(std::string::npos,
+              content.find("Heart Rate     : low 40 bpm / high 150 bpm"));
     EXPECT_NE(std::string::npos, content.find("Latest Vital Signs"));
     EXPECT_NE(std::string::npos, content.find("Heart Rate     : 108 bpm [WARNING]"));
+    EXPECT_NE(std::string::npos,
+              content.find("Status Basis   : Live dashboard clinical thresholds; configured alarm limits are listed above for session context."));
     EXPECT_NE(std::string::npos, content.find("Overall Status : WARNING"));
     EXPECT_NE(std::string::npos, content.find("Active Alerts"));
     EXPECT_NE(std::string::npos,
-              content.find("[WARNING]  Heart rate 108 bpm outside configured range 60-100 bpm"));
+              content.find("[WARNING]  Heart rate 108 bpm [normal 60-100]"));
     EXPECT_NE(std::string::npos,
-              content.find("[WARNING]  BP 148/94 mmHg outside configured limits (SBP 90-140, DBP 60-90)"));
+              content.find("[WARNING]  BP 148/94 mmHg [normal 90-140 / 60-90]"));
     EXPECT_NE(std::string::npos,
-              content.find("[WARNING]  Temp 37.9 C outside configured range 36.1-37.2 C"));
+              content.find("[WARNING]  Temp 37.9 C [normal 36.1-37.2]"));
     EXPECT_NE(std::string::npos,
-              content.find("[WARNING]  SpO2 93% below configured minimum 95%"));
+              content.find("[WARNING]  SpO2 93% [normal 95-100%]"));
     EXPECT_NE(std::string::npos,
-              content.find("[WARNING]  RR 23 br/min outside configured range 12-20 br/min"));
+              content.find("[WARNING]  RR 23 br/min [normal 12-20]"));
     EXPECT_NE(std::string::npos, content.find("Reading History"));
     EXPECT_NE(std::string::npos,
               content.find("#1  HR 108 | BP 148/94 | Temp 37.9 C | SpO2 93% | RR 23 br/min  [WARNING]"));
@@ -333,7 +386,7 @@ TEST_F(SessionExportTest, SWR_EXP_003_ExistingFileRequiresExplicitOverwrite)
     EXPECT_EQ(temp_path_, std::string(path));
 }
 
-TEST_F(SessionExportTest, SWR_EXP_001_OverwriteEnabledReplacesExistingSnapshot)
+TEST_F(SessionExportTest, SWR_EXP_001_OverwriteEnabledRecreatesRestrictedSnapshot)
 {
     std::string content;
     VitalSigns reading = make_warning_reading();
@@ -341,6 +394,16 @@ TEST_F(SessionExportTest, SWR_EXP_001_OverwriteEnabledReplacesExistingSnapshot)
 
     existing << "stale snapshot";
     existing.close();
+    ASSERT_EQ(1, make_file_permissions_permissive(temp_path_));
+#ifdef _WIN32
+    EXPECT_EQ(0, file_has_restricted_windows_acl(temp_path_));
+#else
+    {
+        int mode_bits = 0;
+        ASSERT_EQ(1, read_file_mode_bits(temp_path_, &mode_bits));
+        EXPECT_EQ(0666, mode_bits);
+    }
+#endif
 
     patient_init(&patient_, 1001, "Sarah Johnson", 52, 72.5f, 1.66f);
     ASSERT_EQ(1, patient_add_reading(&patient_, &reading));
@@ -353,4 +416,13 @@ TEST_F(SessionExportTest, SWR_EXP_001_OverwriteEnabledReplacesExistingSnapshot)
     content = read_text_file(temp_path_);
     EXPECT_EQ(std::string::npos, content.find("stale snapshot"));
     EXPECT_NE(std::string::npos, content.find("Session Review Snapshot"));
+#ifdef _WIN32
+    EXPECT_EQ(1, file_has_restricted_windows_acl(temp_path_));
+#else
+    {
+        int mode_bits = 0;
+        ASSERT_EQ(1, read_file_mode_bits(temp_path_, &mode_bits));
+        EXPECT_EQ(0600, mode_bits);
+    }
+#endif
 }
