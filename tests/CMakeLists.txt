@@ -42,6 +42,13 @@ target_link_libraries(test_integration PRIVATE monitor_lib ${GTEST_MAIN_TARGET})
 target_include_directories(test_integration PRIVATE ${PROJECT_SOURCE_DIR}/include)
 add_test(NAME IntegrationTests COMMAND test_integration --gtest_output=xml:${CMAKE_BINARY_DIR}/results_integration.xml)
 
+set(TEST_TEMP_DIR "${CMAKE_BINARY_DIR}/test_tmp")
+file(MAKE_DIRECTORY "${TEST_TEMP_DIR}")
+foreach(test_name UnitTests IntegrationTests)
+    set_tests_properties(${test_name} PROPERTIES
+        ENVIRONMENT "TMP=${TEST_TEMP_DIR};TEMP=${TEST_TEMP_DIR};TMPDIR=${TEST_TEMP_DIR}")
+endforeach()
+
 # -------------------------------------------------------
 # GCC/Clang: propagate coverage flags to test binaries
 # -------------------------------------------------------
