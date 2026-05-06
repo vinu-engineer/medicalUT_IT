@@ -243,9 +243,9 @@ static void patient_copy_name(char *dst, size_t dst_len, const char *src)
 void patient_init(PatientRecord *rec, int id, const char *name,
                   int age, float weight_kg, float height_m)
 {
-    char name_copy[MAX_NAME_LEN];
+    char name_copy[MAX_NAME_LEN] = {0};
 
-    /* Copy the name first in case the caller passes rec->info.name back in. */
+    /* Preserve the source before clearing rec; rollover may pass rec->info.name. */
     patient_copy_name(name_copy, sizeof(name_copy), name);
 
     memset(rec, 0, sizeof(*rec));
@@ -253,7 +253,7 @@ void patient_init(PatientRecord *rec, int id, const char *name,
     rec->info.age       = age;
     rec->info.weight_kg = weight_kg;
     rec->info.height_m  = height_m;
-    patient_copy_name(rec->info.name, sizeof(rec->info.name), name_copy);
+    memcpy(rec->info.name, name_copy, sizeof(rec->info.name));
     rec->reading_count  = 0;
 }
 

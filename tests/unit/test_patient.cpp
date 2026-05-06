@@ -85,6 +85,28 @@ TEST(PatientInit, REQ_PAT_001_LongNameTruncated) {
     EXPECT_EQ(utf8_rec.info.name[expected_utf8.size()], '\0');
 }
 
+TEST(PatientInit, REQ_PAT_001_AliasSafeResetPreservesName) {
+    PatientRecord rec;
+    std::string boundary_name = repeat_utf8_unit("\xC3\xA9", 31);
+    VitalSigns v = make_normal_vitals();
+
+    patient_init(&rec, 2001, boundary_name.c_str(), 45, 78.0f, 1.75f);
+    for (int i = 0; i < MAX_READINGS; ++i) {
+        ASSERT_EQ(patient_add_reading(&rec, &v), 1);
+    }
+    ASSERT_NE(patient_is_full(&rec), 0);
+
+    patient_init(&rec, rec.info.id, rec.info.name,
+                 rec.info.age, rec.info.weight_kg, rec.info.height_m);
+
+    EXPECT_EQ(rec.info.id, 2001);
+    EXPECT_STREQ(rec.info.name, boundary_name.c_str());
+    EXPECT_EQ(rec.info.age, 45);
+    EXPECT_FLOAT_EQ(rec.info.weight_kg, 78.0f);
+    EXPECT_FLOAT_EQ(rec.info.height_m, 1.75f);
+    EXPECT_EQ(rec.reading_count, 0);
+}
+
 TEST(PatientInit, REQ_PAT_001_ReadingCountZero) {
     PatientRecord rec;
     patient_init(&rec, 1, "Test", 25, 70.0f, 1.75f);
