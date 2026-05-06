@@ -46,6 +46,15 @@ static std::string read_text_file(const std::string &path)
                        std::istreambuf_iterator<char>());
 }
 
+static std::string repeat_utf8_unit(const char *utf8_unit, int count)
+{
+    std::string out;
+    for (int i = 0; i < count; ++i) {
+        out += utf8_unit;
+    }
+    return out;
+}
+
 static int read_file_mode_bits(const std::string &path, int *mode_bits_out)
 {
     struct stat file_info;
@@ -324,9 +333,10 @@ TEST_F(SessionExportTest, SWR_EXP_002_WritesRequiredSnapshotSections)
 {
     std::string content;
     VitalSigns reading = make_warning_reading();
-    const char *patient_name = "Ren\xC3\xA9""e Alvarez";
+    std::string patient_name = repeat_utf8_unit("\xC3\xA9", 32);
+    std::string expected_name = repeat_utf8_unit("\xC3\xA9", 31);
 
-    patient_init(&patient_, 1001, patient_name, 52, 72.5f, 1.66f);
+    patient_init(&patient_, 1001, patient_name.c_str(), 52, 72.5f, 1.66f);
     ASSERT_EQ(1, patient_add_reading(&patient_, &reading));
 
     ASSERT_EQ(SESSION_EXPORT_RESULT_OK,
@@ -339,7 +349,7 @@ TEST_F(SessionExportTest, SWR_EXP_002_WritesRequiredSnapshotSections)
     EXPECT_NE(std::string::npos, content.find("Format Version: 1.0"));
     EXPECT_NE(std::string::npos, content.find("Patient Demographics"));
     EXPECT_NE(std::string::npos,
-              content.find("Name           : " + std::string(patient_name)));
+              content.find("Name           : " + expected_name));
     EXPECT_NE(std::string::npos, content.find("Mode Context"));
     EXPECT_NE(std::string::npos, content.find("Alarm Limit Context"));
     EXPECT_NE(std::string::npos,

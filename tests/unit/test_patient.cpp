@@ -10,6 +10,13 @@ extern "C" {
 #include <gtest/gtest.h>
 #include <cstring>
 #include <string>
+static std::string repeat_utf8_unit(const char *utf8_unit, int count) {
+    std::string out;
+    for (int i = 0; i < count; ++i) {
+        out += utf8_unit;
+    }
+    return out;
+}
 
 // Helper fixtures
 static VitalSigns make_normal_vitals() {
@@ -62,12 +69,20 @@ TEST(PatientInit, REQ_PAT_001_FieldsSet) {
 }
 
 TEST(PatientInit, REQ_PAT_001_LongNameTruncated) {
-    PatientRecord rec;
+    PatientRecord ascii_rec;
+    PatientRecord utf8_rec;
     std::string long_name(MAX_NAME_LEN + 10, 'X');
-    patient_init(&rec, 1, long_name.c_str(), 30, 70.0f, 1.75f);
-    // Name must be null-terminated and within buffer
-    EXPECT_EQ(strnlen(rec.info.name, MAX_NAME_LEN), (size_t)(MAX_NAME_LEN - 1));
-    EXPECT_EQ(rec.info.name[MAX_NAME_LEN - 1], '\0');
+    std::string utf8_name = repeat_utf8_unit("\xC3\xA9", 32);
+    std::string expected_utf8 = repeat_utf8_unit("\xC3\xA9", 31);
+
+    patient_init(&ascii_rec, 1, long_name.c_str(), 30, 70.0f, 1.75f);
+    EXPECT_EQ(strnlen(ascii_rec.info.name, MAX_NAME_LEN), (size_t)(MAX_NAME_LEN - 1));
+    EXPECT_EQ(ascii_rec.info.name[MAX_NAME_LEN - 1], '\0');
+
+    patient_init(&utf8_rec, 2, utf8_name.c_str(), 30, 70.0f, 1.75f);
+    EXPECT_STREQ(utf8_rec.info.name, expected_utf8.c_str());
+    EXPECT_EQ(strnlen(utf8_rec.info.name, MAX_NAME_LEN), expected_utf8.size());
+    EXPECT_EQ(utf8_rec.info.name[expected_utf8.size()], '\0');
 }
 
 TEST(PatientInit, REQ_PAT_001_ReadingCountZero) {

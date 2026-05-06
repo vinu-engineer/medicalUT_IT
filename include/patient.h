@@ -50,7 +50,7 @@
 /** @brief Maximum number of alert-event records stored per patient session. */
 #define MAX_ALERT_EVENTS MAX_READINGS
 
-/** @brief Maximum length of a patient name string (including null terminator). */
+/** @brief Maximum UTF-8 byte length of a patient name buffer including the null terminator. */
 #define MAX_NAME_LEN 64
 
 /** @brief Maximum length of a stored alert-event summary string. */
@@ -71,8 +71,9 @@
  */
 typedef struct {
     int   id;                  /**< Unique patient identifier.                 */
-    char  name[MAX_NAME_LEN];  /**< Full name. Null-terminated, truncated to
-                                    MAX_NAME_LEN - 1 characters if necessary.  */
+    char  name[MAX_NAME_LEN];  /**< UTF-8 full name. Null-terminated and
+                                    truncated only at whole code-point
+                                    boundaries when necessary.                 */
     int   age;                 /**< Age in years.                              */
     float weight_kg;           /**< Body weight in kilograms.                  */
     float height_m;            /**< Height in metres.                          */
@@ -138,8 +139,9 @@ typedef struct {
  * @brief Initialise a PatientRecord with demographic data.
  *
  * @details Zero-fills the entire structure before populating fields.
- * reading_count is set to 0. The name string is copied with truncation
- * to MAX_NAME_LEN - 1 characters and guaranteed null-termination.
+ * reading_count is set to 0. The name string is copied as a valid UTF-8
+ * prefix that fits in MAX_NAME_LEN - 1 bytes and is guaranteed
+ * null-termination.
  *
  * @param[out] rec        Pointer to the record to initialise. Must not be NULL.
  * @param[in]  id         Unique patient identifier.
