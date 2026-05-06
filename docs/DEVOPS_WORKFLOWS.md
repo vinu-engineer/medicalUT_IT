@@ -27,7 +27,7 @@ dispatch.
  │  ┌───────────┐    ┌──────────────────┐    ┌───────────────────────┐     │
  │  │ 1. BUILD  │───▸│ 2a. CPPCHECK     │───▸│ 3. UNIT & INTEGRATION │     │
  │  │   ALL     │    │    (ubuntu)       │    │    TESTS              │     │
- │  │ (windows) │    ├──────────────────┤    │    295 GTest cases    │     │
+ │  │ (windows) │    ├──────────────────┤    │    307 GTest cases    │     │
  │  └───────────┘    │ 2b. CODEQL       │───▸│    (windows)          │     │
  │                   │    (windows)      │    └───────────┬───────────┘     │
  │                   └──────────────────┘                │                 │
@@ -129,7 +129,7 @@ activity for Class B software.
 |-------------|-----------------------------------------------|
 | Runner      | `windows-latest`                              |
 | Framework   | Google Test (release-1.10.0)                   |
-| Unit tests  | 291 tests across 31 suites                     |
+| Unit tests  | 293 tests across 30 suites                     |
 | Integration | 14 tests across 2 suites                       |
 | Output      | JUnit XML → artefact (90-day retention)        |
 | Summary     | Pass/fail table in Actions job summary         |
@@ -140,7 +140,7 @@ activity for Class B software.
 |--------------------------|------:|----------------------------------|
 | `test_vitals.cpp`        | 80    | SWR-VIT-001..008                 |
 | `test_alerts.cpp`        | 11    | SWR-ALT-001..004                 |
-| `test_patient.cpp`       | 27    | SWR-PAT-001..008                 |
+| `test_patient.cpp`       | 29    | SWR-PAT-001..008                 |
 | `test_news2.cpp`         | 53    | SWR-NEW-001                      |
 | `test_alarm_limits.cpp`  | 31    | SWR-ALM-001                      |
 | `test_trend.cpp`         | 18    | SWR-TRD-001                      |
