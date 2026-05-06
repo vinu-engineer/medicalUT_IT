@@ -1,9 +1,9 @@
 # Software Requirements Specification (SWR)
 
-**Document ID:** SWR-001-REV-I
+**Document ID:** SWR-001-REV-M
 **Project:** Patient Vital Signs Monitor
 **Version:** 2.7.0
-**Date:** 2026-05-03
+**Date:** 2026-05-06
 **Status:** Approved
 **Standard:** IEC 62304 §5.2
 

@@ -1,9 +1,9 @@
 # Requirements Traceability Matrix (RTM)
 
-**Document ID:** RTM-001-REV-J
+**Document ID:** RTM-001-REV-L
 **Project:** Patient Vital Signs Monitor
 **Version:** 2.7.0
-**Date:** 2026-05-05
+**Date:** 2026-05-06
 **Status:** Approved
 **Standard:** IEC 62304 §5.7.3 / FDA SW Validation Guidance
 
