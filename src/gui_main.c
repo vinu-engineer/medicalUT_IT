@@ -1757,8 +1757,12 @@ static LRESULT CALLBACK dash_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
 
     case WM_GETMINMAXINFO: {
         MINMAXINFO *mmi = (MINMAXINFO *)lp;
+        RECT min_wr = {0, 0, WIN_CW, WIN_CH};
+        DWORD style = (DWORD)GetWindowLongPtrA(w, GWL_STYLE);
+
+        AdjustWindowRect(&min_wr, style, FALSE);
         mmi->ptMinTrackSize.x = 760;
-        mmi->ptMinTrackSize.y = 760;
+        mmi->ptMinTrackSize.y = min_wr.bottom - min_wr.top;
         return 0;
     }
 
