@@ -15,6 +15,7 @@ add_executable(test_unit
     unit/test_vitals.cpp
     unit/test_alerts.cpp
     unit/test_patient.cpp
+    unit/test_session_export.cpp
     unit/test_auth.cpp
     unit/test_hal.cpp
     unit/test_config.cpp
@@ -29,6 +30,7 @@ add_executable(test_unit
 )
 target_link_libraries(test_unit PRIVATE monitor_lib ${GTEST_MAIN_TARGET})
 target_include_directories(test_unit PRIVATE ${PROJECT_SOURCE_DIR}/include)
+target_compile_definitions(test_unit PRIVATE SESSION_EXPORT_TESTING)
 add_test(NAME UnitTests COMMAND test_unit --gtest_output=xml:${CMAKE_BINARY_DIR}/results_unit.xml)
 
 # -------------------------------------------------------
@@ -37,9 +39,11 @@ add_test(NAME UnitTests COMMAND test_unit --gtest_output=xml:${CMAKE_BINARY_DIR}
 add_executable(test_integration
     integration/test_patient_monitoring.cpp
     integration/test_alert_escalation.cpp
+    integration/test_session_export.cpp
 )
 target_link_libraries(test_integration PRIVATE monitor_lib ${GTEST_MAIN_TARGET})
 target_include_directories(test_integration PRIVATE ${PROJECT_SOURCE_DIR}/include)
+target_compile_definitions(test_integration PRIVATE SESSION_EXPORT_TESTING)
 add_test(NAME IntegrationTests COMMAND test_integration --gtest_output=xml:${CMAKE_BINARY_DIR}/results_integration.xml)
 
 set(TEST_TEMP_DIR "${CMAKE_BINARY_DIR}/test_tmp")

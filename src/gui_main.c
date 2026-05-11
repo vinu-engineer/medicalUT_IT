@@ -14,7 +14,7 @@
  * @req SWR-GUI-001  @req SWR-GUI-002  @req SWR-GUI-003  @req SWR-GUI-004
  * @req SWR-SEC-001  @req SWR-SEC-002  @req SWR-SEC-003
  * @req SWR-GUI-007  @req SWR-GUI-008  @req SWR-GUI-009  @req SWR-GUI-010
- * @req SWR-VIT-008  @req SWR-NEW-001
+ * @req SWR-VIT-008  @req SWR-NEW-001  @req SWR-GUI-013  @req SWR-GUI-014
  */
 #ifdef _MSC_VER
 #  define _CRT_SECURE_NO_WARNINGS
@@ -37,7 +37,9 @@
 #include "gui_users.h"
 #include "hw_vitals.h"
 #include "app_config.h"
+#include "gui_utf8.h"
 #include "localization.h"
+#include "session_export.h"
 
 /* ===================================================================
  * App metadata
@@ -85,6 +87,7 @@
 #define IDC_VIT_RR      1106  /**< Respiration rate field @req SWR-VIT-008 */
 #define IDC_BTN_ADD     1110
 #define IDC_BTN_CLEAR   1111
+#define IDC_BTN_EXPORT  1112
 
 /* ===================================================================
  * Control IDs — Dashboard header buttons + lists
@@ -269,6 +272,20 @@ static void draw_text_ex(HDC hdc, const char *txt,
     HFONT old = (HFONT)SelectObject(hdc, font);
     SetTextColor(hdc, fg);
     SetBkMode(hdc, TRANSPARENT);
+#if defined(_WIN32)
+    if (txt != NULL) {
+        WCHAR wide_text[1024];
+        int wide_len = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS,
+                                           txt, -1,
+                                           wide_text,
+                                           (int)(sizeof(wide_text) / sizeof(wide_text[0])));
+        if (wide_len > 0) {
+            DrawTextW(hdc, wide_text, -1, &r, fmt);
+            SelectObject(hdc, old);
+            return;
+        }
+    }
+#endif
     DrawTextA(hdc, txt, -1, &r, fmt);
     SelectObject(hdc, old);
 }
@@ -590,6 +607,17 @@ static HWND make_edit(HWND p, int id, const char *t, int x, int y, int w, int h)
                            WS_CHILD|WS_VISIBLE|WS_TABSTOP|ES_AUTOHSCROLL,
                            x,y,w,h,p,(HMENU)(INT_PTR)id,g_app.inst,NULL);
 }
+static HWND make_edit_utf8(HWND p, int id, const char *t, int x, int y, int w, int h)
+{
+#if defined(_WIN32)
+    return gui_create_edit_utf8(g_app.inst, p, id, t,
+                                WS_EX_CLIENTEDGE,
+                                WS_CHILD|WS_VISIBLE|WS_TABSTOP|ES_AUTOHSCROLL,
+                                x, y, w, h);
+#else
+    return make_edit(p, id, t, x, y, w, h);
+#endif
+}
 static HWND make_btn(HWND p, int id, const char *t, int x, int y, int w, int h)
 {
     return CreateWindowExA(0,"BUTTON",t,
@@ -608,7 +636,23 @@ static int get_txt(HWND p, int id, char *out, int len)
     GetWindowTextA(GetDlgItem(p,id), out, len);
     return (int)strlen(out);
 }
+static int get_txt_utf8(HWND p, int id, char *out, int len)
+{
+#if defined(_WIN32)
+    return gui_get_control_text_utf8(p, id, out, len);
+#else
+    return get_txt(p, id, out, len);
+#endif
+}
 static void set_txt(HWND p, int id, const char *s) { SetWindowTextA(GetDlgItem(p,id),s); }
+static void set_txt_utf8(HWND p, int id, const char *s)
+{
+#if defined(_WIN32)
+    gui_set_control_text_utf8(p, id, s);
+#else
+    set_txt(p, id, s);
+#endif
+}
 
 /* ===================================================================
  * Dashboard: controls
@@ -618,7 +662,7 @@ static void create_dash_controls(HWND w)
     make_label(w,localization_get_string(STR_PATIENT_ID), 20, CY, 40, 18);
     make_edit (w,IDC_PAT_ID, "1001",  20, CY+20, 100, 24);
     make_label(w,localization_get_string(STR_PATIENT_NAME), 130, CY, 90, 18);
-    make_edit (w,IDC_PAT_NAME,"Sarah Johnson",130,CY+20,240,24);
+    make_edit_utf8(w,IDC_PAT_NAME,"Sarah Johnson",130,CY+20,240,24);
     make_label(w,localization_get_string(STR_AGE), 382, CY, 40, 18);
     make_edit (w,IDC_PAT_AGE, "52",  382,CY+20,  70, 24);
     make_label(w,localization_get_string(STR_WEIGHT_KG), 464, CY, 90, 18);
@@ -644,6 +688,7 @@ static void create_dash_controls(HWND w)
 
     make_btn(w,IDC_BTN_SCEN1,"Demo: Deterioration",20, CY+124,175,26);
     make_btn(w,IDC_BTN_SCEN2,"Demo: Bradycardia",  205,CY+124,160,26);
+    make_btn(w,IDC_BTN_EXPORT, localization_get_string(STR_EXPORT_SESSION_REVIEW), 377, CY+124, 245, 26);
 
     make_label(w,localization_get_string(STR_ACTIVE_ALERTS),20,CY+162,160,18);
     CreateWindowExA(WS_EX_CLIENTEDGE,"LISTBOX","",
@@ -703,20 +748,10 @@ static void update_dashboard(HWND w)
         return;
     }
     for (i = 0; i < g_app.patient.reading_count; ++i) {
-        const VitalSigns *r = &g_app.patient.readings[i];
-        if (r->respiration_rate != 0)
-            snprintf(buf, sizeof(buf),
-                     "#%d  HR %d | BP %d/%d | Temp %.1f C | SpO2 %d%% | RR %d br/min  [%s]",
-                     i+1, r->heart_rate, r->systolic_bp, r->diastolic_bp,
-                     r->temperature, r->spo2, r->respiration_rate,
-                     alert_level_str(overall_alert_level(r)));
-        else
-            snprintf(buf, sizeof(buf),
-                     "#%d  HR %d | BP %d/%d | Temp %.1f C | SpO2 %d%%  [%s]",
-                     i+1, r->heart_rate, r->systolic_bp, r->diastolic_bp,
-                     r->temperature, r->spo2,
-                     alert_level_str(overall_alert_level(r)));
-        SendMessageA(GetDlgItem(w,IDC_LIST_HISTORY),LB_ADDSTRING,0,(LPARAM)buf);
+        if (session_export_format_history_row(&g_app.patient.readings[i], i + 1,
+                                              buf, sizeof(buf))) {
+            SendMessageA(GetDlgItem(w,IDC_LIST_HISTORY),LB_ADDSTRING,0,(LPARAM)buf);
+        }
     }
     latest = patient_latest_reading(&g_app.patient);
     if (latest) ac = generate_alerts(latest, alerts, MAX_ALERTS);
@@ -725,9 +760,9 @@ static void update_dashboard(HWND w)
                      (LPARAM)"No active alerts — all parameters within normal range.");
     } else {
         for (i = 0; i < ac; ++i) {
-            const char *sev = (alerts[i].level==ALERT_CRITICAL)?"CRITICAL":"WARNING ";
-            snprintf(buf, sizeof(buf), "[%s]  %s", sev, alerts[i].message);
-            SendMessageA(GetDlgItem(w,IDC_LIST_ALERTS),LB_ADDSTRING,0,(LPARAM)buf);
+            if (session_export_format_alert_row(&alerts[i], buf, sizeof(buf))) {
+                SendMessageA(GetDlgItem(w,IDC_LIST_ALERTS),LB_ADDSTRING,0,(LPARAM)buf);
+            }
         }
     }
 
@@ -799,7 +834,7 @@ static int do_admit(HWND w)
     if (!parse_int_field(w,IDC_PAT_AGE,   "Age",        &age)) return 0;
     if (!parse_flt_field(w,IDC_PAT_WEIGHT,"Weight (kg)",&wt))  return 0;
     if (!parse_flt_field(w,IDC_PAT_HEIGHT,"Height (m)", &ht))  return 0;
-    if (!get_txt(w,IDC_PAT_NAME,name,(int)sizeof(name))) {
+    if (!get_txt_utf8(w,IDC_PAT_NAME,name,(int)sizeof(name))) {
         MessageBoxA(w,"Patient name is required.",APP_TITLE,MB_OK|MB_ICONWARNING);
         SetFocus(GetDlgItem(w,IDC_PAT_NAME)); return 0;
     }
@@ -827,7 +862,7 @@ static void do_clear(HWND w)
 {
     ZeroMemory(&g_app.patient,sizeof(g_app.patient));
     g_app.has_patient=0;
-    set_txt(w,IDC_PAT_ID,    "1001"); set_txt(w,IDC_PAT_NAME,"Sarah Johnson");
+    set_txt(w,IDC_PAT_ID,    "1001"); set_txt_utf8(w,IDC_PAT_NAME,"Sarah Johnson");
     set_txt(w,IDC_PAT_AGE,   "52");   set_txt(w,IDC_PAT_WEIGHT,"72.5");
     set_txt(w,IDC_PAT_HEIGHT,"1.66"); set_txt(w,IDC_VIT_HR,"78");
     set_txt(w,IDC_VIT_SYS,  "122");   set_txt(w,IDC_VIT_DIA,"82");
@@ -835,17 +870,73 @@ static void do_clear(HWND w)
     set_txt(w,IDC_VIT_RR,   "15");
     update_dashboard(w);
 }
+static void do_export_session_review(HWND w)
+{
+    SessionExportResult result;
+    char path[SESSION_EXPORT_PATH_MAX];
+
+    result = session_export_write_snapshot(&g_app.patient, g_app.has_patient,
+                                           &g_app.alarm_limits,
+                                           g_app.sim_enabled, g_app.sim_paused,
+                                           NULL, 0, path, sizeof(path));
+
+    if (result == SESSION_EXPORT_RESULT_EXISTS) {
+        char confirm[768];
+
+        snprintf(confirm, sizeof(confirm),
+                 "A session review snapshot already exists:\n\n%s\n\nReplace it?",
+                 path);
+        if (MessageBoxA(w, confirm, APP_TITLE,
+                        MB_YESNO | MB_ICONQUESTION | MB_DEFBUTTON2) != IDYES) {
+            return;
+        }
+
+        result = session_export_write_snapshot(&g_app.patient, g_app.has_patient,
+                                               &g_app.alarm_limits,
+                                               g_app.sim_enabled, g_app.sim_paused,
+                                               NULL, 1, path, sizeof(path));
+    }
+
+    switch (result) {
+    case SESSION_EXPORT_RESULT_OK: {
+        char success[768];
+        snprintf(success, sizeof(success),
+                 "Session review snapshot exported to:\n\n%s", path);
+        MessageBoxA(w, success, APP_TITLE, MB_OK | MB_ICONINFORMATION);
+        return;
+    }
+    case SESSION_EXPORT_RESULT_NO_PATIENT:
+        MessageBoxA(w,
+                    "Admit a patient before exporting a session review snapshot.",
+                    APP_TITLE, MB_OK | MB_ICONWARNING);
+        return;
+    case SESSION_EXPORT_RESULT_NO_READINGS:
+        MessageBoxA(w,
+                    "Add at least one reading before exporting a session review snapshot.",
+                    APP_TITLE, MB_OK | MB_ICONWARNING);
+        return;
+    case SESSION_EXPORT_RESULT_PATH_ERROR:
+    case SESSION_EXPORT_RESULT_IO_ERROR:
+    case SESSION_EXPORT_RESULT_TIME_ERROR:
+    case SESSION_EXPORT_RESULT_ARGUMENT_ERROR:
+    default:
+        MessageBoxA(w,
+                    "Session review snapshot export failed. No file was written.",
+                    APP_TITLE, MB_OK | MB_ICONERROR);
+        return;
+    }
+}
 static void do_scenario(HWND w, int s)
 {
     static const VitalSigns det[3]={{78,122,82,36.7f,98,15},{108,148,94,37.9f,93,23},{135,175,112,39.8f,87,27}};
     static const VitalSigns bra[2]={{68,118,76,36.5f,99,14},{38,110,72,36.6f,97,8}};
     const VitalSigns *rd; int n,i;
     if (s==1) {
-        set_txt(w,IDC_PAT_ID,"1001"); set_txt(w,IDC_PAT_NAME,"Sarah Johnson");
+        set_txt(w,IDC_PAT_ID,"1001"); set_txt_utf8(w,IDC_PAT_NAME,"Sarah Johnson");
         set_txt(w,IDC_PAT_AGE,"52");  set_txt(w,IDC_PAT_WEIGHT,"72.5");
         set_txt(w,IDC_PAT_HEIGHT,"1.66"); rd=det; n=3;
     } else {
-        set_txt(w,IDC_PAT_ID,"1002"); set_txt(w,IDC_PAT_NAME,"David Okonkwo");
+        set_txt(w,IDC_PAT_ID,"1002"); set_txt_utf8(w,IDC_PAT_NAME,"David Okonkwo");
         set_txt(w,IDC_PAT_AGE,"34");  set_txt(w,IDC_PAT_WEIGHT,"85.0");
         set_txt(w,IDC_PAT_HEIGHT,"1.80"); rd=bra; n=2;
     }
@@ -1619,7 +1710,7 @@ static void apply_sim_mode(HWND dash)
         if (!g_app.has_patient) {
             patient_init(&g_app.patient, 2001, "James Mitchell", 45, 78.0f, 1.75f);
             g_app.has_patient = 1;
-            set_txt(dash,IDC_PAT_ID,"2001"); set_txt(dash,IDC_PAT_NAME,"James Mitchell");
+            set_txt(dash,IDC_PAT_ID,"2001"); set_txt_utf8(dash,IDC_PAT_NAME,"James Mitchell");
             set_txt(dash,IDC_PAT_AGE,"45");  set_txt(dash,IDC_PAT_WEIGHT,"78.0");
             set_txt(dash,IDC_PAT_HEIGHT,"1.75");
         }
@@ -1658,7 +1749,7 @@ static void refresh_dash_language(HWND w)
     HWND btn;
 
     get_txt(w, IDC_PAT_ID,     pat_id,   sizeof(pat_id));
-    get_txt(w, IDC_PAT_NAME,   pat_name, sizeof(pat_name));
+    get_txt_utf8(w, IDC_PAT_NAME, pat_name, sizeof(pat_name));
     get_txt(w, IDC_PAT_AGE,    pat_age,  sizeof(pat_age));
     get_txt(w, IDC_PAT_WEIGHT, pat_wt,   sizeof(pat_wt));
     get_txt(w, IDC_PAT_HEIGHT, pat_ht,   sizeof(pat_ht));
@@ -1689,7 +1780,7 @@ static void refresh_dash_language(HWND w)
 
     /* --- restore saved state --- */
     set_txt(w, IDC_PAT_ID,     pat_id);
-    set_txt(w, IDC_PAT_NAME,   pat_name);
+    set_txt_utf8(w, IDC_PAT_NAME, pat_name);
     set_txt(w, IDC_PAT_AGE,    pat_age);
     set_txt(w, IDC_PAT_WEIGHT, pat_wt);
     set_txt(w, IDC_PAT_HEIGHT, pat_ht);
@@ -1749,7 +1840,7 @@ static LRESULT CALLBACK dash_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
         if (g_app.sim_enabled) {
             patient_init(&g_app.patient, 2001, "James Mitchell", 45, 78.0f, 1.75f);
             g_app.has_patient = 1;
-            set_txt(w,IDC_PAT_ID,"2001"); set_txt(w,IDC_PAT_NAME,"James Mitchell");
+            set_txt(w,IDC_PAT_ID,"2001"); set_txt_utf8(w,IDC_PAT_NAME,"James Mitchell");
             set_txt(w,IDC_PAT_AGE,"45");  set_txt(w,IDC_PAT_WEIGHT,"78.0");
             set_txt(w,IDC_PAT_HEIGHT,"1.75");
             hw_get_next_reading(&first_v);
@@ -1827,6 +1918,7 @@ static LRESULT CALLBACK dash_proc(HWND w, UINT msg, WPARAM wp, LPARAM lp)
         case IDC_BTN_ADMIT:   do_admit(w);       return 0;
         case IDC_BTN_ADD:     do_add_reading(w); return 0;
         case IDC_BTN_CLEAR:   do_clear(w);       return 0;
+        case IDC_BTN_EXPORT:  do_export_session_review(w); return 0;
         case IDC_BTN_SCEN1:   do_scenario(w,1);  return 0;
         case IDC_BTN_SCEN2:   do_scenario(w,2);  return 0;
         case IDC_BTN_PAUSE:

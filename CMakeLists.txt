@@ -32,6 +32,7 @@ add_library(monitor_lib STATIC
     src/vitals.c
     src/alerts.c
     src/patient.c
+    src/session_export.c
     src/pw_hash.c
     src/app_config.c
     src/news2.c
@@ -44,6 +45,11 @@ target_compile_options(monitor_lib PRIVATE
     $<$<C_COMPILER_ID:GNU,Clang>:-Wall -Wextra -Wpedantic>
     $<$<C_COMPILER_ID:MSVC>:/W4 /FS>
 )
+
+if(WIN32)
+    target_sources(monitor_lib PRIVATE src/gui_utf8.c)
+    target_link_libraries(monitor_lib PUBLIC advapi32)
+endif()
 
 if(ENABLE_COVERAGE AND NOT MSVC)
     target_compile_options(monitor_lib PRIVATE --coverage -O0 -g)
@@ -104,6 +110,8 @@ endif()
 option(BUILD_TESTS "Build unit and integration tests" ON)
 
 if(BUILD_TESTS)
+    target_compile_definitions(monitor_lib PRIVATE SESSION_EXPORT_TESTING)
+
     include(FetchContent)
     FetchContent_Declare(
         googletest

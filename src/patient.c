@@ -10,8 +10,8 @@
  * ### Memory Safety
  * - `patient_init()` zero-fills the entire record before writing fields,
  *   preventing stale data from a previous session.
- * - `strncpy` is used with an explicit length limit and explicit
- *   null-termination to guard against buffer overrun.
+ * - Patient names are copied into fixed storage using UTF-8-aware
+ *   truncation so multi-byte characters are never cut mid-sequence.
  * - `patient_add_reading()` enforces the MAX_READINGS cap and returns a
  *   status code so callers can detect and handle overflow.
  *
@@ -153,6 +153,86 @@ static void format_alert_event_line(const AlertEvent *event,
              event->summary);
 }
 
+static size_t utf8_codepoint_len(unsigned char lead_byte)
+{
+    if ((lead_byte & 0x80u) == 0u) return 1u;
+    if ((lead_byte & 0xE0u) == 0xC0u) return 2u;
+    if ((lead_byte & 0xF0u) == 0xE0u) return 3u;
+    if ((lead_byte & 0xF8u) == 0xF0u) return 4u;
+    return 0u;
+}
+
+static int utf8_sequence_is_valid(const unsigned char *src, size_t codepoint_len)
+{
+    size_t i;
+
+    if (src == NULL || codepoint_len == 0u) {
+        return 0;
+    }
+
+    for (i = 1u; i < codepoint_len; ++i) {
+        if ((src[i] & 0xC0u) != 0x80u) {
+            return 0;
+        }
+    }
+
+    if (codepoint_len == 1u) {
+        return 1;
+    }
+
+    if (codepoint_len == 2u) {
+        return src[0] >= 0xC2u;
+    }
+
+    if (codepoint_len == 3u) {
+        if (src[0] == 0xE0u && src[1] < 0xA0u) return 0;
+        if (src[0] == 0xEDu && src[1] >= 0xA0u) return 0;
+        return 1;
+    }
+
+    if (codepoint_len == 4u) {
+        if (src[0] > 0xF4u) return 0;
+        if (src[0] == 0xF0u && src[1] < 0x90u) return 0;
+        if (src[0] == 0xF4u && src[1] > 0x8Fu) return 0;
+        return 1;
+    }
+
+    return 0;
+}
+
+static void patient_copy_name(char *dst, size_t dst_len, const char *src)
+{
+    const unsigned char *cursor = (const unsigned char *)src;
+    size_t written = 0u;
+    size_t byte_limit;
+
+    if (dst == NULL || dst_len == 0u) {
+        return;
+    }
+
+    dst[0] = '\0';
+    if (src == NULL) {
+        return;
+    }
+
+    byte_limit = dst_len - 1u;
+    while (*cursor != '\0' && written < byte_limit) {
+        size_t codepoint_len = utf8_codepoint_len(*cursor);
+
+        if (codepoint_len == 0u ||
+            written + codepoint_len > byte_limit ||
+            !utf8_sequence_is_valid(cursor, codepoint_len)) {
+            break;
+        }
+
+        memcpy(dst + written, cursor, codepoint_len);
+        written += codepoint_len;
+        cursor += codepoint_len;
+    }
+
+    dst[written] = '\0';
+}
+
 /**
  * @brief Initialise a PatientRecord, zeroing all fields before populating.
  * @details memset(0) ensures that any unused readings array slots contain
@@ -163,19 +243,17 @@ static void format_alert_event_line(const AlertEvent *event,
 void patient_init(PatientRecord *rec, int id, const char *name,
                   int age, float weight_kg, float height_m)
 {
-    char name_copy[MAX_NAME_LEN];
+    char name_copy[MAX_NAME_LEN] = {0};
 
-    /* Copy the name first in case the caller passes rec->info.name back in. */
-    strncpy(name_copy, name, MAX_NAME_LEN - 1);
-    name_copy[MAX_NAME_LEN - 1] = '\0';
+    /* Preserve the source before clearing rec; rollover may pass rec->info.name. */
+    patient_copy_name(name_copy, sizeof(name_copy), name);
 
     memset(rec, 0, sizeof(*rec));
     rec->info.id        = id;
     rec->info.age       = age;
     rec->info.weight_kg = weight_kg;
     rec->info.height_m  = height_m;
-    strncpy(rec->info.name, name_copy, MAX_NAME_LEN - 1);
-    rec->info.name[MAX_NAME_LEN - 1] = '\0'; /* guarantee null-termination */
+    memcpy(rec->info.name, name_copy, sizeof(rec->info.name));
     rec->reading_count  = 0;
 }
 
